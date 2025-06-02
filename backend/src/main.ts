@@ -9,7 +9,6 @@ async function bootstrap() {
     .setTitle('API Challenge Gaming')
     .setDescription('API pour la plateforme de challenges de jeux vidéo')
     .setVersion('1.0')
-    .addTag('users')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
