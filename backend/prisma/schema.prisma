@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum TargetType {
+  CHALLENGE
+  PARTICIPATION
+}
+
+model User {
+  id             String          @id @default(uuid())
+  userName       String          @unique
+  email          String          @unique
+  password_hash  String
+  avatar_url     String
+  created_at     DateTime        @default(now())
+  challenges     Challenge[]     @relation("CreatedChallenges")
+  participations Participation[]
+  votes          Vote[]
+}
+
+model Challenge {
+  id          String     @id @default(uuid())
+  title       String
+  description String
+  rules       String
+  game        String
+  difficulty  Difficulty
+  created_by  String
+  validated   Boolean
+  created_at  DateTime   @default(now())
+  creator     User       @relation("CreatedChallenges", fields: [created_by], references: [id], onDelete: Cascade)
+  votes       Vote[]
+}
+
+model Participation {
+  id           String   @id @default(uuid())
+  users_id     String
+  challenge_id String
+  video_url    String
+  description  String
+  validated    Boolean
+  created_at   DateTime @default(now())
+  user         User     @relation(fields: [users_id], references: [id], onDelete: Cascade)
+  votes        Vote[]
+}
+
+model Vote {
+  id               String         @id @default(uuid())
+  users_id         String
+  challenge_id     String?
+  participation_id String?
+  target_type      TargetType
+  created_at       DateTime       @default(now())
+  user             User           @relation(fields: [users_id], references: [id], onDelete: Cascade)
+  challenge        Challenge?     @relation(fields: [challenge_id], references: [id])
+  participation    Participation? @relation(fields: [participation_id], references: [id])
+}

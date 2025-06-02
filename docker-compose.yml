@@ -1,0 +1,59 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app/frontend
+      - /app/frontend/node_modules
+    ports:
+      - 5173:5173
+    depends_on:
+      - backend
+    tty: true
+
+  backend:
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/usr/src/backend
+      - /ur/src/backend/node_modules
+    ports:
+      - 3000:3000
+    tty: true
+    depends_on:
+      database:
+        condition: service_healthy
+    command:
+      [
+        "bash",
+        "-c",
+        "./wait-for-it.sh database:5432 -- npx prisma migrate dev --name init &&  npx prisma generate && npm run seed && npm run start:dev",
+      ]
+
+  database:
+    image: postgres:17-alpine
+    container_name: database
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    env_file:
+      - docker.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gamer -d gamerchallenge"]
+      start_period: 15s
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  prismastudio:
+    image: timothyjmiller/prisma-studio
+    container_name: prismastudio
+    restart: unless-stopped
+    ports:
+      - 5555:5555
+    env_file:
+      - docker.env
+    depends_on:
+      database:
+        condition: service_healthy

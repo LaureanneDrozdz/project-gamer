@@ -1,0 +1,26 @@
+{
+  "name": "projet-gamer-challenges",
+  "version": "1.0.0",
+  "description": "- **Quoi ?** Une plateforme dédiée aux défis de jeux vidéo, permettant aux utilisateurs de proposer et relever des challenges sur différents jeux. - **Qui ?** GamerChallenges (fictif) vise à rassembler les passionnés de jeux vidéo autour d'une communauté dynamique et compétitive. - **Pour qui ?** Pour tous les amateurs de jeux vidéo, quel que soit leur niveau, cherchant à se mesurer aux autres et à partager leurs expériences. - **Comment ?** En équipe à définir (positionnement via un formulaire de voeux) par l'équipe pédagogique. Organisation en méthode agile pour la gestion de projet. - **Quand ?** Pendant 4 semaines correspondant à 4 sprints (conception, code, déploiement, recettage, etc.). - **Pourquoi ?** Pour la réalisation d'un projet fictif à but pédagogique visant l'obtention du Titre Professionnel.",
+  "repository": {
+    "type": "git",
+    "url": "git@oclock.github.com:O-clock-Naga/projet-gamer-challenges.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.4.21",
+    "class-validator": "^0.14.2",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.7"
+  },
+  "devDependencies": {
+    "@nestjs/swagger": "^11.2.0",
+    "cypress": "^14.3.3"
+  }
+}

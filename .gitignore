@@ -38,3 +38,9 @@ package-lock.json
 
 # Optional: TypeScript
 *.tsbuildinfo
+
+#Volumes DB 
+/db
+
+# Env Var Docker
+docker.env
