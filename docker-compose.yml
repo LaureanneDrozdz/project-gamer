@@ -68,3 +68,19 @@ services:
     depends_on:
       database:
         condition: service_healthy
+  
+  cypress:
+    image: cypress/included:13.7.3
+    container_name: cypress
+    working_dir: /e2e
+    volumes:
+      - ./:/e2e
+    depends_on:
+      - frontend
+    entrypoint: 
+      - sh
+      - -c
+      - |
+        npm ci && \
+        npx cypress install && \
+        npx cypress run
