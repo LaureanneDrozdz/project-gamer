@@ -61,6 +61,7 @@ export default function SignUpPage() {
             type="text"
             required
             value={userName}
+            data-testid="signupUserName"
             onChange={(e) => setUserName(e.target.value)}
             className="block w-full border border-gray-200 rounded px-4 py-3"
           />
@@ -72,6 +73,7 @@ export default function SignUpPage() {
           </label>
           <input
             id="email"
+            data-testid="signupUserMail"
             type="email"
             required
             value={email}
@@ -91,6 +93,7 @@ export default function SignUpPage() {
             id="password"
             type="password"
             required
+            data-testid="signupUserPassword"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="block w-full border border-gray-200 rounded px-4 py-3"
@@ -99,6 +102,7 @@ export default function SignUpPage() {
 
         <button
           type="submit"
+          data-testid="signupButton"
           className="w-full bg-cta text-noir py-3 rounded font-semibold"
         >
           INSCRIPTION

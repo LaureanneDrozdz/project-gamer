@@ -2,6 +2,7 @@
 import Link from "next/link";
 
 type ButtonProps = {
+  datatestid?: string;
   label: string;
   href?: string;
   variant?: "primary" | "cta" | "white";
@@ -9,6 +10,7 @@ type ButtonProps = {
 };
 
 const Button = ({
+  datatestid,
   label,
   href,
   variant = "primary",
@@ -27,7 +29,7 @@ const Button = ({
   };
 
   return (
-    <button className={`${baseStyle} ${variants[variant]} ${className || ""}`}>
+    <button data-testid={datatestid} className={`${baseStyle} ${variants[variant]} ${className || ""}`}>
       <Link href={href || "#"}>{label}</Link>
     </button>
   );

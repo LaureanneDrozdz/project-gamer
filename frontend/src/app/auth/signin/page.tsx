@@ -55,6 +55,7 @@ export default function SignInPage() {
             Email ou nom
           </label>
           <input
+            data-testid='loginUserMail'
             id="email"
             type="email"
             required
@@ -71,6 +72,7 @@ export default function SignInPage() {
             Mot de passe
           </label>
           <input
+            data-testid='loginUserPassword'
             id="password"
             type="password"
             required
@@ -81,6 +83,7 @@ export default function SignInPage() {
         </div>
         <button
           type="submit"
+          data-testid='loginButton'
           className="w-full bg-cta text-noir py-3 rounded font-semibold"
         >
           CONNEXION
