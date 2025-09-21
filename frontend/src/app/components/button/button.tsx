@@ -33,6 +33,7 @@ const Button = ({
     <Link
       href={href || '#'}
       className={`${baseStyle} ${variants[variant]} ${className || ''}`}
+      aria-label={label}
     >
       {label}
     </Link>

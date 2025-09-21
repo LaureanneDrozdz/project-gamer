@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import Header from './components/header/header';
 import Footer from './components/footer/footer';
 import { AuthProvider } from '@/lib/auth-context';
-import { Raleway, Roboto, Pacifico } from "./font";
+import { Raleway, Roboto, Pacifico } from './font';
 
 export const metadata = {
   title: 'ACCUEIL - GamerChallenges',
@@ -14,7 +14,9 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr">
-      <body className={`min-h-screen flex flex-col ${Raleway.variable} ${Roboto.variable} ${Pacifico.variable}`}>
+      <body
+        className={`min-h-screen flex flex-col ${Raleway.variable} ${Roboto.variable} ${Pacifico.variable}`}
+      >
         <AuthProvider>
           <Header />
           <main className="">{children}</main>

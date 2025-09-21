@@ -83,7 +83,11 @@ export default function CreateChallengeModal({
 
   return (
     <div className="relative">
-      <button onClick={() => setIsOpen(true)} className="cta-base cta-button">
+      <button
+        onClick={() => setIsOpen(true)}
+        className="cta-base cta-button"
+        aria-haspopup="dialog"
+      >
         Créer un challenge
       </button>
 
