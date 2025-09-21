@@ -4,7 +4,6 @@ import Button from '../button/button';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
-// import { FiUser } from "react-icons/fi"; // or any icon lib
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

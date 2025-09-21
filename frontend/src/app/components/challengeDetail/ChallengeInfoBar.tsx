@@ -1,5 +1,5 @@
 import type { Challenge } from '@/types';
-import { Heart, Users, Star } from 'lucide-react';
+import { Users, Star } from 'lucide-react';
 import { VoteButton } from '../button/voteButton';
 import ChallengeTags from './ChallengeTags';
 import ChallengeRules from './ChallengeRules';

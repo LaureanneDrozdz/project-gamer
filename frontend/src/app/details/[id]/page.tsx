@@ -6,36 +6,17 @@ import { useAuth } from '@/lib/auth-context';
 import { useParams, useRouter } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
 import type { Challenge, User } from '@/types';
-import ParticipationCard from '@/app/components/participationCard/participationCard';
-import { VoteButton } from '@/app/components/button/voteButton';
 import ChallengeDetailHeader from '@/app/components/challengeDetail/ChallengeDetailHeader';
 import ChallengeInfoBar from '@/app/components/challengeDetail/ChallengeInfoBar';
-import ChallengeTags from '@/app/components/challengeDetail/ChallengeTags';
-import ChallengeRules from '@/app/components/challengeDetail/ChallengeRules';
-import ParticipationBox from '@/app/components/challengeDetail/ParticipationBox';
 import ParticipationsGrid from '@/app/components/challengeDetail/ParticipationsGrid';
 import ParticipationForm from '@/app/components/challengeDetail/ParticipationForm';
-import Link from 'next/link';
 import LoginForm from '@/app/components/challengeDetail/LoginForm';
-
-const getEndDate = (startDate: string | undefined): string => {
-  if (!startDate) return 'Date de fin non disponible';
-  const date = new Date(startDate);
-  date.setMonth(date.getMonth() + 1.5);
-  return date.toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-};
 
 export default function ChallengeDetailPage() {
   const params = useParams();
   const challengeId = params.id as string;
   const [submitError, setSubmitError] = useState('');
   const [challenge, setChallenge] = useState<Challenge | null>(null);
-  const [votesCount, setVotesCount] = useState(0);
-  const [hasVoted, setHasVoted] = useState(false);
   const [isParticipationSubmitted, setIsParticipationSubmitted] =
     useState(false);
   const [hasUserParticipated, setHasUserParticipated] = useState(false);
