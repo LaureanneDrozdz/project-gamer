@@ -83,7 +83,7 @@ export default function CreateChallengeModal({
 
   return (
     <div className="relative">
-      <button onClick={() => setIsOpen(true)} className="cta-button">
+      <button onClick={() => setIsOpen(true)} className="cta-base cta-button">
         Créer un challenge
       </button>
 

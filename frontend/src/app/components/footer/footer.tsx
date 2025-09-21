@@ -2,11 +2,11 @@
 
 const footer = () => {
   return (
-    <footer className="mt-auto border-t border-primary-600 py-4 px-8 z-50 bg-primary">
+    <footer className="mt-auto py-4 px-8 z-50 bg-primary">
       <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-        <h1 className="text-blanc text-2xl font-logo">
+        <span className="logo">
           GamerChallenges
-        </h1>
+        </span>
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 text-center">
           <a
             href="/mentions-legales"

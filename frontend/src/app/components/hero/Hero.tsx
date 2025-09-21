@@ -20,7 +20,7 @@ const Hero = () => {
 
           <Button
             label="Découvrir les défis"
-            className="cta-button"
+            className="cta-base cta-button"
           />
         </div>
       </div>

@@ -12,9 +12,9 @@ export default function Header() {
   return (
     <div className="bg-primary relative z-50">
       <header className="flex justify-between items-center px-8 py-4">
-        <h1 className="text-blanc text-2xl font-logo">
+        <span className="logo">
           GamerChallenges
-        </h1>
+        </span>
 
         {/* Burger Menu Button */}
         <button
