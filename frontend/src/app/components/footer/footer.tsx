@@ -4,9 +4,7 @@ const footer = () => {
   return (
     <footer className="mt-auto py-4 px-8 z-50 bg-primary">
       <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-        <span className="logo">
-          GamerChallenges
-        </span>
+        <span className="logo">GamerChallenges</span>
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 text-center">
           <a
             href="/mentions-legales"

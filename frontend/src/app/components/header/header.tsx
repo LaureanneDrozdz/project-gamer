@@ -12,14 +12,13 @@ export default function Header() {
   return (
     <div className="bg-primary relative z-50">
       <header className="flex justify-between items-center px-8 py-4">
-        <span className="logo">
-          GamerChallenges
-        </span>
+        <span className="logo">GamerChallenges</span>
 
         {/* Burger Menu Button */}
         <button
           className="md:hidden text-blanc z-10"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label={isMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
         >
           <svg
             className="w-6 h-6"
@@ -65,6 +64,7 @@ export default function Header() {
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="flex items-center text-blanc focus:outline-none"
+                aria-label="Ouvrir la page profil"
               >
                 <img
                   src={user.avatar_url}

@@ -1,11 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Button from './components/button/button';
 import Hero from './components/hero/Hero';
 import ChallengeCard from './components/challengeCard/challengeCard';
 import Leaderboard from './components/leaderboard/leaderboard';
-import ParticipationCard from './components/participationCard/participationCard';
 import { Challenge, LeaderboardType } from '@/types';
 import { apiFetch } from '@/lib/api';
 
