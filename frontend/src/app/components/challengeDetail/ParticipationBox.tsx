@@ -1,8 +1,8 @@
-import { useAuth } from "@/lib/auth-context";
-import React, { useState } from "react";
-import { apiFetch } from "@/lib/api";
-import ParticipationForm from "./ParticipationForm";
-import LoginForm from "./LoginForm";
+import { useAuth } from '@/lib/auth-context';
+import React, { useState } from 'react';
+import { apiFetch } from '@/lib/api';
+import ParticipationForm from './ParticipationForm';
+import LoginForm from './LoginForm';
 
 type ParticipationBoxProps = {
   challengeId: string;
@@ -10,17 +10,17 @@ type ParticipationBoxProps = {
 
 const ParticipationBox = ({ challengeId }: ParticipationBoxProps) => {
   const { isLoggedIn, login, user } = useAuth();
-  const [submitError, setSubmitError] = useState("");
-  const [loginError, setLoginError] = useState("");
+  const [submitError, setSubmitError] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const handleParticipationSubmit = async (
     videoUrl: string,
     description: string
   ): Promise<boolean> => {
-    setSubmitError("");
+    setSubmitError('');
     try {
-      await apiFetch("/participation", {
-        method: "POST",
+      await apiFetch('/participation', {
+        method: 'POST',
         body: JSON.stringify({
           challenge_id: challengeId,
           video_url: videoUrl,
@@ -31,7 +31,7 @@ const ParticipationBox = ({ challengeId }: ParticipationBoxProps) => {
       });
       return true;
     } catch (err: any) {
-      setSubmitError(err.message || "Erreur lors de la soumission");
+      setSubmitError(err.message || 'Erreur lors de la soumission');
       return false;
     }
   };
@@ -40,12 +40,12 @@ const ParticipationBox = ({ challengeId }: ParticipationBoxProps) => {
     emailOrUsername: string,
     password: string
   ) => {
-    setLoginError("");
+    setLoginError('');
     try {
       await login({ email: emailOrUsername, password });
     } catch (err: any) {
       setLoginError(
-        err.message || "Login failed. Please check your credentials."
+        err.message || 'Login failed. Please check your credentials.'
       );
     }
   };

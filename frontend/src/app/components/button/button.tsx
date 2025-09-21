@@ -1,17 +1,17 @@
-"use client";
-import Link from "next/link";
+'use client';
+import Link from 'next/link';
 
 type ButtonProps = {
   label: string;
   href?: string;
-  variant?: "primary" | "cta" | "white";
+  variant?: 'primary' | 'cta' | 'white';
   className?: string;
 };
 
 const Button = ({
   label,
   href,
-  variant = "primary",
+  variant = 'primary',
   className,
 }: ButtonProps) => {
   const baseStyle = `
@@ -21,14 +21,14 @@ const Button = ({
   `;
 
   const variants = {
-    primary: "bg-secondary text-blanc hover:bg-secondary/90",
-    cta: "px-6 py-2 rounded-full font-semibold bg-cta text-noir hover:bg-cta/10 border-2 border-solid border-cta transition hover:text-cta shadow-[0px_4px_4px_rgba(0,0,0,0.25)]",
-    white: "bg-blanc text-cta hover:bg-blanc/90",
+    primary: 'bg-secondary text-blanc hover:bg-secondary/90',
+    cta: 'px-6 py-2 rounded-full font-semibold bg-cta text-noir hover:bg-cta/10 border-2 border-solid border-cta transition hover:text-cta shadow-[0px_4px_4px_rgba(0,0,0,0.25)]',
+    white: 'bg-blanc text-cta hover:bg-blanc/90',
   };
 
   return (
-    <button className={`${baseStyle} ${variants[variant]} ${className || ""}`}>
-      <Link href={href || "#"}>{label}</Link>
+    <button className={`${baseStyle} ${variants[variant]} ${className || ''}`}>
+      <Link href={href || '#'}>{label}</Link>
     </button>
   );
 };

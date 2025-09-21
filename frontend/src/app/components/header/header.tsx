@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Button from "../button/button";
-import Link from "next/link";
-import { useState } from "react";
-import { useAuth } from "@/lib/auth-context";
+import Button from '../button/button';
+import Link from 'next/link';
+import { useState } from 'react';
+import { useAuth } from '@/lib/auth-context';
 // import { FiUser } from "react-icons/fi"; // or any icon lib
 
 export default function Header() {
@@ -57,9 +57,6 @@ export default function Header() {
           <Link href="/leaderboard" className="text-blanc hover:text-secondary">
             Leaderboard
           </Link>
-          <Link href="/affronter" className="text-blanc hover:text-secondary">
-            Affronter
-          </Link>
         </nav>
 
         {/* Desktop Buttons or Profile */}
@@ -70,13 +67,11 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 className="flex items-center text-blanc focus:outline-none"
               >
-                
-                  <img
-                    src={user.avatar_url}
-                    alt="Avatar"
-                    className="w-8 h-8 rounded-full border-2 border-blanc"
-                  />
-                
+                <img
+                  src={user.avatar_url}
+                  alt="Avatar"
+                  className="w-8 h-8 rounded-full border-2 border-blanc"
+                />
               </button>
               {isMenuOpen && (
                 <div className="absolute right-0 mt-2 w-40 bg-white rounded shadow-lg py-2">
@@ -110,7 +105,7 @@ export default function Header() {
         {/* Mobile Menu */}
         <div
           className={`${
-            isMenuOpen ? "flex" : "hidden"
+            isMenuOpen ? 'flex' : 'hidden'
           } md:hidden absolute top-full left-0 right-0 bg-primary flex-col items-center py-4 space-y-4 z-10 shadow-lg`}
         >
           <Link href="/" className="text-blanc hover:text-secondary">
@@ -121,9 +116,6 @@ export default function Header() {
           </Link>
           <Link href="/leaderboard" className="text-blanc hover:text-secondary">
             Leaderboard
-          </Link>
-          <Link href="/affronter" className="text-blanc hover:text-secondary">
-            Affronter
           </Link>
 
           <div className="flex flex-col space-y-2">
@@ -149,7 +141,11 @@ export default function Header() {
             ) : (
               <>
                 <Button label="Connexion" href="/auth/signin" variant="cta" />
-                <Button label="Inscription" href="/auth/signup" variant="white" />
+                <Button
+                  label="Inscription"
+                  href="/auth/signup"
+                  variant="white"
+                />
               </>
             )}
           </div>

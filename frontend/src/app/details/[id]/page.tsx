@@ -1,38 +1,38 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Users, CheckCircle, Info } from "lucide-react";
-import { useAuth } from "@/lib/auth-context";
-import { useParams, useRouter } from "next/navigation";
-import { apiFetch } from "@/lib/api";
-import type { Challenge, User } from "@/types";
-import ParticipationCard from "@/app/components/participationCard/participationCard";
-import { VoteButton } from "@/app/components/button/voteButton";
-import ChallengeDetailHeader from "@/app/components/challengeDetail/ChallengeDetailHeader";
-import ChallengeInfoBar from "@/app/components/challengeDetail/ChallengeInfoBar";
-import ChallengeTags from "@/app/components/challengeDetail/ChallengeTags";
-import ChallengeRules from "@/app/components/challengeDetail/ChallengeRules";
-import ParticipationBox from "@/app/components/challengeDetail/ParticipationBox";
-import ParticipationsGrid from "@/app/components/challengeDetail/ParticipationsGrid";
-import ParticipationForm from "@/app/components/challengeDetail/ParticipationForm";
-import Link from "next/link";
-import LoginForm from "@/app/components/challengeDetail/LoginForm";
+import { useEffect, useState } from 'react';
+import { Users, CheckCircle, Info } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
+import { useParams, useRouter } from 'next/navigation';
+import { apiFetch } from '@/lib/api';
+import type { Challenge, User } from '@/types';
+import ParticipationCard from '@/app/components/participationCard/participationCard';
+import { VoteButton } from '@/app/components/button/voteButton';
+import ChallengeDetailHeader from '@/app/components/challengeDetail/ChallengeDetailHeader';
+import ChallengeInfoBar from '@/app/components/challengeDetail/ChallengeInfoBar';
+import ChallengeTags from '@/app/components/challengeDetail/ChallengeTags';
+import ChallengeRules from '@/app/components/challengeDetail/ChallengeRules';
+import ParticipationBox from '@/app/components/challengeDetail/ParticipationBox';
+import ParticipationsGrid from '@/app/components/challengeDetail/ParticipationsGrid';
+import ParticipationForm from '@/app/components/challengeDetail/ParticipationForm';
+import Link from 'next/link';
+import LoginForm from '@/app/components/challengeDetail/LoginForm';
 
 const getEndDate = (startDate: string | undefined): string => {
-  if (!startDate) return "Date de fin non disponible";
+  if (!startDate) return 'Date de fin non disponible';
   const date = new Date(startDate);
   date.setMonth(date.getMonth() + 1.5);
-  return date.toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+  return date.toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
   });
 };
 
 export default function ChallengeDetailPage() {
   const params = useParams();
   const challengeId = params.id as string;
-  const [submitError, setSubmitError] = useState("");
+  const [submitError, setSubmitError] = useState('');
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [votesCount, setVotesCount] = useState(0);
   const [hasVoted, setHasVoted] = useState(false);
@@ -40,9 +40,9 @@ export default function ChallengeDetailPage() {
     useState(false);
   const [hasUserParticipated, setHasUserParticipated] = useState(false);
 
-  const { isLoggedIn, login, user} = useAuth();
+  const { isLoggedIn, login, user } = useAuth();
   const [userObject, setUserObject] = useState<User | null>(null);
-  const [loginError, setLoginError] = useState("");
+  const [loginError, setLoginError] = useState('');
   const router = useRouter();
 
   const fetchChallenge = () => {
@@ -60,16 +60,15 @@ export default function ChallengeDetailPage() {
         }
       })
       .catch((err) => {
-        console.error("Erreur lors du chargement du challenge :", err);
+        console.error('Erreur lors du chargement du challenge :', err);
       });
   };
 
   const fetchUser = () => {
-    apiFetch(`/user/${user?.id}`)
-    .then((data) => {
+    apiFetch(`/user/${user?.id}`).then((data) => {
       setUserObject(data);
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     fetchChallenge();
@@ -80,14 +79,14 @@ export default function ChallengeDetailPage() {
     emailOrUsername: string,
     password: string
   ) => {
-    setLoginError("");
+    setLoginError('');
     try {
       await login({ email: emailOrUsername, password });
-      console.log("Logged in successfully!");
+      console.log('Logged in successfully!');
     } catch (err: any) {
-      console.error("Login failed:", err);
+      console.error('Login failed:', err);
       setLoginError(
-        err.message || "Login failed. Please check your credentials."
+        err.message || 'Login failed. Please check your credentials.'
       );
     }
   };
@@ -96,11 +95,11 @@ export default function ChallengeDetailPage() {
     videoUrl: string,
     description: string
   ): Promise<boolean> => {
-    setSubmitError("");
-    console.log("Submitting participation:", { videoUrl, description });
+    setSubmitError('');
+    console.log('Submitting participation:', { videoUrl, description });
     try {
-      await apiFetch("/participation", {
-        method: "POST",
+      await apiFetch('/participation', {
+        method: 'POST',
         body: JSON.stringify({
           challenge_id: challengeId,
           video_url: videoUrl,
@@ -109,13 +108,13 @@ export default function ChallengeDetailPage() {
           user_id: user?.id,
         }),
       });
-      console.log("Participation submitted successfully!");
+      console.log('Participation submitted successfully!');
       fetchChallenge();
       setIsParticipationSubmitted(true);
       return true;
     } catch (err: any) {
-      console.error("Erreur lors de la soumission de la participation:", err);
-      setSubmitError(err.message || "Erreur lors de la soumission");
+      console.error('Erreur lors de la soumission de la participation:', err);
+      setSubmitError(err.message || 'Erreur lors de la soumission');
       return false;
     }
   };
@@ -125,7 +124,7 @@ export default function ChallengeDetailPage() {
       <section className="relative px-4 py-4 md:px-8 md:py-6">
         <div className="flex justify-center items-center relative w-full h-[40vh] md:h-[60vh] rounded-3xl overflow-hidden bg-radial-[at_50%_50%] from-secondary via-primary to-black shadow-[inset_0_0_400px_rgba(0,0,0,1)]">
           <img
-            src={challenge?.image_url || "/details/default_image.webp"}
+            src={challenge?.image_url || '/details/default_image.webp'}
             alt="Hero background"
             className="w-auto h-[90%] object-fit mx-auto rounded-3xl shadow-[0px_0px_15px_rgba(0,0,0,0.50)] ring-2 ring-secondary shadow-secondary"
           />
@@ -133,7 +132,7 @@ export default function ChallengeDetailPage() {
             En cours
           </div>
           <div className="absolute bottom-4 right-4 bg-gray-800 bg-opacity-75 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 font-primary">
-            <Users size={12} /> {challenge?.participations?.length ?? 0} {""}
+            <Users size={12} /> {challenge?.participations?.length ?? 0} {''}
             participations
           </div>
         </div>
@@ -186,26 +185,35 @@ export default function ChallengeDetailPage() {
               <LoginForm onLogin={handleLoginSubmit} loginError={loginError} />
             )}
           </div>
-          {isLoggedIn && challenge && userObject && (userObject.id === challenge.user_id || userObject.role === "ADMIN") && (
-          <button
-            className="w-full mt-6 py-3 rounded-full text-primary font-bold text-lg tracking-wide bg-red-600 hover:bg-red-600/75 transition-colors font-primary"
-            onClick={async () => {
-              if (!window.confirm("Es-tu sûr de vouloir supprimer ce challenge ?")) return;
-              try {
-                await apiFetch(`/challenge/${challengeId}`, {
-                  method: "DELETE",
-                });
-                alert("Challenge supprimé !");
-                router.push("/challenges");
-              } catch (err) {
-                console.error("Erreur lors de la suppression :", err);
-                alert("Erreur lors de la suppression du challenge");
-              }
-            }}
-          >
-            Supprimer ce challenge
-          </button>
-        )}
+          {isLoggedIn &&
+            challenge &&
+            userObject &&
+            (userObject.id === challenge.user_id ||
+              userObject.role === 'ADMIN') && (
+              <button
+                className="w-full mt-6 py-3 rounded-full text-primary font-bold text-lg tracking-wide bg-red-600 hover:bg-red-600/75 transition-colors font-primary"
+                onClick={async () => {
+                  if (
+                    !window.confirm(
+                      'Es-tu sûr de vouloir supprimer ce challenge ?'
+                    )
+                  )
+                    return;
+                  try {
+                    await apiFetch(`/challenge/${challengeId}`, {
+                      method: 'DELETE',
+                    });
+                    alert('Challenge supprimé !');
+                    router.push('/challenges');
+                  } catch (err) {
+                    console.error('Erreur lors de la suppression :', err);
+                    alert('Erreur lors de la suppression du challenge');
+                  }
+                }}
+              >
+                Supprimer ce challenge
+              </button>
+            )}
         </div>
 
         <div className="md:col-span-1">

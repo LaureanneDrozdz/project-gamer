@@ -1,11 +1,11 @@
-"use client";
-import { apiFetch } from "@/lib/api";
+'use client';
+import { apiFetch } from '@/lib/api';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { useAuth } from "@/lib/auth-context";
-import { Menu, Heart, Users, Trophy, Star } from "lucide-react";
-import { VoteButton } from "../button/voteButton";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '@/lib/auth-context';
+import { Menu, Heart, Users, Trophy, Star } from 'lucide-react';
+import { VoteButton } from '../button/voteButton';
 
 type ParticipationCardProps = {
   link: string;
@@ -28,7 +28,7 @@ const ParticipationCard = ({
     const regex = /(?:youtube\.com\/.*v=|youtu\.be\/)([^&\n?#]+)/;
     const match = link.match(regex);
     const videoId = match ? match[1] : undefined;
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : "";
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
   };
 
   return (

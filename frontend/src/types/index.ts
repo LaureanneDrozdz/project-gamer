@@ -53,7 +53,7 @@ export type User = {
   participations?: Participation[];
   votes?: Vote[];
   role: string;
-}
+};
 
 // export type LeaderboardEntry = {
 //   imageUser: string;

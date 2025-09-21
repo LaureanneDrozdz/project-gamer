@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { apiFetch } from "@/lib/api";
-import type { User } from "@/types";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/lib/auth-context";
+import { useEffect, useState } from 'react';
+import { apiFetch } from '@/lib/api';
+import type { User } from '@/types';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/lib/auth-context';
 
 export default function AccountDashboardPage() {
   const { user, isLoading, logout } = useAuth();
@@ -13,7 +13,7 @@ export default function AccountDashboardPage() {
 
   useEffect(() => {
     if (!isLoading && user === null) {
-      router.replace("/auth/signin");
+      router.replace('/auth/signin');
       return;
     }
 
@@ -21,7 +21,7 @@ export default function AccountDashboardPage() {
       apiFetch(`/user/${user.id}`)
         .then(setUserObject)
         .catch((err) => {
-          console.error("Erreur lors du chargement du userObject :", err);
+          console.error('Erreur lors du chargement du userObject :', err);
         });
     }
   }, [isLoading, user, router]);
@@ -81,7 +81,6 @@ export default function AccountDashboardPage() {
                 key={challenge.id}
                 className="bg-background rounded-lg p-4 shadow transform transition-transform hover:scale-105 hover:shadow-lg"
               >
-
                 <h3 className="text-xl font-semibold">{challenge.title}</h3>
 
                 <p className="text-sm text-secondary">
@@ -112,7 +111,9 @@ export default function AccountDashboardPage() {
 
       {/* Mes Participations */}
       <section className="mt-8">
-        <h2 className="text-2xl font-bold text-primary mb-4">Mes Participations</h2>
+        <h2 className="text-2xl font-bold text-primary mb-4">
+          Mes Participations
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {userObject?.participations.map((part) => (
             <a href={`/details/${part.challenge_id}`}>
@@ -120,9 +121,7 @@ export default function AccountDashboardPage() {
                 key={part.id}
                 className="bg-background rounded-lg p-4 shadow transform transition-transform hover:scale-105 hover:shadow-lg"
               >
-
                 <p className="text-white">{part.description}</p>
-
 
                 <a
                   href={part.video_url}
@@ -145,7 +144,6 @@ export default function AccountDashboardPage() {
             </a>
           ))}
         </div>
-
       </section>
 
       <button

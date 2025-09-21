@@ -8,7 +8,8 @@ const nextConfig: NextConfig = {
       "www.worldhistory.org",
       "example.com",
       "placehold.co",
-      "rawg.io"
+      "rawg.io",
+      "media.rawg.io"
     ],
   },
 };

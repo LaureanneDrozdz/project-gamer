@@ -1,8 +1,8 @@
-import type { Challenge } from "@/types";
-import { Heart, Users, Star } from "lucide-react";
-import { VoteButton } from "../button/voteButton";
-import ChallengeTags from "./ChallengeTags";
-import ChallengeRules from "./ChallengeRules";
+import type { Challenge } from '@/types';
+import { Heart, Users, Star } from 'lucide-react';
+import { VoteButton } from '../button/voteButton';
+import ChallengeTags from './ChallengeTags';
+import ChallengeRules from './ChallengeRules';
 
 type ChallengeInfoBarProps = {
   challenge: Challenge | null;
@@ -21,7 +21,7 @@ const ChallengeInfoBar = ({
         <div className="flex items-center gap-1">
           <Star size={16} className="text-yellow-500" />
           <p className="text-white font-secondary">
-            {challenge?.difficulty || "Non précisée"}
+            {challenge?.difficulty || 'Non précisée'}
           </p>
         </div>
         <div className="flex items-center gap-1">

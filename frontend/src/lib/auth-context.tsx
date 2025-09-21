@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { getToken, setToken, removeToken } from "@/lib/auth";
-import { apiFetch as baseApiFetch } from "@/lib/api";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { getToken, setToken, removeToken } from '@/lib/auth';
+import { apiFetch as baseApiFetch } from '@/lib/api';
 
 interface User {
   id: string;
@@ -14,7 +14,7 @@ interface User {
   challenges: JSON;
   participations: JSON;
   votes: JSON;
-  role: JSON
+  role: JSON;
 }
 
 interface AuthContextValue {
@@ -35,7 +35,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used inside an AuthProvider");
+  if (!ctx) throw new Error('useAuth must be used inside an AuthProvider');
   return ctx;
 }
 
@@ -46,44 +46,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // 1. On mount, check for a token. If present, call /auth/me (or similar) to populate “user”.
   // 1) On mount, *only* fetch
-useEffect(() => {
-  const token = getToken();
-  if (!token) {
-    setIsLoading(false);
-    return;
-  }
-
-  apiFetch("/auth/me", { method: "GET" })
-    .then(json => {
-      setUser({
-        id: json.id,
-        name: json.name,
-        email: json.email,
-        created_at: json.created_at,
-        avatar_url: json.avatar_url,
-        challenges: json.challenges,
-        participations: json.participations,
-        votes: json.votes,
-        role: json.roles,
-      });
-    })
-    .catch(err => {
-      console.error("auth/me failed", err);
-      removeToken();
-      setUser(null);
-    })
-    .finally(() => {
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
       setIsLoading(false);
-    });
-}, []); // ← only on first mount
+      return;
+    }
 
-// 2) Once we know “loading is done & we got a user” → dashboard
-useEffect(() => {
-  if (!isLoading && user) {
-    // router.replace("/account/dashboard");
-  }
-}, [isLoading, user, router]);
+    apiFetch('/auth/me', { method: 'GET' })
+      .then((json) => {
+        setUser({
+          id: json.id,
+          name: json.name,
+          email: json.email,
+          created_at: json.created_at,
+          avatar_url: json.avatar_url,
+          challenges: json.challenges,
+          participations: json.participations,
+          votes: json.votes,
+          role: json.roles,
+        });
+      })
+      .catch((err) => {
+        console.error('auth/me failed', err);
+        removeToken();
+        setUser(null);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []); // ← only on first mount
 
+  // 2) Once we know “loading is done & we got a user” → dashboard
+  useEffect(() => {
+    if (!isLoading && user) {
+      // router.replace("/account/dashboard");
+    }
+  }, [isLoading, user, router]);
 
   // 2. Wrap “apiFetch” so that if any call returns 401, we clear token & redirect
   async function apiFetch(path: string, options: RequestInit = {}) {
@@ -92,11 +91,11 @@ useEffect(() => {
     } catch (error: any) {
       // Naively detect “Unauthorized” by checking status text or including a custom field.
       // If you modify baseApiFetch to throw an Error that contains status, use that.
-      if (error.message.includes("401")) {
+      if (error.message.includes('401')) {
         //force logout
         removeToken();
         setUser(null);
-        router.push("/auth/signin");
+        router.push('/auth/signin');
       }
       throw error;
     }
@@ -105,36 +104,35 @@ useEffect(() => {
   //lorsque login,
   // store token, setUser(, et push le navigateur to /dashboard (la homepage devrait etre /dashboard).
   async function login(data: { email: string; password: string }) {
-  // 1) hit login → get the token
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.message || "Login failed");
+    // 1) hit login → get the token
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'Login failed');
+    }
+    const { accessToken } = await res.json();
+
+    // 2) store it
+    setToken(accessToken);
+
+    // 3) *now* fetch the real user profile
+    const profile = await baseApiFetch('/auth/me', { method: 'GET' });
+    setUser({
+      id: profile.id,
+      name: profile.name,
+      email: profile.email,
+      created_at: profile.created_at,
+      avatar_url: profile.avatar_url,
+      challenges: profile.challenges,
+      participations: profile.participations,
+      votes: profile.votes,
+      role: profile.roles,
+    });
   }
-  const { accessToken } = await res.json();
-
-  // 2) store it
-  setToken(accessToken);
-
-  // 3) *now* fetch the real user profile
-  const profile = await baseApiFetch("/auth/me", { method: "GET" });
-  setUser({
-    id:         profile.id,
-    name:       profile.name,
-    email:      profile.email,
-    created_at: profile.created_at,
-    avatar_url: profile.avatar_url,
-    challenges: profile.challenges,
-    participations: profile.participations,
-    votes: profile.votes,
-    role: profile.roles,
-  });
-}
-
 
   async function signup(data: {
     userName: string;
@@ -142,35 +140,35 @@ useEffect(() => {
     password: string;
   }) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
     if (!res.ok) {
       const err = await res.json();
-      throw new Error(err.message || "Signup failed");
+      throw new Error(err.message || 'Signup failed');
     }
     const { accessToken } = await res.json();
     setToken(accessToken);
     // Fetch “/auth/me”
-    const profile = await baseApiFetch("/auth/me", { method: "GET" });
+    const profile = await baseApiFetch('/auth/me', { method: 'GET' });
     setUser({
-    id:         profile.id,
-    name:       profile.name,
-    email:      profile.email,
-    created_at: profile.created_at,
-    avatar_url: profile.avatar_url,
-    challenges: profile.challenges,
-    participations: profile.participations,
-    votes: profile.votes,
-    role: profile.roles,
-  });
+      id: profile.id,
+      name: profile.name,
+      email: profile.email,
+      created_at: profile.created_at,
+      avatar_url: profile.avatar_url,
+      challenges: profile.challenges,
+      participations: profile.participations,
+      votes: profile.votes,
+      role: profile.roles,
+    });
   }
 
   function logout() {
     removeToken();
     setUser(null);
-    router.push("/auth/signin");
+    router.push('/auth/signin');
   }
 
   const value: AuthContextValue = {

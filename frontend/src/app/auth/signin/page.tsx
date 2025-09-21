@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useState } from 'react';
+import { useAuth } from '@/lib/auth-context';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function SignInPage() {
   const { login } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
   async function handleSubmit(e: any) {
     e.preventDefault();
-    setError("");
+    setError('');
     try {
       await login({ email, password });
-      router.replace("/");
+      router.replace('/');
     } catch (err: any) {
       setError(err.message);
     }
@@ -31,7 +31,7 @@ export default function SignInPage() {
           CONNEXION
         </button>
         <button
-          onClick={() => router.push("/auth/signup")}
+          onClick={() => router.push('/auth/signup')}
           className="bg-white text-noir px-4 py-2 ml-2 font-medium"
         >
           INSCRIPTION
@@ -90,7 +90,7 @@ export default function SignInPage() {
       <div className="flex-1"></div>
 
       <p className="text-sm text-center text-gray-600 mt-4">
-        Pas encore de compte ?{" "}
+        Pas encore de compte ?{' '}
         <Link href="/auth/signup" className="text-secondary font-medium">
           Créer un compte
         </Link>

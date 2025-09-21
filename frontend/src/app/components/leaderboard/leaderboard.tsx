@@ -1,6 +1,6 @@
 'use client';
 
-import LeaderboardItem from "./leaderboardItem";
+import LeaderboardItem from './leaderboardItem';
 
 type LeaderboardItem = {
   avatar_url: string;
@@ -9,24 +9,36 @@ type LeaderboardItem = {
 };
 
 type LeaderboardProps = {
-  leaderboard: LeaderboardItem[],
-  color: string; 
+  leaderboard: LeaderboardItem[];
+  color: string;
   backgroundColor: string;
-  centered: boolean; 
+  centered: boolean;
 };
 
-const Leaderboard = ({ leaderboard, color, backgroundColor, centered }: LeaderboardProps) => {
+const Leaderboard = ({
+  leaderboard,
+  color,
+  backgroundColor,
+  centered,
+}: LeaderboardProps) => {
   return (
-    <div className={` rounded-lg overflow-hidden ${
+    <div
+      className={` rounded-lg overflow-hidden ${
         centered ? 'max-w-4xl mx-auto' : ''
-      } ${backgroundColor} mt-4`}>
+      } ${backgroundColor} mt-4`}
+    >
       <div className="overflow-x-auto">
         <table className="w-full ">
-          <thead>
-          </thead>
+          <thead></thead>
           <tbody className={`divide-y divide-gray-200 ${color}`}>
             {leaderboard.map(({ avatar_url, userName, score }, index) => (
-              <LeaderboardItem imageUser={avatar_url} username={userName} score={score} index={index} key={index}/>
+              <LeaderboardItem
+                imageUser={avatar_url}
+                username={userName}
+                score={score}
+                index={index}
+                key={index}
+              />
             ))}
           </tbody>
         </table>

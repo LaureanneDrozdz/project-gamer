@@ -1,18 +1,17 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import { useAuth } from '@/lib/auth-context'
-import { createPortal } from "react-dom";
-import { useRouter } from "next/navigation";
-import { apiFetch } from '@/lib/api'
-import Select from 'react-select'
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/lib/auth-context';
+import { createPortal } from 'react-dom';
+import { useRouter } from 'next/navigation';
+import { apiFetch } from '@/lib/api';
+import Select from 'react-select';
 import { fetchGames } from '@/lib/games';
 
-
 type Props = {
-  label?: string
-  className?: string
-}
+  label?: string;
+  className?: string;
+};
 
 type GameOption = {
   label: string;
@@ -22,28 +21,31 @@ type GameOption = {
   };
 };
 
-export default function CreateChallengeModal({ label = 'Créer un challenge', className = '' }: Props) {
-  const { user } = useAuth()
-  const [submitError, setSubmitError] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [rules, setRules] = useState("");
+export default function CreateChallengeModal({
+  label = 'Créer un challenge',
+  className = '',
+}: Props) {
+  const { user } = useAuth();
+  const [submitError, setSubmitError] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [rules, setRules] = useState('');
   const [games, setGames] = useState<GameOption[]>([]);
   const [game, setGame] = useState<GameOption | null>(null);
-  const [difficulty, setDifficulty] = useState("EASY");
-  const [isOpen, setIsOpen] = useState(false)
+  const [difficulty, setDifficulty] = useState('EASY');
+  const [isOpen, setIsOpen] = useState(false);
   const [form, setForm] = useState({
     title: '',
     description: '',
     rules: '',
     game: '',
     difficulty: 'EASY',
-  })
-  const [loading, setLoading] = useState(false)
+  });
+  const [loading, setLoading] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchGames()
-    .then((data) => {
+      .then((data) => {
         const options = data.results.map((game: any) => ({
           label: game.name,
           value: {
@@ -53,22 +55,23 @@ export default function CreateChallengeModal({ label = 'Créer un challenge', cl
         }));
         setGames(options);
       })
-    .catch((err) => console.error('Error fetching games:', err));
-  },[])
-
+      .catch((err) => console.error('Error fetching games:', err));
+  }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
-    const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitError("")
+    setSubmitError('');
     try {
       const challenge = await apiFetch('/challenge', {
         method: 'POST',
@@ -76,7 +79,7 @@ export default function CreateChallengeModal({ label = 'Créer un challenge', cl
           title: title,
           description: description,
           rules: rules,
-          game:  game?.value.name,
+          game: game?.value.name,
           image_url: game?.value.image,
           difficulty: difficulty,
           validated: false,
@@ -87,13 +90,12 @@ export default function CreateChallengeModal({ label = 'Créer un challenge', cl
       if (challenge?.id) {
         router.push(`/details/${challenge.id}`);
       } else {
-        throw new Error("Réponse inattendue du serveur");
+        throw new Error('Réponse inattendue du serveur');
       }
-
     } catch (err: any) {
-      setSubmitError(err.message || "Erreur lors de la soumission");
+      setSubmitError(err.message || 'Erreur lors de la soumission');
     }
-  }
+  };
 
   return (
     <div className="relative">
@@ -104,9 +106,11 @@ export default function CreateChallengeModal({ label = 'Créer un challenge', cl
           px-4 py-2 rounded transition transform duration-200 ease-in-out 
           hover:-translate-y-0.5 hover:shadow-lg 
           p-[50px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)]
-          ${user
-            ? 'bg-cta text-noir hover:bg-cta/90'
-            : 'bg-cta text-noir opacity-50 cursor-not-allowed'}
+          ${
+            user
+              ? 'bg-cta text-noir hover:bg-cta/90'
+              : 'bg-cta text-noir opacity-50 cursor-not-allowed'
+          }
           ${className || ''}
         `}
       >
@@ -114,7 +118,7 @@ export default function CreateChallengeModal({ label = 'Créer un challenge', cl
       </button>
 
       {isOpen &&
-        typeof window !== "undefined" &&
+        typeof window !== 'undefined' &&
         createPortal(
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 relative">
@@ -125,7 +129,9 @@ export default function CreateChallengeModal({ label = 'Créer un challenge', cl
                 ×
               </button>
 
-              <h2 className="text-xl font-semibold mb-4 text-black  ">Créer un challenge</h2>
+              <h2 className="text-xl font-semibold mb-4 text-black  ">
+                Créer un challenge
+              </h2>
 
               <div className="space-y-4">
                 <input
@@ -156,7 +162,7 @@ export default function CreateChallengeModal({ label = 'Créer un challenge', cl
                   placeholder="Recherchez un jeu"
                   isClearable
                 />
-               
+
                 <select
                   name="difficulty"
                   value={difficulty}
@@ -178,8 +184,8 @@ export default function CreateChallengeModal({ label = 'Créer un challenge', cl
               </div>
             </div>
           </div>,
-        document.getElementById("modal-root") as HTMLElement
-      )}
+          document.getElementById('modal-root') as HTMLElement
+        )}
     </div>
-  )
+  );
 }

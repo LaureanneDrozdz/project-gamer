@@ -1,16 +1,16 @@
-import { getToken } from "@/lib/auth";
+import { getToken } from '@/lib/auth';
 
 export async function apiFetch(path: string, options: RequestInit = {}) {
   const base =
-    typeof window === "undefined"
+    typeof window === 'undefined'
       ? process.env.SERVER_API_URL
       : process.env.NEXT_PUBLIC_API_URL;
-      
-  if (!base) throw new Error("API base URL is not defined");
+
+  if (!base) throw new Error('API base URL is not defined');
 
   const token = getToken();
   const headers = {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
     ...(options.headers || {}),
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };

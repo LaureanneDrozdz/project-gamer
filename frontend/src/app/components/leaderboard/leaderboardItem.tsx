@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { faMedal, faTrophy } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
+import { faMedal, faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Image from 'next/image';
 
 type LeaderboardItemProps = {
   index: number;
@@ -26,10 +26,10 @@ const LeaderboardItem = ({
               icon={faMedal}
               className={`mr-1 ${
                 index + 1 === 1
-                  ? "text-yellow-400"
+                  ? 'text-yellow-400'
                   : index + 1 === 2
-                  ? "text-gray-400"
-                  : "text-amber-700"
+                    ? 'text-gray-400'
+                    : 'text-amber-700'
               }`}
             />
           ) : (

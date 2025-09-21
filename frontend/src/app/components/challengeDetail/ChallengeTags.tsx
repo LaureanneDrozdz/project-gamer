@@ -1,13 +1,13 @@
-import type { Challenge } from "@/types";
+import type { Challenge } from '@/types';
 
 const getEndDate = (startDate: string | undefined): string => {
-  if (!startDate) return "Date de fin non disponible";
+  if (!startDate) return 'Date de fin non disponible';
   const date = new Date(startDate);
   date.setMonth(date.getMonth() + 1); // Ajoute 1 mois
-  return date.toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+  return date.toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
   });
 };
 
@@ -22,7 +22,7 @@ const ChallengeTags = ({ challenge }: ChallengeTagsProps) => {
         🔴 FIN LE {getEndDate(challenge?.created_at)}
       </p>
       <p className="bg-secondary text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 font-semibold font-primary">
-        🎮 {challenge?.game || "Jeu non spécifié"}
+        🎮 {challenge?.game || 'Jeu non spécifié'}
       </p>
     </div>
   );

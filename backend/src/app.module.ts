@@ -12,7 +12,7 @@ import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
-    PrismaModule, // now available globally
+    PrismaModule,
     UserModule, 
     ChallengeModule, 
     ParticipationModule, 

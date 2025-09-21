@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import CreateChallengeModal from "../createChallengeModal/createChallengeModal"
-import Button from "../button/button"
+import CreateChallengeModal from '../createChallengeModal/createChallengeModal';
+import Button from '../button/button';
 
 const Hero = () => {
   return (
@@ -15,11 +15,10 @@ const Hero = () => {
         </p>
 
         <div className="flex flex-col lg:flex-row font-semibold items-center justify-center gap-4 mt-11">
-        <CreateChallengeModal
-          label="Créer un défi"
-          className="rounded-2xl w-40"
-        />
-
+          <CreateChallengeModal
+            label="Créer un défi"
+            className="rounded-2xl w-40"
+          />
 
           <Button
             label="Découvrir les défis"
@@ -29,7 +28,7 @@ const Hero = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Hero
+export default Hero;

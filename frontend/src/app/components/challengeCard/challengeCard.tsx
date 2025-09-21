@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { apiFetch } from "@/lib/api";
-import Link from "next/link";
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import { apiFetch } from '@/lib/api';
+import Link from 'next/link';
 
 type ChallengeCardProps = {
   id: string;
@@ -27,7 +27,7 @@ const ChallengeCard = ({ id }: ChallengeCardProps) => {
     setLoading(true);
     apiFetch(`/challenge/${id}`)
       .then((data) => setChallenge(data))
-      
+
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -47,7 +47,7 @@ const ChallengeCard = ({ id }: ChallengeCardProps) => {
       <div className="bg-white rounded-xl shadow-md overflow-hidden w-[95%] mx-auto max-w-sm group-hover:shadow-lg transition-shadow">
         <div className="relative h-40 w-full">
           <Image
-            src={challenge.image_url || "/details/default_image.webp"}
+            src={challenge.image_url || '/details/default_image.webp'}
             alt={challenge.title}
             fill
             className="object-fit"
@@ -67,7 +67,7 @@ const ChallengeCard = ({ id }: ChallengeCardProps) => {
           </p>
           <p className="text-sm text-gray-600">
             {challenge.participations.length} participation
-            {challenge.participations.length > 1 ? "s" : ""}
+            {challenge.participations.length > 1 ? 's' : ''}
           </p>
           {/* <p className="text-sm text-gray-600">{challenge.participations.length} participants</p> */}
         </div>

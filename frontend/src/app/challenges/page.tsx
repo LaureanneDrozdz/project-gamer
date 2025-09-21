@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import ChallengeCard from "../components/challengeCard/challengeCard";
-import { Challenge } from "@/types";
-import { apiFetch } from "@/lib/api";
+import { useEffect, useState } from 'react';
+import ChallengeCard from '../components/challengeCard/challengeCard';
+import { Challenge } from '@/types';
+import { apiFetch } from '@/lib/api';
 
 export default function ChallengesView() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [visibleCount, setVisibleCount] = useState(6);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<"all" | "with" | "without">("all");
+  const [filter, setFilter] = useState<'all' | 'with' | 'without'>('all');
 
   useEffect(() => {
     setLoading(true);
-    apiFetch("/challenge")
+    apiFetch('/challenge')
       .then((data) => setChallenges(data))
       .finally(() => setLoading(false));
   }, []);
@@ -24,18 +24,22 @@ export default function ChallengesView() {
     }
     const aLast =
       a.participations.length > 0
-        ? Math.max(...a.participations.map((p) => new Date(p.created_at).getTime()))
+        ? Math.max(
+            ...a.participations.map((p) => new Date(p.created_at).getTime())
+          )
         : 0;
     const bLast =
       b.participations.length > 0
-        ? Math.max(...b.participations.map((p) => new Date(p.created_at).getTime()))
+        ? Math.max(
+            ...b.participations.map((p) => new Date(p.created_at).getTime())
+          )
         : 0;
     return bLast - aLast;
   });
 
   const filteredChallenges = sortedChallenges.filter((ch) => {
-    if (filter === "with") return ch.participations.length > 0;
-    if (filter === "without") return ch.participations.length === 0;
+    if (filter === 'with') return ch.participations.length > 0;
+    if (filter === 'without') return ch.participations.length === 0;
     return true;
   });
 
@@ -47,20 +51,20 @@ export default function ChallengesView() {
         <h2 className="text-xl font-bold">Challenges</h2>
         <div className="space-x-2">
           <button
-            onClick={() => setFilter("all")}
-            className={`px-4 py-1 rounded ${filter === "all" ? "bg-cta text-noir" : "border"}`}
+            onClick={() => setFilter('all')}
+            className={`px-4 py-1 rounded ${filter === 'all' ? 'bg-cta text-noir' : 'border'}`}
           >
             Tous
           </button>
           <button
-            onClick={() => setFilter("with")}
-            className={`px-4 py-1 rounded ${filter === "with" ? "bg-cta text-noir" : "border"}`}
+            onClick={() => setFilter('with')}
+            className={`px-4 py-1 rounded ${filter === 'with' ? 'bg-cta text-noir' : 'border'}`}
           >
             Avec participations
           </button>
           <button
-            onClick={() => setFilter("without")}
-            className={`px-4 py-1 rounded ${filter === "without" ? "bg-cta text-noir" : "border"}`}
+            onClick={() => setFilter('without')}
+            className={`px-4 py-1 rounded ${filter === 'without' ? 'bg-cta text-noir' : 'border'}`}
           >
             Sans participation
           </button>

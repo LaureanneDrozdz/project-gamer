@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { Heart } from "lucide-react";
-import { apiFetch } from "@/lib/api";
-import { useAuth } from "@/lib/auth-context";
+import { useEffect, useState } from 'react';
+import { Heart } from 'lucide-react';
+import { apiFetch } from '@/lib/api';
+import { useAuth } from '@/lib/auth-context';
 
-type TargetType = "CHALLENGE" | "PARTICIPATION";
+type TargetType = 'CHALLENGE' | 'PARTICIPATION';
 
 interface VoteButtonProps {
   targetId: string;
@@ -24,8 +24,8 @@ export const VoteButton = ({
     if (!targetId || !user?.id) return;
 
     // Vérifier si l'utilisateur a déjà voté
-    apiFetch("/vote/check", {
-      method: "POST",
+    apiFetch('/vote/check', {
+      method: 'POST',
       body: JSON.stringify({
         user_id: user.id,
         target_id: targetId,
@@ -37,24 +37,24 @@ export const VoteButton = ({
         setVoteId(res.voteId);
       })
       .catch((error) => {
-        console.error("Erreur lors de la vérification du vote :", error);
+        console.error('Erreur lors de la vérification du vote :', error);
       });
   }, [targetId, user?.id, hasVoted, voteId]);
 
   const handleVoteToggle = async () => {
     if (!user?.id) {
-      alert("Connectez-vous pour voter !");
+      alert('Connectez-vous pour voter !');
       return;
     }
 
     try {
       if (hasVoted && voteId) {
-        await apiFetch(`/vote/${voteId}`, { method: "DELETE" });
+        await apiFetch(`/vote/${voteId}`, { method: 'DELETE' });
         setHasVoted(false);
         setVoteId(undefined);
       } else {
-        const res = await apiFetch("/vote", {
-          method: "POST",
+        const res = await apiFetch('/vote', {
+          method: 'POST',
           body: JSON.stringify({
             target_id: targetId,
             target_type: targetType,
@@ -78,7 +78,7 @@ export const VoteButton = ({
       onClick={handleVoteToggle}
       className="flex items-center gap-1 text-red-500 hover:text-red-600"
     >
-      <Heart size={18} fill={hasVoted ? "currentColor" : "none"} />
+      <Heart size={18} fill={hasVoted ? 'currentColor' : 'none'} />
     </button>
   );
 };

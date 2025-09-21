@@ -1,5 +1,5 @@
-import type { Challenge } from "@/types";
-import ParticipationCard from "@/app/components/participationCard/participationCard";
+import type { Challenge } from '@/types';
+import ParticipationCard from '@/app/components/participationCard/participationCard';
 
 type ParticipationsGridProps = {
   challenge: Challenge | null;

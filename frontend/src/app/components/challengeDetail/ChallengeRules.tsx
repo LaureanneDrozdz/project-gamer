@@ -1,4 +1,4 @@
-import type { Challenge } from "@/types";
+import type { Challenge } from '@/types';
 
 type ChallengeRulesProps = {
   challenge: Challenge | null;

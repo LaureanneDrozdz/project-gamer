@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useAuth } from "@/lib/auth-context";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useState } from 'react';
+import { useAuth } from '@/lib/auth-context';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function SignUpPage() {
   const { signup } = useAuth();
-  const [userName, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [userName, setUserName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError("");
+    setError('');
     try {
       await signup({ userName, email, password });
-      router.push("/");
+      router.push('/');
     } catch (err: any) {
       setError(err.message);
     }
@@ -29,7 +29,7 @@ export default function SignUpPage() {
       {/* Toggle */}
       <div className="mb-6">
         <button
-          onClick={() => router.push("/auth/signin")}
+          onClick={() => router.push('/auth/signin')}
           className="bg-white text-noir px-4 py-2 rounded font-medium"
         >
           CONNEXION
@@ -109,7 +109,7 @@ export default function SignUpPage() {
       <div className="flex-1" />
 
       <p className="text-sm text-center text-gray-600 mt-4">
-        Vous avez déjà un compte ?{" "}
+        Vous avez déjà un compte ?{' '}
         <Link href="/auth/signin" className="text-secondary font-medium">
           Connexion
         </Link>

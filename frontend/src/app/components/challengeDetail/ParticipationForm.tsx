@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 type ParticipationFormProps = {
   onSubmit: (videoUrl: string, description: string) => Promise<boolean>;
@@ -9,15 +9,15 @@ const ParticipationForm = ({
   onSubmit,
   submitError,
 }: ParticipationFormProps) => {
-  const [videoUrl, setVideoUrl] = useState("");
-  const [description, setDescription] = useState("");
+  const [videoUrl, setVideoUrl] = useState('');
+  const [description, setDescription] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const success = await onSubmit(videoUrl, description);
     if (success) {
-      setVideoUrl("");
-      setDescription("");
+      setVideoUrl('');
+      setDescription('');
     }
   };
 

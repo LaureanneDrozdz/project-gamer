@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Button from "./components/button/button";
-import Hero from "./components/hero/Hero";
-import ChallengeCard from "./components/challengeCard/challengeCard";
+import { useEffect, useState } from 'react';
+import Button from './components/button/button';
+import Hero from './components/hero/Hero';
+import ChallengeCard from './components/challengeCard/challengeCard';
 import Leaderboard from './components/leaderboard/leaderboard';
 import ParticipationCard from './components/participationCard/participationCard';
-import { Challenge, LeaderboardType } from "@/types";
-import { apiFetch } from "@/lib/api";
+import { Challenge, LeaderboardType } from '@/types';
+import { apiFetch } from '@/lib/api';
 
 export default function Home() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardType[]>([]);
@@ -16,14 +16,14 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    apiFetch("/user/leaderboard")
+    apiFetch('/user/leaderboard')
       .then((data) => setLeaderboard(data))
       .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {     
+  useEffect(() => {
     setLoading(true);
-    apiFetch("/challenge")
+    apiFetch('/challenge')
       .then((data) => setChallenges(data))
       .finally(() => setLoading(false));
   }, []);

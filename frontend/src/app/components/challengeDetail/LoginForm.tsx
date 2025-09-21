@@ -1,5 +1,5 @@
-import Link from "next/link";
-import React, { useState } from "react";
+import Link from 'next/link';
+import React, { useState } from 'react';
 
 type LoginFormProps = {
   onLogin: (emailOrUsername: string, password: string) => Promise<void>;
@@ -7,8 +7,8 @@ type LoginFormProps = {
 };
 
 const LoginForm = ({ onLogin, loginError }: LoginFormProps) => {
-  const [emailOrUsername, setEmailOrUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [emailOrUsername, setEmailOrUsername] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
