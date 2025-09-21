@@ -12,7 +12,7 @@ export default function Header() {
   return (
     <div className="bg-primary relative z-50">
       <header className="flex justify-between items-center px-8 py-4">
-        <h1 className="text-blanc text-2xl font-bold font-logo">
+        <h1 className="text-blanc text-2xl font-logo">
           GamerChallenges
         </h1>
 

@@ -34,13 +34,6 @@ export default function CreateChallengeModal({
   const [game, setGame] = useState<GameOption | null>(null);
   const [difficulty, setDifficulty] = useState('EASY');
   const [isOpen, setIsOpen] = useState(false);
-  const [form, setForm] = useState({
-    title: '',
-    description: '',
-    rules: '',
-    game: '',
-    difficulty: 'EASY',
-  });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -57,15 +50,6 @@ export default function CreateChallengeModal({
       })
       .catch((err) => console.error('Error fetching games:', err));
   }, []);
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
 
   const router = useRouter();
 
@@ -99,22 +83,8 @@ export default function CreateChallengeModal({
 
   return (
     <div className="relative">
-      <button
-        onClick={() => setIsOpen(true)}
-        disabled={!user}
-        className={`
-          px-4 py-2 rounded transition transform duration-200 ease-in-out 
-          hover:-translate-y-0.5 hover:shadow-lg 
-          p-[50px] shadow-[0px_4px_4px_rgba(0,0,0,0.25)]
-          ${
-            user
-              ? 'bg-cta text-noir hover:bg-cta/90'
-              : 'bg-cta text-noir opacity-50 cursor-not-allowed'
-          }
-          ${className || ''}
-        `}
-      >
-        {user ? label : 'Connexion requise'}
+      <button onClick={() => setIsOpen(true)} className="cta-button">
+        Créer un challenge
       </button>
 
       {isOpen &&
@@ -126,7 +96,7 @@ export default function CreateChallengeModal({
                 className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl"
                 onClick={() => setIsOpen(false)}
               >
-                ×
+                X
               </button>
 
               <h2 className="text-xl font-semibold mb-4 text-black  ">
