@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import AuthHeader from '@/app/components/auth/authHeader';
 
 export default function SignUpPage() {
   const { signup } = useAuth();
@@ -26,29 +27,7 @@ export default function SignUpPage() {
 
   return (
     <div className="flex flex-col h-full">
-      {/* Toggle */}
-      <div className="mb-6">
-        <button
-          onClick={() => router.push('/auth/signin')}
-          className="bg-white text-noir px-4 py-2 rounded font-medium"
-        >
-          CONNEXION
-        </button>
-        <button className="bg-primary text-blanc px-4 py-2 ml-2 rounded font-medium">
-          INSCRIPTION
-        </button>
-      </div>
-
-      {/* Logo */}
-      <div className="flex items-center mb-8">
-        <div className="bg-primary rounded-full p-2 w-10 h-10 flex items-center justify-center text-blanc font-bold">
-          GC
-        </div>
-        <span className="ml-2 text-dark font-medium">GamerChallenges</span>
-      </div>
-
-      <h2 className="text-xl font-bold mb-8">Créez votre compte</h2>
-
+      <AuthHeader active="signup" title="Crée ton compte" />
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
