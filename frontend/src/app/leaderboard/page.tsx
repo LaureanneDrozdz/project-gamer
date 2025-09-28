@@ -1,33 +1,44 @@
-import { LeaderboardType } from '@/types';
+import { LeaderboardItemType } from '@/types';
 import Leaderboard from '../components/leaderboard/leaderboard';
 import { apiFetch } from '@/lib/api';
+import Image from 'next/image';
 
-const leaderboard: LeaderboardType[] = await apiFetch(
-  '/user/leaderboard?limit=10'
-);
-export default function LeaderboardPage() {
+export default async function LeaderboardPage() {
+  const leaderboard: LeaderboardItemType[] = await apiFetch(
+    '/user/leaderboard?limit=10',
+    { next: { revalidate: 60 } }
+  );
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white relative min-h-screen" role="main">
       {/* Background image */}
       <div
         className="absolute inset-0 bg-cover bg-center z-0"
-        style={{
-          backgroundImage: `url('/assets/bg-leaderboard.webp')`,
-          zIndex: 0,
-        }}
-      ></div>
+      >
+        <Image
+          src="/assets/bg-leaderboard.webp"
+          alt=""
+          aria-hidden="true"
+          fill
+          objectFit="cover"
+          priority
+          fetchPriority="high"
+          className="object-cover"
+        />
+      </div>
 
       {/* Overlay with transparent color */}
       <div
         className="absolute inset-0 z-1"
         style={{ background: 'rgba(74, 32, 64, 0.6)' }}
+        aria-hidden="true"
       ></div>
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 ">
-        <h2 className="text-3xl font-bold  text-center text-white">
+        <h1 className="text-3xl font-bold  text-center text-white">
           Top Challengers
-        </h2>
+        </h1>
+
         <Leaderboard
           leaderboard={leaderboard}
           color={'text-white'}

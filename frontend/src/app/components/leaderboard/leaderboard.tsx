@@ -1,15 +1,10 @@
 'use client';
 
+import { LeaderboardItemType } from '@/types';
 import LeaderboardItem from './leaderboardItem';
 
-type LeaderboardItem = {
-  avatar_url: string;
-  userName: string;
-  score: number;
-};
-
 type LeaderboardProps = {
-  leaderboard: LeaderboardItem[];
+  leaderboard: LeaderboardItemType[];
   color: string;
   backgroundColor: string;
   centered: boolean;
@@ -28,18 +23,33 @@ const Leaderboard = ({
       } ${backgroundColor} mt-4`}
     >
       <div className="overflow-x-auto">
-        <table className="w-full ">
-          <thead></thead>
+        <table className="w-full" aria-label="Classement des joueurs">
+          <caption className="sr-only">Classement des joueurs</caption>
+          <thead className="sr-only">
+            <tr>
+              <th scope="col">Rang</th>
+              <th scope="col">Joueur</th>
+              <th scope="col">Score</th>
+            </tr>
+          </thead>
           <tbody className={`divide-y divide-gray-200 ${color}`}>
-            {leaderboard.map(({ avatar_url, userName, score }, index) => (
-              <LeaderboardItem
-                imageUser={avatar_url}
-                username={userName}
-                score={score}
-                index={index}
-                key={index}
-              />
-            ))}
+            {leaderboard.length === 0 ? (
+              <tr>
+                <td colSpan={3} className="text-center py-6 text-gray-500">
+                  Aucun joueur dans le classement pour le moment.
+                </td>
+              </tr>
+            ) : (
+              leaderboard.map(({ avatar_url, userName, score }, index) => (
+                <LeaderboardItem
+                  imageUser={avatar_url}
+                  username={userName}
+                  score={score}
+                  index={index}
+                  key={index}
+                />
+              ))
+            )}
           </tbody>
         </table>
       </div>

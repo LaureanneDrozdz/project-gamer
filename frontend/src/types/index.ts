@@ -61,7 +61,7 @@ export type User = {
 //   score: number;
 // };
 
-export type LeaderboardType = {
+export type LeaderboardItemType = {
   userName: string;
   avatar_url: string;
   score: number;
