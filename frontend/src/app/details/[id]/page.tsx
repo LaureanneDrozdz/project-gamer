@@ -10,7 +10,7 @@ import ChallengeDetailHeader from '@/app/components/challengeDetail/ChallengeDet
 import ChallengeInfoBar from '@/app/components/challengeDetail/ChallengeInfoBar';
 import ParticipationsGrid from '@/app/components/challengeDetail/ParticipationsGrid';
 import ParticipationForm from '@/app/components/challengeDetail/ParticipationForm';
-import LoginForm from '@/app/components/challengeDetail/LoginForm';
+import LoginForm from '@/app/components/auth/Form/loginForm';
 
 export default function ChallengeDetailPage() {
   const params = useParams();

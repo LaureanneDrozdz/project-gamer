@@ -30,7 +30,9 @@ export default function AuthHeader({ active, title }: AuthHeaderProps) {
         </div>
         <span className="ml-2 text-dark font-medium">GamerChallenges</span>
       </div>
-      <h2 className="text-xl font-bold mb-8">{title}</h2>
+      <h2 className="text-xl font-bold mb-8" id="auth-header-title">
+        {title}
+      </h2>
     </>
   );
 }
