@@ -14,7 +14,10 @@ export default function AuthHeroSection() {
           className="object-cover"
         />
       </div>
-      <div className="absolute inset-0 bg-gradient-to-b from-[rgba(74,32,64,0.62)] to-transparent" aria-hidden="true"></div>
+      <div
+        className="absolute inset-0 bg-gradient-to-b from-[rgba(74,32,64,0.62)] to-transparent"
+        aria-hidden="true"
+      ></div>
       <div className="relative z-10 my-auto flex flex-col py-8 px-8">
         <h1 className="text-3xl font-bold mb-4 z-10">LEVEL UP TON GAME !</h1>
         <p className="font-medium mb-8">

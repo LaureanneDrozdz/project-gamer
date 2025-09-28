@@ -1,6 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
 import Hero from './components/hero/Hero';
-import ChallengeCard from './components/challengeCard/challengeCard';
 import Leaderboard from './components/leaderboard/leaderboard';
 import { Challenge, LeaderboardItemType } from '@/types';
 import { apiFetch } from '@/lib/api';

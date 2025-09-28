@@ -11,9 +11,7 @@ export default async function LeaderboardPage() {
   return (
     <section className="py-16 bg-white relative min-h-screen" role="main">
       {/* Background image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center z-0"
-      >
+      <div className="absolute inset-0 bg-cover bg-center z-0">
         <Image
           src="/assets/bg-leaderboard.webp"
           alt=""
