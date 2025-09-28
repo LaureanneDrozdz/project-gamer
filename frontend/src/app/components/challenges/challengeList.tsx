@@ -10,7 +10,10 @@ type ChallengesListProps = {
   showFilters?: boolean;
 };
 
-export default function ChallengesList({ challenges, showFilters }: ChallengesListProps) {
+export default function ChallengesList({
+  challenges,
+  showFilters,
+}: ChallengesListProps) {
   const [visibleCount, setVisibleCount] = useState(6);
   const [filter, setFilter] = useState<'all' | 'with' | 'without'>('all');
   // Tri des challenges
@@ -39,7 +42,12 @@ export default function ChallengesList({ challenges, showFilters }: ChallengesLi
   return (
     <>
       {showFilters && <ChallengeFilters filter={filter} onChange={setFilter} />}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6" role='list' id="challenge-list" aria-label="Liste des challenges">
+      <div
+        className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        role="list"
+        id="challenge-list"
+        aria-label="Liste des challenges"
+      >
         {visibleChallenges.map((challenge) => (
           <ChallengeCard key={challenge.id} challenge={challenge} />
         ))}
@@ -50,7 +58,8 @@ export default function ChallengesList({ challenges, showFilters }: ChallengesLi
           <button
             onClick={() => setVisibleCount((prev) => prev + 6)}
             className="px-6 py-2 rounded-full font-semibold bg-cta text-noir hover:bg-cta/10 border-2 border-solid border-cta transition hover:text-cta"
-            aria-controls="challenge-list" aria-label="Voir plus de challenges"
+            aria-controls="challenge-list"
+            aria-label="Voir plus de challenges"
           >
             Voir plus
           </button>

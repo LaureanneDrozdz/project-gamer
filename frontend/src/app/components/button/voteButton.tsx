@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Heart } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { useAuth } from '@/lib/auth-context';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 type TargetType = 'CHALLENGE' | 'PARTICIPATION';
 
 interface VoteButtonProps {
   targetId: string;
   targetType: TargetType;
-  onVoteChange?: () => void;
+  onVoteChange?: (hasVoted: boolean) => void;
 }
 
 export const VoteButton = ({
@@ -19,27 +20,34 @@ export const VoteButton = ({
   const [hasVoted, setHasVoted] = useState(false);
   const [voteId, setVoteId] = useState<string | undefined>(undefined);
   const { user } = useAuth();
-
+ const label = useMemo(() => {
+  if (targetType === 'CHALLENGE') {
+    return hasVoted ? 'Retirer le vote' : 'Voter pour ce challenge';
+  }
+  return hasVoted ? 'Retirer le vote' : 'Voter pour cette participation';
+}, [hasVoted, targetType]);
   useEffect(() => {
+  const checkVote = async () => {
     if (!targetId || !user?.id) return;
 
-    // Vérifier si l'utilisateur a déjà voté
-    apiFetch('/vote/check', {
-      method: 'POST',
-      body: JSON.stringify({
-        user_id: user.id,
-        target_id: targetId,
-        target_type: targetType,
-      }),
-    })
-      .then((res) => {
-        setHasVoted(res.hasVoted);
-        setVoteId(res.voteId);
-      })
-      .catch((error) => {
-        console.error('Erreur lors de la vérification du vote :', error);
+    try {
+      const res = await apiFetch('/vote/check', {
+        method: 'POST',
+        body: JSON.stringify({
+          user_id: user.id,
+          target_id: targetId,
+          target_type: targetType,
+        }),
       });
-  }, [targetId, user?.id, hasVoted, voteId]);
+      setHasVoted(res.hasVoted);
+      setVoteId(res.voteId);
+    } catch (error) {
+      console.error('Erreur lors de la vérification du vote :', error);
+    }
+  };
+
+  checkVote();
+}, [targetId, user?.id, targetType]);
 
   const handleVoteToggle = async () => {
     if (!user?.id) {
@@ -52,6 +60,7 @@ export const VoteButton = ({
         await apiFetch(`/vote/${voteId}`, { method: 'DELETE' });
         setHasVoted(false);
         setVoteId(undefined);
+        onVoteChange?.(false);
       } else {
         const res = await apiFetch('/vote', {
           method: 'POST',
@@ -64,10 +73,8 @@ export const VoteButton = ({
 
         setHasVoted(true);
         setVoteId(res.voteId);
+        onVoteChange?.(true);
       }
-
-      // Appeler onVoteChange après la mise à jour réussie
-      onVoteChange?.();
     } catch (error: any) {
       console.error("Erreur lors de l'opération de vote :", error.message);
     }
@@ -77,8 +84,10 @@ export const VoteButton = ({
     <button
       onClick={handleVoteToggle}
       className="flex items-center gap-1 text-red-500 hover:text-red-600"
+      aria-pressed={hasVoted}
+      aria-label={label}
     >
-      <Heart size={18} fill={hasVoted ? 'currentColor' : 'none'} />
+      <FontAwesomeIcon icon={faHeart} fill={hasVoted ? 'currentColor' : 'none'} />
     </button>
   );
 };
