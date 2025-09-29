@@ -1,11 +1,12 @@
 import { Challenge } from '@/types';
 import ChallengeStatsBar from './ChallengeStatsBar';
+import { memo } from 'react';
 
 export type ChallengeInfoSideProps = {
   challenge: Challenge;
 };
 
-export default function ChallengeInfoSide({
+const ChallengeInfoSide = memo(function ChallengeInfoSide({
   challenge,
 }: ChallengeInfoSideProps) {
   const getEndDate = (startDate: string | undefined): string => {
@@ -17,23 +18,40 @@ export default function ChallengeInfoSide({
       month: 'long',
       year: 'numeric',
     });
+    
+  
   };
   return (
-    <>  
-      {/* Tags challenge */}   
-      <section className="flex flex-wrap gap-3 mb-8 p-4" aria-label="Informations principales sur le challenge">
-        <span  aria-label={`Fin du challenge le ${getEndDate(challenge?.created_at)}`} className="bg-red-500 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 font-semibold font-primary" role="status">
-          <span aria-hidden="true">🔴</span> FIN LE {getEndDate(challenge?.created_at)}
+    <>
+      {/* Tags challenge */}
+      <section
+        className="flex flex-wrap gap-3 mb-8 p-4"
+        aria-label="Informations principales sur le challenge"
+      >
+        <span
+          aria-label={`Fin du challenge le ${getEndDate(challenge?.created_at)}`}
+          className="bg-red-500 text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 font-semibold font-primary"
+          role="status"
+        >
+          <span aria-hidden="true">🔴</span> FIN LE{' '}
+          {getEndDate(challenge?.created_at)}
         </span>
-        <span className="bg-secondary text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 font-semibold font-primary" aria-label={`Jeu du challenge : ${challenge?.game || 'Jeu non spécifié'}`}>
-          <span aria-hidden="true">🎮</span> {challenge?.game || 'Jeu non spécifié'}
+        <span
+          className="bg-secondary text-white text-xs px-3 py-1 rounded-full flex items-center gap-1 font-semibold font-primary"
+          aria-label={`Jeu du challenge : ${challenge?.game || 'Jeu non spécifié'}`}
+        >
+          <span aria-hidden="true">🎮</span>{' '}
+          {challenge?.game || 'Jeu non spécifié'}
         </span>
       </section>
       {/* Stats Bar */}
       <ChallengeStatsBar challenge={challenge} />
       {/* Description & Règles */}
       <section className="mb-8 p-4" aria-labelledby="challenge-desc-title">
-        <h2 id="challenge-desc-title" className="text-xl font-bold mb-4 font-primary">
+        <h2
+          id="challenge-desc-title"
+          className="text-xl font-bold mb-4 font-primary"
+        >
           Description & Règles
         </h2>
         <p className="text-gray-700 leading-relaxed mb-4 font-secondary">
@@ -50,4 +68,7 @@ export default function ChallengeInfoSide({
       </section>
     </>
   );
-}
+});
+
+ChallengeInfoSide.displayName = 'ChallengeInfoSide';
+export default ChallengeInfoSide;

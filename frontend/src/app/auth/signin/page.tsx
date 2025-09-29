@@ -13,8 +13,7 @@ export default function SignInPage() {
   const [error, setError] = useState('');
   const router = useRouter();
 
-  async function handleSubmit(e: any) {
-    e.preventDefault();
+  async function handleSubmit() {
     setError('');
     try {
       await login({ email, password });

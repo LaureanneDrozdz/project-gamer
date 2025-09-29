@@ -1,5 +1,5 @@
 import Image from 'next/image';
-
+import { memo } from 'react';
 import { faUsers } from '@fortawesome/free-solid-svg-icons/faUsers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Challenge } from '@/types';
@@ -8,7 +8,9 @@ type ChallengeHeaderProps = {
   challenge: Challenge;
 };
 
-export default function ChallengeHeader({ challenge }: ChallengeHeaderProps) {
+const ChallengeHeader = memo(function ChallengeHeader({
+  challenge,
+}: ChallengeHeaderProps) {
   const participations = challenge?.participations?.length ?? 0;
   const creatorName =
     typeof challenge?.creator === 'object'
@@ -78,4 +80,7 @@ export default function ChallengeHeader({ challenge }: ChallengeHeaderProps) {
       </section>
     </>
   );
-}
+});
+
+ChallengeHeader.displayName = 'ChallengeHeader';
+export default ChallengeHeader;

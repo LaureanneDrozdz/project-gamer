@@ -20,34 +20,34 @@ export const VoteButton = ({
   const [hasVoted, setHasVoted] = useState(false);
   const [voteId, setVoteId] = useState<string | undefined>(undefined);
   const { user } = useAuth();
- const label = useMemo(() => {
-  if (targetType === 'CHALLENGE') {
-    return hasVoted ? 'Retirer le vote' : 'Voter pour ce challenge';
-  }
-  return hasVoted ? 'Retirer le vote' : 'Voter pour cette participation';
-}, [hasVoted, targetType]);
-  useEffect(() => {
-  const checkVote = async () => {
-    if (!targetId || !user?.id) return;
-
-    try {
-      const res = await apiFetch('/vote/check', {
-        method: 'POST',
-        body: JSON.stringify({
-          user_id: user.id,
-          target_id: targetId,
-          target_type: targetType,
-        }),
-      });
-      setHasVoted(res.hasVoted);
-      setVoteId(res.voteId);
-    } catch (error) {
-      console.error('Erreur lors de la vérification du vote :', error);
+  const label = useMemo(() => {
+    if (targetType === 'CHALLENGE') {
+      return hasVoted ? 'Retirer le vote' : 'Voter pour ce challenge';
     }
-  };
+    return hasVoted ? 'Retirer le vote' : 'Voter pour cette participation';
+  }, [hasVoted, targetType]);
+  useEffect(() => {
+    const checkVote = async () => {
+      if (!targetId || !user?.id) return;
 
-  checkVote();
-}, [targetId, user?.id, targetType]);
+      try {
+        const res = await apiFetch('/vote/check', {
+          method: 'POST',
+          body: JSON.stringify({
+            user_id: user.id,
+            target_id: targetId,
+            target_type: targetType,
+          }),
+        });
+        setHasVoted(res.hasVoted);
+        setVoteId(res.voteId);
+      } catch (error) {
+        console.error('Erreur lors de la vérification du vote :', error);
+      }
+    };
+
+    checkVote();
+  }, [targetId, user?.id, targetType]);
 
   const handleVoteToggle = async () => {
     if (!user?.id) {
@@ -87,7 +87,10 @@ export const VoteButton = ({
       aria-pressed={hasVoted}
       aria-label={label}
     >
-      <FontAwesomeIcon icon={faHeart} fill={hasVoted ? 'currentColor' : 'none'} />
+      <FontAwesomeIcon
+        icon={faHeart}
+        fill={hasVoted ? 'currentColor' : 'none'}
+      />
     </button>
   );
 };

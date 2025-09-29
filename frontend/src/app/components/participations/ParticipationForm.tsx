@@ -11,10 +11,13 @@ const ParticipationForm = ({
 }: ParticipationFormProps) => {
   const [videoUrl, setVideoUrl] = useState('');
   const [description, setDescription] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     const success = await onSubmit(videoUrl, description);
+    setLoading(false);
     if (success) {
       setVideoUrl('');
       setDescription('');
@@ -23,7 +26,10 @@ const ParticipationForm = ({
 
   return (
     <div className="bg-white rounded-lg p-6 shadow-md">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} aria-labelledby="participation-form-title">
+        <h3 id="participation-form-title" className="sr-only">
+          Formulaire de participation
+        </h3>
         <div className="mb-4">
           <label
             htmlFor="video-url"
@@ -38,6 +44,8 @@ const ParticipationForm = ({
             onChange={(e) => setVideoUrl(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-secondary focus:border-secondary font-secondary"
             placeholder="https://www.youtube.com/watch?v=..."
+            required
+            aria-describedby={submitError ? 'participation-error' : undefined}
           />
         </div>
         <div>
@@ -54,14 +62,26 @@ const ParticipationForm = ({
             onChange={(e) => setDescription(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-secondary focus:border-secondary font-secondary"
             placeholder="Ajoutez une description à votre participation"
+            required
+            aria-describedby={submitError ? 'participation-error' : undefined}
           ></textarea>
         </div>
-        {submitError && <p className="text-red-500">{submitError}</p>}
+        {submitError && (
+          <p
+            id="participation-error"
+            className="text-red-500 mt-2"
+            role="alert"
+            aria-live="assertive"
+          >
+            {submitError}
+          </p>
+        )}
         <button
           type="submit"
           className="w-full mt-6 py-3 rounded-full text-primary font-bold text-lg tracking-wide bg-cta hover:bg-cta/75 transition-colors font-primary"
+          disabled={loading}
         >
-          PARTICIPER
+          {loading ? 'Envoi en cours...' : 'PARTICIPER'}
         </button>
       </form>
     </div>
