@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString, IsBoolean, IsOptional } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, IsBoolean, IsOptional, IsUrl, IsUUID } from 'class-validator';
+import { Trim, Escape } from 'class-sanitizer';
 
 enum Difficulty {
   EASY = 'EASY',
@@ -14,6 +15,8 @@ export class CreateChallengeDto {
   })
   @IsString()
   @IsNotEmpty()
+  @Trim()
+  @Escape()
   title: string;
 
   @ApiProperty({
@@ -22,6 +25,8 @@ export class CreateChallengeDto {
   })
   @IsString()
   @IsNotEmpty()
+  @Trim()
+  @Escape()
   description: string;
 
   @ApiProperty({
@@ -31,6 +36,8 @@ export class CreateChallengeDto {
   })
   @IsString()
   @IsNotEmpty()
+  @Trim()
+  @Escape()
   rules: string;
 
   @ApiProperty({
@@ -39,6 +46,8 @@ export class CreateChallengeDto {
   })
   @IsString()
   @IsNotEmpty()
+  @Trim()
+  @Escape()
   game: string;
 
   @ApiProperty({
@@ -59,8 +68,12 @@ export class CreateChallengeDto {
   validated: boolean = false;
 
   @ApiProperty({ description: 'ID of the creator' })
+  @IsUUID()
+  @IsNotEmpty()
   user_id: string;
 
   @ApiProperty({ description: 'Url image of the Challenge' })
+  @IsOptional()
+  @IsUrl()
   image_url?: string;
 }

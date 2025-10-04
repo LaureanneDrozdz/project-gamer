@@ -21,7 +21,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
     AuthentificationModule, 
     ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRoot({
-      throttlers:[
+      throttlers: [
         { ttl: 60, limit: 100 },
       ]
     }),

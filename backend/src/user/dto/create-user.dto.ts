@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { NormalizeEmail, Trim } from 'class-sanitizer';
 import {
   IsEmail,
   IsNotEmpty,
@@ -6,6 +7,8 @@ import {
   IsUrl,
   MinLength,
   IsEnum,
+  Length,
+  Matches,
 } from 'class-validator';
 
 enum Roles {
@@ -20,6 +23,11 @@ export class CreateUserDto {
   })
   @IsString()
   @IsNotEmpty()
+  @Trim()
+  @Length(3, 20)
+  @Matches(/^[a-zA-Z0-9_]+$/, {
+    message: "Le nom d'utilisateur ne peut contenir que des lettres, chiffres et underscores.",
+  })
   userName: string;
 
   @ApiProperty({
@@ -28,6 +36,8 @@ export class CreateUserDto {
   })
   @IsEmail()
   @IsNotEmpty()
+  @Trim()
+  @NormalizeEmail()
   email: string;
 
   @ApiProperty({
