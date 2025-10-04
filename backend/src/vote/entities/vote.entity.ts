@@ -2,13 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../user/entities/user.entity';
 import { Challenge } from '../../challenge/entities/challenge.entity';
 import { Participation } from '../../participation/entities/participation.entity';
+import { Vote } from '@prisma/client';
 
 export enum TargetType {
   CHALLENGE = 'CHALLENGE',
   PARTICIPATION = 'PARTICIPATION',
 }
 
-export class Vote {
+export class VoteEntity implements Vote {
   @ApiProperty({
     description: 'Identifiant unique du vote',
     example: '123e4567-e89b-12d3-a456-426614174000',
@@ -21,11 +22,11 @@ export class Vote {
   })
   user_id: string;
 
-  @ApiProperty({
-    description: 'Identifiant de la cible du vote (challenge ou participation)',
-    example: '123e4567-e89b-12d3-a456-426614174000',
-  })
-  target_id: string;
+  @ApiProperty({ nullable: true })
+  challenge_id: string | null;
+
+  @ApiProperty({ nullable: true })
+  participation_id: string | null;
 
   @ApiProperty({
     description: 'Type de la cible (CHALLENGE ou PARTICIPATION)',
@@ -44,7 +45,7 @@ export class Vote {
     description: "L'utilisateur qui a voté",
     type: User,
   })
-  user?: User;
+  user: User;
 
   @ApiProperty({
     description: 'Le challenge ciblé (si target_type est CHALLENGE)',
@@ -59,4 +60,8 @@ export class Vote {
     nullable: true,
   })
   participation?: Participation | null;
+
+  constructor(vote: Vote) {
+    Object.assign(this, vote);
+  }
 }

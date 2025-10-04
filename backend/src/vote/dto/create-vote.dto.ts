@@ -27,8 +27,7 @@ export class CreateVoteDto {
 
   @ApiProperty({
     description: 'User qui vote pour la participation',
-    example:
-      "a4a52400-22b7-4318-b04d-3dc5a75c63f4",
+    example: 'a4a52400-22b7-4318-b04d-3dc5a75c63f4',
   })
   @IsUUID()
   @IsNotEmpty()

@@ -7,8 +7,8 @@ import { CheckVoteDto } from './dto/check-vote.dto';
 
 describe('VoteService', () => {
   let service: VoteService;
-  let prisma: PrismaService; 
-  
+  let prisma: PrismaService;
+
   const mockPrisma = {
     vote: {
       create: jest.fn(),
@@ -16,21 +16,24 @@ describe('VoteService', () => {
       findUnique: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
-      findFirst: jest.fn()
+      findFirst: jest.fn(),
     },
   };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [VoteService, {
+      providers: [
+        VoteService,
+        {
           provide: PrismaService,
           useValue: mockPrisma,
-        }],
+        },
+      ],
     }).compile();
 
     service = module.get<VoteService>(VoteService);
     prisma = module.get<PrismaService>(PrismaService);
   });
-   afterEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 

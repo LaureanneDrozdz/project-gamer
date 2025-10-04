@@ -5,7 +5,7 @@ import { AuthentificationService } from '../authentification/authentification.se
 
 @Injectable()
 export class VoteOwnershipGuard extends OwnershipGuard {
-  constructor(voteService: VoteService,  authService: AuthentificationService) {
+  constructor(voteService: VoteService, authService: AuthentificationService) {
     super(voteService, authService);
   }
 }

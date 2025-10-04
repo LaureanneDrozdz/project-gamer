@@ -33,7 +33,6 @@ const mockAuthService = {
   decodeToken: jest.fn(),
 };
 
-
 describe('VoteController', () => {
   let controller: VoteController;
   let jwtGuard: JwtAuthGuard;
@@ -48,7 +47,6 @@ describe('VoteController', () => {
         { provide: JwtAuthGuard, useValue: mockJwtGuard },
         { provide: VoteOwnershipGuard, useValue: mockOwnershipGuard },
         { provide: AuthentificationService, useValue: mockAuthService },
-        
       ],
     }).compile();
 
@@ -102,7 +100,6 @@ describe('VoteController', () => {
       expect(mockVoteService.findOne).toHaveBeenCalledWith('1');
     });
   });
-
 
   describe('remove', () => {
     it('should remove vote if user is authorized', async () => {

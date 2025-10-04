@@ -1,15 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateVoteDto } from './dto/create-vote.dto';
 import { UpdateVoteDto } from './dto/update-vote.dto';
 import { TargetType } from '@prisma/client';
 import { CheckVoteDto } from './dto/check-vote.dto';
+import { VoteEntity } from './entities/vote.entity';
 
 @Injectable()
 export class VoteService {
   constructor(private prisma: PrismaService) {}
 
-  create(createVoteDto: CreateVoteDto) {
+  async create(createVoteDto: CreateVoteDto) {
     const { user_id, target_id, target_type, ...rest } = createVoteDto;
     if (!target_id) {
       throw new Error('target_id est obligatoire');
@@ -31,7 +32,7 @@ export class VoteService {
     } else {
       throw new Error('target_type invalide');
     }
-    return this.prisma.vote.create({
+    const vote = await this.prisma.vote.create({
       data: {
         ...rest,
         target_type,
@@ -44,31 +45,46 @@ export class VoteService {
         },
       },
     });
+    return new VoteEntity(vote);
   }
 
-  findAll() {
-    return this.prisma.vote.findMany();
+  async findAll() {
+    const votes = await this.prisma.vote.findMany();
+    return votes.map((vote) => new VoteEntity(vote));
   }
 
-  findOne(id: string) {
-    return this.prisma.vote.findUnique({
+  async findOne(id: string) {
+    const vote = await this.prisma.vote.findUnique({
       where: { id },
     });
+    if (!vote) {
+      throw new NotFoundException(`Vote with id ${id} not found`);
+    }
+    return new VoteEntity(vote);
   }
 
-  update(id: string, updateVoteDto: UpdateVoteDto) {
-    return this.prisma.vote.update({
-      where: { id },
-      data: updateVoteDto,
-    });
+  async update(id: string, updateVoteDto: UpdateVoteDto) {
+    try {
+      const vote = await this.prisma.vote.update({
+        where: { id },
+        data: updateVoteDto,
+      });
+      return new VoteEntity(vote);
+    } catch (error) {
+      throw new NotFoundException(`Vote with id ${id} not found`);
+    }
   }
 
-  remove(id: string) {
-    return this.prisma.vote.delete({
-      where: { id },
-    });
+  async remove(id: string) {
+    try {
+      const vote = await this.prisma.vote.delete({
+        where: { id },
+      });
+      return new VoteEntity(vote);
+    } catch (error: any) {
+      throw new NotFoundException(`Vote with id ${id} not found`);
+    }
   }
-
   findByTargetId(targetId: string) {
     return this.prisma.vote.findMany({
       where: {
