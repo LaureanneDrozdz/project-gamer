@@ -9,6 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthentificationModule } from './authentification/authentification.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from './prisma/prisma.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -19,6 +20,11 @@ import { PrismaModule } from './prisma/prisma.module';
     VoteModule, 
     AuthentificationModule, 
     ConfigModule.forRoot({ isGlobal: true }),
+    ThrottlerModule.forRoot({
+      throttlers:[
+        { ttl: 60, limit: 100 },
+      ]
+    }),
     JwtModule.registerAsync({
       global: true,
       imports: [ConfigModule],
