@@ -13,12 +13,10 @@ export class OwnershipGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-     const authHeader = request.headers['authorization'];
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Token manquant ou mal formaté');
+    const token = request.cookies?.token;
+    if (!token) {
+      throw new UnauthorizedException('Token manquant');
     }
-    const token = authHeader.replace('Bearer ', '').trim();
     const decodedToken = this.authService.decodeToken(token)
 
     const resourceId = request.params.id; 
@@ -31,13 +29,8 @@ export class OwnershipGuard implements CanActivate {
       throw new UnauthorizedException('Ressource introuvable');
     }
     
-    if (resource.user_id !== decodedToken.id && decodedToken.role !== 'ADMIN') {
-      throw new ForbiddenException('Accès refusé : vous n’êtes pas le propriétaire');
-    }
-    
-
-    const isOwner = resource.user_id === user.id;
-    const isAdmin = user.role === 'ADMIN';
+    const isOwner = resource.user_id === decodedToken.id;
+    const isAdmin = decodedToken.role === 'ADMIN';
 
     if (!isOwner && !isAdmin) {
       throw new ForbiddenException('Accès interdit');

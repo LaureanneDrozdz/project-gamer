@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getToken, setToken, removeToken } from '@/lib/auth';
 import { apiFetch as baseApiFetch } from '@/lib/api';
 import { Challenge, Participation, Vote } from '@/types';
 
@@ -48,13 +47,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // 1. On mount, check for a token. If present, call /auth/me (or similar) to populate “user”.
   // 1) On mount, *only* fetch
   useEffect(() => {
-    const token = getToken();
-    if (!token) {
-      setIsLoading(false);
-      return;
-    }
-
-    baseApiFetch('/auth/me', { method: 'GET' })
+   
+    baseApiFetch('/auth/me', { method: 'GET', credentials: "include"  })
       .then((json) => {
         setUser({
           id: json.id,
@@ -69,7 +63,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
       })
       .catch(() => {
-        removeToken();
         setUser(null);
       })
       .finally(() => {
@@ -93,7 +86,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // If you modify baseApiFetch to throw an Error that contains status, use that.
       if (error instanceof Error && error.message.includes('401')) {
         //force logout
-        removeToken();
         setUser(null);
         router.push('/auth/signin');
       }
@@ -108,19 +100,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: "include",
       body: JSON.stringify(data),
     });
     if (!res.ok) {
       const err = await res.json();
       throw new Error(err.message || 'Login failed');
     }
-    const { accessToken } = await res.json();
 
-    // 2) store it
-    setToken(accessToken);
 
     // 3) *now* fetch the real user profile
-    const profile = await baseApiFetch('/auth/me', { method: 'GET' });
+    const profile = await baseApiFetch('/auth/me', { method: 'GET', credentials: "include" });
     setUser({
       id: profile.id,
       userName: profile.name,
@@ -148,10 +138,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const err = await res.json();
       throw new Error(err.message || 'Signup failed');
     }
-    const { accessToken } = await res.json();
-    setToken(accessToken);
+  
+
     // Fetch “/auth/me”
-    const profile = await baseApiFetch('/auth/me', { method: 'GET' });
+    const profile = await baseApiFetch('/auth/me', { method: 'GET', credentials: "include" });
     setUser({
       id: profile.id,
       userName: profile.name,
@@ -166,9 +156,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   function logout() {
-    removeToken();
-    setUser(null);
-    router.push('/auth/signin');
+    baseApiFetch('/auth/logout', { method: 'POST', credentials: "include" })
+    .then(() => {
+      setUser(null)
+      router.push('/auth/signin');
+    })
+    .catch((error) => {
+      console.error("Logout failed:", error);
+    });
   }
 
   const value: AuthContextValue = {

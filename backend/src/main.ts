@@ -4,12 +4,12 @@ import { AppModule } from './app.module';
 import { ExcludePasswordInterceptor } from './interceptors/exclude-password.interceptor';
 import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
-
+import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.use(helmet());
-  
+  app.use(cookieParser());
   app.enableCors({
     origin: 'http://localhost:5173',
     credentials: true,

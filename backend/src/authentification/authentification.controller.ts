@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Headers, HttpCode, HttpStatus, Post, UnauthorizedException } from "@nestjs/common";
+import { Body, Controller, Get, Headers, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException } from "@nestjs/common";
 import { CreateUserDto } from "../user/dto/create-user.dto";
 import { SignInDto } from "./dto/sign-in.dto";
 import { AuthentificationService } from "./authentification.service";
-import { ApiBearerAuth, ApiBody, ApiResponse } from "@nestjs/swagger";
+import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiResponse } from "@nestjs/swagger";
+import { Response } from 'express';
+import { Request } from "express";
 
 @Controller('auth')
 export class AuthentificationController {
@@ -13,12 +15,18 @@ export class AuthentificationController {
   @ApiBody({
     type: SignInDto
   })
-  @ApiResponse({
-    description: 'Login successful, returns access token',
-    type: 'object'
+  @ApiOkResponse({
+    description: 'Login successful, sets access token cookie'
   })
-  signIn(@Body() data: SignInDto ) {
-    return this.authentificationService.signIn(data);
+  async signIn(@Body() data: SignInDto, @Res({ passthrough: true }) res: Response ) {
+    const { accessToken } = await this.authentificationService.signIn(data);
+    res.cookie('token', accessToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000, 
+  });
+    return { success: true };
   }
 
   @HttpCode(HttpStatus.OK)
@@ -26,12 +34,18 @@ export class AuthentificationController {
   @ApiBody({
     type: CreateUserDto
   })
-  @ApiResponse({
-    description: 'Registration successful, returns access token',
-    type: 'object'
+  @ApiOkResponse({
+    description: 'Registration successful, sets access token cookie',
   })
-  signUp(@Body() data: CreateUserDto ) {
-    return this.authentificationService.signUp(data);
+  async signUp(@Body() data: CreateUserDto, @Res({ passthrough: true }) res: Response) {
+    const { accessToken } = await this.authentificationService.signUp(data);
+    res.cookie('token', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    return { success: true };
   }
 
   @Get('me')
@@ -41,11 +55,11 @@ export class AuthentificationController {
     description: 'Returns the decoded payload of the JWT',
     type: 'object'
   })
-  decodeToken(@Headers('authorization') authHeader: string) {
-    if (!authHeader) {
-      throw new UnauthorizedException('Authorization header missing');
+  decodeToken(@Req() req: Request) {
+    const token = req.cookies?.token;
+    if (!token) {
+      throw new UnauthorizedException('Authentication required');
     }
-    const token = authHeader.replace('Bearer ', '').trim();
     return this.authentificationService.decodeToken(token);
   }
 

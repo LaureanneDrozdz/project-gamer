@@ -8,13 +8,11 @@ export class JwtAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
 
-    const authHeader = request.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new UnauthorizedException('Token manquant ou invalide');
+    const token = request.cookies?.token;
+    if (!token) {
+      throw new UnauthorizedException('Token manquant');
     }
-
-    const token = authHeader.split(' ')[1];
-
+    
     try {
       const payload = await this.jwtService.verifyAsync(token);
       request.user = payload;
