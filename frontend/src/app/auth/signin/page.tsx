@@ -8,18 +8,18 @@ import LoginForm from '@/app/components/auth/Form/loginForm';
 
 export default function SignInPage() {
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
 
-  async function handleSubmit() {
+  async function handleSubmit(email: string, password: string) {
     setError('');
     try {
       await login({ email, password });
       router.replace('/');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error ? err.message : 'Erreur lors de la connexion'
+      );
     }
   }
 

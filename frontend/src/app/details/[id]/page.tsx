@@ -1,16 +1,14 @@
 import { apiFetch } from '@/lib/api';
 import type { Challenge } from '@/types';
 import ParticipationsGrid from '@/app/components/participations/ParticipationsGrid';
-//import ParticipationBlock from '@/app/components/participations/ParticipationBlock';
 import ChallengeHeader from '@/app/components/challenge/ChallengeHeader';
 import ChallengeInfoSide from '@/app/components/challenge/ChallengeInfoSide';
-import type { Metadata } from 'next';
+import ParticipationBlock from '@/app/components/participations/participationBlock';
 
-type Props = {
-  params: { id: string };
-};
+type Params = Promise<{ id: string }>;
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: { params: Params }) {
+  const params = await props.params;
   const challenge: Challenge = await apiFetch(`/challenge/${params.id}`);
   return {
     title: `${challenge.title} - Gamer Challenges`,
@@ -18,8 +16,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ChallengeDetailPage({ params }: Props) {
-  const challengeId = params.id;
+export default async function ChallengeDetailPage(props: { params: Params }) {
+  const challengeId = (await props.params).id;
   const challenge: Challenge = await apiFetch(`/challenge/${challengeId}`);
 
   return (
@@ -30,7 +28,7 @@ export default async function ChallengeDetailPage({ params }: Props) {
           <ChallengeInfoSide challenge={challenge} />
         </div>
         <section className="md:col-span-1">
-          {/* <ParticipationBlock /> */}
+          <ParticipationBlock challengeId={challengeId} />
         </section>
         <section className="md:col-span-1">
           <ParticipationsGrid challenge={challenge} />

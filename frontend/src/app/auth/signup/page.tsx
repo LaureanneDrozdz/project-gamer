@@ -3,15 +3,11 @@
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import AuthHeader from '@/app/components/auth/authHeader';
 import SignUpForm from '@/app/components/auth/Form/signUpForm';
 
 export default function SignUpPage() {
   const { signup } = useAuth();
-  const [userName, setUserName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
 
@@ -24,8 +20,12 @@ export default function SignUpPage() {
     try {
       await signup({ userName, email, password });
       router.push('/');
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Erreur lors de la création du compte'
+      );
     }
   }
 

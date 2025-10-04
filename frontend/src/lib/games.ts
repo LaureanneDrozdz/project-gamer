@@ -1,4 +1,6 @@
-export async function fetchGames() {
+import { GamesResponse } from '@/types';
+
+export async function fetchGames(): Promise<GamesResponse> {
   const apiKey = process.env.NEXT_PUBLIC_RAWG_API_KEY;
   const res = await fetch(`https://api.rawg.io/api/games?key=${apiKey}`, {
     next: { revalidate: 86400 },

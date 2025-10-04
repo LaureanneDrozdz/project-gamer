@@ -37,7 +37,7 @@ export default function AccountDashboardPage() {
       </p>
     );
   }
-   
+
   if (!user) return null;
 
   return (
@@ -45,15 +45,35 @@ export default function AccountDashboardPage() {
       <ProfileHeader user={user} />
 
       {/* Stats */}
-      <section aria-label="Statistiques de l'utilisateur" className="flex flex-wrap gap-6 justify-between">
-        <StatsCard label="Challenges créés" value={userObject?.challenges?.length ?? 0} color="primary" />
-        <StatsCard label="Participations" value={userObject?.participations?.length ?? 0} color="secondary" />
-        <StatsCard label="Votes" value={userObject?.votes?.length ?? 0} color="cta" />
+      <section
+        aria-label="Statistiques de l'utilisateur"
+        className="flex flex-wrap gap-6 justify-between"
+      >
+        <StatsCard
+          label="Challenges créés"
+          value={userObject?.challenges?.length ?? 0}
+          color="primary"
+        />
+        <StatsCard
+          label="Participations"
+          value={userObject?.participations?.length ?? 0}
+          color="secondary"
+        />
+        <StatsCard
+          label="Votes"
+          value={userObject?.votes?.length ?? 0}
+          color="cta"
+        />
       </section>
 
       {/* Mes Challenges */}
       <section aria-labelledby="mes-challenges-title">
-        <h2 id="mes-challenges-title" className="text-2xl font-bold text-primary mb-4">Mes Challenges</h2>
+        <h2
+          id="mes-challenges-title"
+          className="text-2xl font-bold text-primary mb-4"
+        >
+          Mes Challenges
+        </h2>
         {userObject?.challenges?.length ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {userObject.challenges.map((c) => (
@@ -61,13 +81,20 @@ export default function AccountDashboardPage() {
             ))}
           </div>
         ) : (
-          <p className="text-noir/60" role="status">Vous n'avez pas encore créé de challenges.</p>
+          <p className="text-noir/60" role="status">
+            Vous n&apos;avez pas encore créé de challenges.
+          </p>
         )}
       </section>
 
       {/* Mes Participations */}
       <section aria-labelledby="mes-participations-title">
-        <h2 id="mes-participations-title" className="text-2xl font-bold text-primary mb-4">Mes Participations</h2>
+        <h2
+          id="mes-participations-title"
+          className="text-2xl font-bold text-primary mb-4"
+        >
+          Mes Participations
+        </h2>
         {userObject?.participations?.length ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {userObject.participations.map((p) => (
@@ -75,7 +102,9 @@ export default function AccountDashboardPage() {
             ))}
           </div>
         ) : (
-          <p className="text-noir/60" role="status">Vous n'avez pas encore participé à un challenge.</p>
+          <p className="text-noir/60" role="status">
+            Vous n&apos;avez pas encore participé à un challenge.
+          </p>
         )}
       </section>
 
@@ -83,7 +112,9 @@ export default function AccountDashboardPage() {
 
       <button
         type="button"
-        onClick={() => confirm('Voulez-vous vraiment vous déconnecter ?') && logout()}
+        onClick={() =>
+          confirm('Voulez-vous vraiment vous déconnecter ?') && logout()
+        }
         className="px-3 py-1 bg-red-500 text-white rounded self-start hover:bg-red-600 transition"
         aria-label="Se déconnecter du compte"
       >

@@ -1,3 +1,4 @@
+'use client';
 import type { Challenge } from '@/types';
 
 import { VoteButton } from '../button/voteButton';

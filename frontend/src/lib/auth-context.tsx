@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    apiFetch('/auth/me', { method: 'GET' })
+    baseApiFetch('/auth/me', { method: 'GET' })
       .then((json) => {
         setUser({
           id: json.id,
@@ -68,8 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           role: json.roles,
         });
       })
-      .catch((err) => {
-        console.error('auth/me failed', err);
+      .catch(() => {
         removeToken();
         setUser(null);
       })
@@ -89,10 +88,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   async function apiFetch(path: string, options: RequestInit = {}) {
     try {
       return await baseApiFetch(path, options);
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Naively detect “Unauthorized” by checking status text or including a custom field.
       // If you modify baseApiFetch to throw an Error that contains status, use that.
-      if (error.message.includes('401')) {
+      if (error instanceof Error && error.message.includes('401')) {
         //force logout
         removeToken();
         setUser(null);

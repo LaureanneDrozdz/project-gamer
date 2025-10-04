@@ -8,11 +8,6 @@ import { apiFetch } from '@/lib/api';
 import Select from 'react-select';
 import { fetchGames } from '@/lib/games';
 
-type Props = {
-  label?: string;
-  className?: string;
-};
-
 type GameOption = {
   label: string;
   value: {
@@ -21,10 +16,7 @@ type GameOption = {
   };
 };
 
-export default function CreateChallengeModal({
-  label = 'Créer un challenge',
-  className = '',
-}: Props) {
+export default function CreateChallengeModal() {
   const { user } = useAuth();
   const [submitError, setSubmitError] = useState('');
   const [title, setTitle] = useState('');
@@ -35,25 +27,30 @@ export default function CreateChallengeModal({
   const [difficulty, setDifficulty] = useState('EASY');
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState('');
 
   useEffect(() => {
     fetchGames()
       .then((data) => {
-        const options = data.results.map((game: any) => ({
+        const options = data.results.map((game) => ({
           label: game.name,
           value: {
             name: game.name,
             image: game.background_image,
           },
         }));
+        setFetchError('');
         setGames(options);
       })
-      .catch((err) => console.error('Error fetching games:', err));
+      .catch(() => {
+        setFetchError('Erreur lors de la récupération des jeux');
+      });
   }, []);
 
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
     setSubmitError('');
     try {
@@ -76,8 +73,12 @@ export default function CreateChallengeModal({
       } else {
         throw new Error('Réponse inattendue du serveur');
       }
-    } catch (err: any) {
-      setSubmitError(err.message || 'Erreur lors de la soumission');
+    } catch (err: unknown) {
+      setSubmitError(
+        err instanceof Error ? err.message : 'Erreur lors de la soumission'
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -129,6 +130,15 @@ export default function CreateChallengeModal({
                   onChange={(e) => setRules(e.target.value)}
                   className="w-full border border-gray-300 rounded px-3 py-2 text-black"
                 />
+                {fetchError && (
+                  <p
+                    className="text-red-500 text-sm mb-2"
+                    role="alert"
+                    aria-live="assertive"
+                  >
+                    {fetchError}
+                  </p>
+                )}
                 <Select
                   options={games}
                   onChange={setGame}
@@ -155,6 +165,15 @@ export default function CreateChallengeModal({
                 >
                   {loading ? 'Création...' : 'Créer'}
                 </button>
+                {submitError && (
+                  <p
+                    className="text-red-500 text-sm mt-2"
+                    role="alert"
+                    aria-live="assertive"
+                  >
+                    {submitError}
+                  </p>
+                )}
               </div>
             </div>
           </div>,

@@ -75,8 +75,11 @@ export const VoteButton = ({
         setVoteId(res.voteId);
         onVoteChange?.(true);
       }
-    } catch (error: any) {
-      console.error("Erreur lors de l'opération de vote :", error.message);
+    } catch (error: unknown) {
+      console.error(
+        "Erreur lors de l'opération de vote :",
+        (error as Error).message
+      );
     }
   };
 

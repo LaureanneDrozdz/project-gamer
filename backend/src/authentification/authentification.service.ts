@@ -5,6 +5,8 @@ import { SignInDto } from './dto/sign-in.dto';
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+
+
 @Injectable()
 export class AuthentificationService {
   constructor(
@@ -39,7 +41,7 @@ export class AuthentificationService {
     return true
   }
 
-  async signUp(data: CreateUserDto): Promise<any> {
+  async signUp(data: CreateUserDto): Promise<{ accessToken: string }> {
     
     this.checkEmailFormat(data.email)
     this.checkPasswordFormat(data.password)
@@ -53,7 +55,7 @@ export class AuthentificationService {
     };
   }
 
-  async signIn(data: SignInDto): Promise<any> {
+  async signIn(data: SignInDto): Promise<{ accessToken: string }> {
     const user = await this.usersService.findByEmailWithPassword(data.email);
     if (!user) {
       throw new NotFoundException();

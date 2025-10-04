@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import BurgerButton from './burgerButton';
@@ -11,7 +10,7 @@ import MobileMenu from './mobileMenu';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { isLoggedIn, user, logout } = useAuth();
+  const { isLoggedIn } = useAuth();
   const toggleMenu = () => setIsMenuOpen((open) => !open);
 
   return (

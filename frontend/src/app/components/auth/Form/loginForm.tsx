@@ -34,7 +34,7 @@ const LoginForm = ({ onLogin, loginError }: LoginFormProps) => {
         )}
         <div>
           <label htmlFor="email" className="label">
-            Email ou nom d'utilisateur
+            Email ou nom d&apos;utilisateur
           </label>
           <input
             type="text"

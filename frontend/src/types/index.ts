@@ -66,3 +66,13 @@ export type LeaderboardItemType = {
   avatar_url: string;
   score: number;
 };
+
+export type RawGame = {
+  id: number;
+  name: string;
+  background_image: string;
+};
+
+export type GamesResponse = {
+  results: RawGame[];
+};

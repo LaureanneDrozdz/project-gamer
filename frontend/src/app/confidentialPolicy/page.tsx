@@ -16,7 +16,8 @@ export default function ConfidentialityPolicy() {
 
         <h2>Données collectées</h2>
         <p>
-          Nom, prénom, adresse email, mot de passe chiffré et données techniques liées à l’usage de l’application.
+          Nom, prénom, adresse email, mot de passe chiffré et données techniques
+          liées à l’usage de l’application.
         </p>
 
         <h2>Finalités</h2>
@@ -28,9 +29,7 @@ export default function ConfidentialityPolicy() {
         </ul>
 
         <h2>Bases légales</h2>
-        <p>
-          Exécution du contrat et intérêt légitime pour la sécurité.
-        </p>
+        <p>Exécution du contrat et intérêt légitime pour la sécurité.</p>
 
         <h2>Durées de conservation</h2>
         <ul>
@@ -41,17 +40,20 @@ export default function ConfidentialityPolicy() {
 
         <h2>Vos droits</h2>
         <p>
-          Accès, rectification, suppression, opposition, limitation, portabilité. Contact : dpo@asperiotech.example ou par courrier.
+          Accès, rectification, suppression, opposition, limitation,
+          portabilité. Contact : dpo@asperiotech.example ou par courrier.
         </p>
 
         <h2>Sécurité</h2>
         <p>
-          Mesures techniques et organisationnelles pour protéger vos données (chiffrement, sauvegardes, accès restreint).
+          Mesures techniques et organisationnelles pour protéger vos données
+          (chiffrement, sauvegardes, accès restreint).
         </p>
 
         <h2>Cookies</h2>
         <p>
-          Cookies uniquement nécessaires au fonctionnement (session, sécurité, compte). Aucun cookie publicitaire ni de suivi tiers.
+          Cookies uniquement nécessaires au fonctionnement (session, sécurité,
+          compte). Aucun cookie publicitaire ni de suivi tiers.
         </p>
       </section>
     </section>

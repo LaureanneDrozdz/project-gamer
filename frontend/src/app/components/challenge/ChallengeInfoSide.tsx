@@ -18,8 +18,6 @@ const ChallengeInfoSide = memo(function ChallengeInfoSide({
       month: 'long',
       year: 'numeric',
     });
-    
-  
   };
   return (
     <>

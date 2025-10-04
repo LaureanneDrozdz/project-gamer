@@ -2,7 +2,9 @@ export default function LegalNotes() {
   return (
     <section className="container">
       <h1>Mentions légales</h1>
-      <div className="muted">AsperioTech SARL — Données factices à remplacer</div>
+      <div className="muted">
+        AsperioTech SARL — Données factices à remplacer
+      </div>
 
       <section id="mentions" className="card">
         <h2>Éditeur du site</h2>
@@ -36,17 +38,21 @@ export default function LegalNotes() {
 
         <h2>Hébergeur</h2>
         <p>
-          OVHcloud — 2 rue Kellermann, 59100 Roubaix, France — +33 (0)9 72 10 10 07
+          OVHcloud — 2 rue Kellermann, 59100 Roubaix, France — +33 (0)9 72 10 10
+          07
         </p>
 
         <h2>Propriété intellectuelle</h2>
         <p>
-          Tous les contenus présents sur le site sont la propriété d&apos;AsperioTech SARL ou de ses partenaires et sont protégés par le droit d&apos;auteur.
+          Tous les contenus présents sur le site sont la propriété
+          d&apos;AsperioTech SARL ou de ses partenaires et sont protégés par le
+          droit d&apos;auteur.
         </p>
 
         <h2>Responsabilité</h2>
         <p>
-          AsperioTech SARL s’efforce d’assurer l’exactitude des informations publiées mais ne peut garantir l’absence d’erreurs.
+          AsperioTech SARL s’efforce d’assurer l’exactitude des informations
+          publiées mais ne peut garantir l’absence d’erreurs.
         </p>
       </section>
     </section>

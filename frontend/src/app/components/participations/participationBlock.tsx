@@ -1,3 +1,4 @@
+'use client';
 import { useEffect, useState } from 'react';
 import LoginForm from '../auth/Form/loginForm';
 import ParticipationForm from './ParticipationForm';
@@ -17,8 +18,7 @@ export default function ParticipationBlock({
     useState(false);
   const [hasUserParticipated, setHasUserParticipated] = useState(false);
   const [loginError, setLoginError] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
   useEffect(() => {
     const checkParticipation = async () => {
       if (!user?.id || !challengeId) {
@@ -34,19 +34,19 @@ export default function ParticipationBlock({
           }),
         });
         setHasUserParticipated(res.hasParticipated);
-      } catch (err) {
+      } catch {
         setHasUserParticipated(false);
       }
     };
     checkParticipation();
   }, [user?.id, challengeId]);
 
-  async function handleLoginSubmit() {
+  async function handleLoginSubmit(email: string, password: string) {
     setLoginError('');
     try {
       await login({ email, password });
-    } catch (err: any) {
-      setLoginError(err.message);
+    } catch (err: unknown) {
+      setLoginError((err as Error).message);
     }
   }
 
@@ -68,8 +68,8 @@ export default function ParticipationBlock({
       });
       setIsParticipationSubmitted(true);
       return true;
-    } catch (err: any) {
-      setSubmitError(err.message || 'Erreur lors de la soumission');
+    } catch (err: unknown) {
+      setSubmitError((err as Error).message || 'Erreur lors de la soumission');
       return false;
     }
   };

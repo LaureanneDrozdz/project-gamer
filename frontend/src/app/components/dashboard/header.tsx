@@ -1,5 +1,5 @@
-import { User } from "@/types";
-import Image from "next/image";
+import { User } from '@/types';
+import Image from 'next/image';
 
 export default function ProfileHeader({ user }: { user: User }) {
   return (
@@ -29,11 +29,11 @@ export default function ProfileHeader({ user }: { user: User }) {
         </h2>
         <p className="text-secondary font-secondary">{user.email}</p>
         <p className="text-xs text-noir/60 mt-1">
-          Membre depuis :{" "}
-          {new Intl.DateTimeFormat("fr-FR", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
+          Membre depuis :{' '}
+          {new Intl.DateTimeFormat('fr-FR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
           }).format(new Date(user.created_at))}
         </p>
       </div>

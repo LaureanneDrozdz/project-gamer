@@ -38,7 +38,7 @@ export default function SignUpForm({ onSignup, signupError }: SignUpFormProps) {
 
       <div>
         <label htmlFor="name" className="label">
-          Nom d'utilisateur
+          Nom d&apos;utilisateur
         </label>
         <input
           id="name"

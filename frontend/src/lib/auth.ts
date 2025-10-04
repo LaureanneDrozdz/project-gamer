@@ -18,12 +18,3 @@ export function removeToken() {
     localStorage.removeItem(TOKEN_KEY);
   }
 }
-
-interface LoginData {
-  email: string;
-  password: string;
-}
-
-interface SignupData extends LoginData {
-  userName: string;
-}
