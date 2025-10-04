@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
+import { ChallengeEntity } from './entities/challenge.entity';
 
 
 @Injectable()
@@ -14,7 +15,7 @@ export class ChallengeService {
     const finalImageUrl =
       image_url?.trim() ||
       `https://via.assets.so/game.webp?id=${Math.floor(Math.random() * 50) + 1}`;
-    return await this.prisma.challenge.create({
+    const challenge = await this.prisma.challenge.create({
       data: {
         ...rest,
         image_url: finalImageUrl,
@@ -24,7 +25,9 @@ export class ChallengeService {
           },
         },
       },
-    });}
+    });
+     return new ChallengeEntity(challenge);
+  }
     catch(error){
       throw new BadRequestException('invalid data')
     }
@@ -37,10 +40,7 @@ export class ChallengeService {
         participations: true,
       },
     });
-   
-  return res.map(challenge => ({
-    ...challenge,
-  }));
+   return res.map(challenge => new ChallengeEntity(challenge));
   }
 
   async findOne(id: string) {
@@ -60,18 +60,17 @@ export class ChallengeService {
     if(!challenge){
       return null
     }
-    return {
-      ...challenge,
-      created_at: challenge.created_at?.toISOString(),
-    };
+    return new ChallengeEntity(challenge);
   }
 
   async update(id: string, updateChallengeDto: UpdateChallengeDto) {
     try{
-    return await this.prisma.challenge.update({
+    const challenge = await this.prisma.challenge.update({
       where: { id },
       data: updateChallengeDto,
-    });}
+    });
+    return new ChallengeEntity(challenge);
+  }
     catch(error){
        throw new BadRequestException('invalid data')
     }
