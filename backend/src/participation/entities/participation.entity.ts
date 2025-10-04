@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '../../user/entities/user.entity';
-import { Vote } from '../../vote/entities/vote.entity';
+import { UserEntity } from '../../user/entities/user.entity';
+import { VoteEntity } from '../../vote/entities/vote.entity';
+import { Participation } from '@prisma/client';
 
-export class Participation {
+export class ParticipationEntity implements Participation {
   @ApiProperty({
     description: 'Identifiant unique de la participation',
     example: '123e4567-e89b-12d3-a456-426614174000',
@@ -48,13 +49,18 @@ export class Participation {
 
   @ApiProperty({
     description: "L'utilisateur qui a créé la participation",
-    type: User,
+    type: UserEntity,
   })
-  user?: User;
+  user?: UserEntity;
 
   @ApiProperty({
     description: 'Votes reçus pour cette participation',
-    type: [Vote],
+    type: [VoteEntity],
   })
-  votes?: Vote[];
+  votes?: VoteEntity[];
+
+  constructor(participation: Participation) {
+    Object.assign(this, participation);
+  }
+
 }

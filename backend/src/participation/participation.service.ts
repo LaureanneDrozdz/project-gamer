@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateParticipationDto } from './dto/create-participation.dto';
 import { UpdateParticipationDto } from './dto/update-participation.dto';
+import { ParticipationEntity } from './entities/participation.entity';
 
 @Injectable()
 export class ParticipationService {
@@ -18,7 +19,7 @@ export class ParticipationService {
   }
 
   try {
-    return await this.prisma.participation.create({
+    const participation = await this.prisma.participation.create({
       data: {
         ...rest,
         validated: rest.validated ?? false,
@@ -34,6 +35,7 @@ export class ParticipationService {
         },
       },
     });
+    return new ParticipationEntity(participation);
   } catch (error) {
     throw new BadRequestException('Erreur lors de la création de la participation');
   }
@@ -41,10 +43,7 @@ export class ParticipationService {
 
   async findAll() {
     const participations = await this.prisma.participation.findMany();
-    return participations.map(participation => ({
-      ...participation,
-      created_at: participation.created_at?.toISOString(),
-   }));
+    return participations.map(participation => new ParticipationEntity(participation));
   }
 
   async findOne(id: string) {
@@ -57,18 +56,16 @@ export class ParticipationService {
 
   if (!participation) return null;
 
-  return {
-    ...participation,
-
-  };
+  return new ParticipationEntity(participation);
 }
 
   async update(id: string, updateParticipationDto: UpdateParticipationDto) {
   try {
-    return await this.prisma.participation.update({
+    const participation = await this.prisma.participation.update({
       where: { id },
       data: updateParticipationDto,
     });
+    return new ParticipationEntity(participation);
   } catch (error) {
     throw new BadRequestException('Erreur lors de la mise à jour de la participation');
   }
@@ -76,9 +73,10 @@ export class ParticipationService {
 
 async remove(id: string) {
   try {
-    return await this.prisma.participation.delete({
+    const participation = await this.prisma.participation.delete({
       where: { id },
     });
+    return new ParticipationEntity(participation);
   } catch (error) {
     throw new BadRequestException('Erreur lors de la suppression de la participation');
   }
