@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '../../user/entities/user.entity';
-import { Challenge } from '../../challenge/entities/challenge.entity';
-import { Participation } from '../../participation/entities/participation.entity';
+import { UserEntity } from '../../user/entities/user.entity';
+import { ChallengeEntity } from '../../challenge/entities/challenge.entity';
+import { ParticipationEntity } from '../../participation/entities/participation.entity';
 import { Vote } from '@prisma/client';
 
 export enum TargetType {
@@ -43,23 +43,23 @@ export class VoteEntity implements Vote {
 
   @ApiProperty({
     description: "L'utilisateur qui a voté",
-    type: User,
+    type: UserEntity,
   })
-  user: User;
+  user: UserEntity;
 
   @ApiProperty({
     description: 'Le challenge ciblé (si target_type est CHALLENGE)',
-    type: Challenge,
+    type: ChallengeEntity,
     nullable: true,
   })
-  challenge?: Challenge | null;
+  challenge?: ChallengeEntity | null;
 
   @ApiProperty({
     description: 'La participation ciblée (si target_type est PARTICIPATION)',
-    type: Participation,
+    type: ParticipationEntity,
     nullable: true,
   })
-  participation?: Participation | null;
+  participation?: ParticipationEntity  | null;
 
   constructor(vote: Vote) {
     Object.assign(this, vote);

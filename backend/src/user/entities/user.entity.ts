@@ -1,10 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Challenge } from '../../challenge/entities/challenge.entity';
-import { Participation } from '../../participation/entities/participation.entity';
-import { Roles } from '@prisma/client';
-import { Vote } from '../../vote/entities/vote.entity';
+import { ChallengeEntity } from '../../challenge/entities/challenge.entity';
+import { ParticipationEntity } from '../../participation/entities/participation.entity';
+import { Roles, User } from '@prisma/client';
+import { VoteEntity } from '../../vote/entities/vote.entity';
 
-export class User {
+export class UserEntity implements User {
+  constructor(user: UserEntity) {
+    Object.assign(this, user);
+  }
+
   @ApiProperty({
     description: "Identifiant unique de l'utilisateur",
     example: '123e4567-e89b-12d3-a456-426614174000',
@@ -43,21 +47,21 @@ export class User {
 
   @ApiProperty({
     description: "Challenges créés par l'utilisateur",
-    type: [Challenge],
+    type: [ChallengeEntity],
   })
-  challenges?: Challenge[];
+  challenges?: ChallengeEntity[];
 
   @ApiProperty({
     description: "Participations de l'utilisateur",
-    type: [Participation],
+    type: [ParticipationEntity],
   })
-  participations?: Participation[];
+  participations?: ParticipationEntity[];
 
   @ApiProperty({
     description: "Votes de l'utilisateur",
-    type: [Vote],
+    type: [VoteEntity],
   })
-  votes?: Vote[];
+  votes?: VoteEntity[];
 
   @ApiProperty({
     description: "Rôle(s) de l'utilisateur (par exemple, 'admin', 'user')",

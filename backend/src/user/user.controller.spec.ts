@@ -1,29 +1,27 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, Roles } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+
 
 describe('UserController', () => {
   let controller: UserController;
   let mockUserService = {
-      getLeaderboard: jest.fn(),
-      create: jest.fn(),
-      findAll: jest.fn(),
-      findOne: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-  } 
+    getLeaderboard: jest.fn(),
+    create: jest.fn(),
+    findAll: jest.fn(),
+    findOne: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn(),
+  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
-      providers: [
-        { provide: UserService, useValue: mockUserService },
-      ],
+      providers: [{ provide: UserService, useValue: mockUserService }],
     }).compile();
 
     controller = module.get<UserController>(UserController);
-
   });
 
   it('should be defined', () => {
@@ -32,7 +30,9 @@ describe('UserController', () => {
   describe('leaderboard', () => {
     it('should return top 10 users by default', async () => {
       const mockResult = [{ userName: 'topuser', score: 100 }];
-      (mockUserService.getLeaderboard as jest.Mock).mockResolvedValue(mockResult);
+      (mockUserService.getLeaderboard as jest.Mock).mockResolvedValue(
+        mockResult,
+      );
 
       const result = await controller.leaderboard();
       expect(result).toEqual(mockResult);
@@ -52,6 +52,7 @@ describe('UserController', () => {
         email: 'john@example.com',
         password: 'password123',
         avatar_url: 'https://placehold.co/10',
+        role: Roles.USER,
       };
 
       const mockResult = { id: '1', ...createUserDto, password_hash: 'hashed' };
@@ -97,7 +98,9 @@ describe('UserController', () => {
 
   describe('remove', () => {
     it('should delete the user', async () => {
-      (mockUserService.delete as jest.Mock).mockResolvedValue({ deleted: true });
+      (mockUserService.delete as jest.Mock).mockResolvedValue({
+        deleted: true,
+      });
       const result = await controller.remove('1');
       expect(result).toEqual({ deleted: true });
       expect(mockUserService.delete).toHaveBeenCalledWith('1');

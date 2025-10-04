@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { BadRequestException, NotFoundException} from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, Roles } from './dto/create-user.dto';
 
 describe('UserService', () => {
   let service: UserService;
@@ -44,16 +44,17 @@ describe('UserService', () => {
         email: 'john.doe@example.com',
         password: 'password123',
         avatar_url: 'https://placehold.co/10',
+        role: Roles.USER,
       };
 
-      const hashed = await bcrypt.hash(createUserDto.password,10);
-      
+      const hashed = await bcrypt.hash(createUserDto.password, 10);
+
       const createdUser = {
         id: '1',
         userName: createUserDto.userName,
         email: createUserDto.email,
         password_hash: hashed,
-        avatar_url: 'https://placehold.co/10'
+        avatar_url: 'https://placehold.co/10',
       };
 
       mockPrismaService.user.create.mockResolvedValue(createdUser);
@@ -68,30 +69,35 @@ describe('UserService', () => {
       });
     });
     it('should throw BadRequestException on unique constraint violation', async () => {
-    const createUserDto: CreateUserDto = {
-      userName: 'johndoe',
-      email: 'john.doe@example.com',
-      password: 'password123',
-      avatar_url: 'https://placehold.co/10',
-    };
+      const createUserDto: CreateUserDto = {
+        userName: 'johndoe',
+        email: 'john.doe@example.com',
+        password: 'password123',
+        avatar_url: 'https://placehold.co/10',
+        role: Roles.USER,
+      };
 
-    mockPrismaService.user.create.mockRejectedValue(new Error());
+      mockPrismaService.user.create.mockRejectedValue(new Error());
 
-    await expect(service.create(createUserDto)).rejects.toThrow(BadRequestException);
-  });
+      await expect(service.create(createUserDto)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
 
-  it('should throw BadRequestException on missing required field', async () => {
-    const createUserDto = {
-      userName: 'johndoe',
-      email: '', 
-      password: 'password123',
-      avatar_url: 'https://placehold.co/10',
-    };
+    it('should throw BadRequestException on missing required field', async () => {
+      const createUserDto = {
+        userName: 'johndoe',
+        email: '',
+        password: 'password123',
+        avatar_url: 'https://placehold.co/10',
+      };
 
-    mockPrismaService.user.create.mockRejectedValue(new Error());
+      mockPrismaService.user.create.mockRejectedValue(new Error());
 
-    await expect(service.create(createUserDto as any)).rejects.toThrow(BadRequestException);
-  });
+      await expect(service.create(createUserDto as any)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
   });
 
   describe('findAll', () => {
@@ -294,7 +300,7 @@ describe('UserService', () => {
     });
   });
 
-   describe('getLeaderboard', () => {
+  describe('getLeaderboard', () => {
     it('should return leaderboard data', async () => {
       mockPrismaService.user.findMany
         .mockResolvedValueOnce([
@@ -308,13 +314,11 @@ describe('UserService', () => {
           },
           {
             id: '2',
-            participations: [
-              { votes: [{ id: 'v3' }] },
-            ],
+            participations: [{ votes: [{ id: 'v3' }] }],
             challenges: [{ id: 'c3' }],
           },
         ])
-       
+
         .mockResolvedValueOnce([
           {
             id: '1',
