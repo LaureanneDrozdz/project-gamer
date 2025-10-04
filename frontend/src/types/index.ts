@@ -48,7 +48,7 @@ export type User = {
   userName: string;
   email: string;
   avatar_url: string;
-  created_at: Date;
+  created_at: string;
   challenges?: Challenge[];
   participations?: Participation[];
   votes?: Vote[];

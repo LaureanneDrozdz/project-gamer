@@ -4,17 +4,18 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getToken, setToken, removeToken } from '@/lib/auth';
 import { apiFetch as baseApiFetch } from '@/lib/api';
+import { Challenge, Participation, Vote } from '@/types';
 
 interface User {
   id: string;
-  name: string;
+  userName: string;
   email: string;
   created_at: string;
   avatar_url: string;
-  challenges: JSON;
-  participations: JSON;
-  votes: JSON;
-  role: JSON;
+  challenges: Challenge[];
+  participations: Participation[];
+  votes: Vote[];
+  role: string;
 }
 
 interface AuthContextValue {
@@ -57,7 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .then((json) => {
         setUser({
           id: json.id,
-          name: json.name,
+          userName: json.name,
           email: json.email,
           created_at: json.created_at,
           avatar_url: json.avatar_url,
@@ -123,7 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const profile = await baseApiFetch('/auth/me', { method: 'GET' });
     setUser({
       id: profile.id,
-      name: profile.name,
+      userName: profile.name,
       email: profile.email,
       created_at: profile.created_at,
       avatar_url: profile.avatar_url,
@@ -154,7 +155,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const profile = await baseApiFetch('/auth/me', { method: 'GET' });
     setUser({
       id: profile.id,
-      name: profile.name,
+      userName: profile.name,
       email: profile.email,
       created_at: profile.created_at,
       avatar_url: profile.avatar_url,
