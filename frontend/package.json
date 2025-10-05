@@ -9,7 +9,9 @@
     "lint": "next lint",
     "eslint:lint": "eslint",
     "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx}'",
-    "format:check": "prettier --check 'src/**/*.{ts,tsx,js,jsx}'"
+    "format:check": "prettier --check 'src/**/*.{ts,tsx,js,jsx}'",
+    "pa11y-ci:run": "pa11y-ci --config ./pa11yci.json"
+    
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -29,6 +31,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
+    "pa11y-ci": "^4.0.1",
     "tailwindcss": "^4.1.7",
     "typescript": "^5"
   }
