@@ -1,7 +1,7 @@
 module.exports = {
   ci: {
     collect: {
-      url: [process.env.NEXT_PUBLIC_URL ||'http://localhost:3000'],
+      url: [process.env.NEXT_PUBLIC_URL || 'http://localhost:5173'],
       numberOfRuns: 3,
     },
     assert: {
