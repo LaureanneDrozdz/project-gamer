@@ -14,7 +14,13 @@ import { CreateParticipationDto } from './dto/create-participation.dto';
 import { UpdateParticipationDto } from './dto/update-participation.dto';
 import { JwtAuthGuard } from '../auth-guard/jwt-auth.guard';
 import { ParticipationOwnershipGuard } from './participation-ownership.guard';
-import { ApiTags, ApiBearerAuth, ApiBody, ApiOkResponse, ApiCreatedResponse, ApiParam, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBody,
+  ApiOkResponse,
+  ApiCreatedResponse,
+  ApiParam,
+} from '@nestjs/swagger';
 import { ParticipationEntity } from './entities/participation.entity';
 
 @ApiTags('Participation')
@@ -24,7 +30,10 @@ export class ParticipationController {
 
   @Post()
   @ApiBody({ type: CreateParticipationDto })
-  @ApiCreatedResponse({ description: 'Participation créée', type: ParticipationEntity })
+  @ApiCreatedResponse({
+    description: 'Participation créée',
+    type: ParticipationEntity,
+  })
   @UseGuards(JwtAuthGuard)
   create(@Body() createParticipationDto: CreateParticipationDto, @Req() req) {
     return this.participationService.create({
@@ -34,14 +43,20 @@ export class ParticipationController {
   }
 
   @Get()
-  @ApiOkResponse({ description: 'Liste des participations', type: [ParticipationEntity] })
+  @ApiOkResponse({
+    description: 'Liste des participations',
+    type: [ParticipationEntity],
+  })
   findAll() {
     return this.participationService.findAll();
   }
 
   @Get(':id')
   @ApiParam({ name: 'id', description: 'ID de la participation' })
-  @ApiOkResponse({ description: 'Participation trouvée', type: ParticipationEntity })
+  @ApiOkResponse({
+    description: 'Participation trouvée',
+    type: ParticipationEntity,
+  })
   findOne(@Param('id') id: string) {
     return this.participationService.findOne(id);
   }
@@ -49,7 +64,10 @@ export class ParticipationController {
   @Patch(':id')
   @ApiParam({ name: 'id', description: 'ID de la participation' })
   @ApiBody({ type: UpdateParticipationDto })
-  @ApiOkResponse({ description: 'Participation mise à jour', type: ParticipationEntity })
+  @ApiOkResponse({
+    description: 'Participation mise à jour',
+    type: ParticipationEntity,
+  })
   @UseGuards(JwtAuthGuard, ParticipationOwnershipGuard)
   update(
     @Param('id') id: string,
@@ -60,7 +78,10 @@ export class ParticipationController {
 
   @Delete(':id')
   @ApiParam({ name: 'id', description: 'ID de la participation' })
-  @ApiOkResponse({ description: 'Participation supprimée', type: ParticipationEntity })
+  @ApiOkResponse({
+    description: 'Participation supprimée',
+    type: ParticipationEntity,
+  })
   @UseGuards(JwtAuthGuard, ParticipationOwnershipGuard)
   remove(@Param('id') id: string) {
     return this.participationService.remove(id);

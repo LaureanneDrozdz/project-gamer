@@ -14,16 +14,14 @@ import { ThrottlerModule } from '@nestjs/throttler';
 @Module({
   imports: [
     PrismaModule,
-    UserModule, 
-    ChallengeModule, 
-    ParticipationModule, 
-    VoteModule, 
-    AuthentificationModule, 
+    UserModule,
+    ChallengeModule,
+    ParticipationModule,
+    VoteModule,
+    AuthentificationModule,
     ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRoot({
-      throttlers: [
-        { ttl: 60, limit: 100 },
-      ]
+      throttlers: [{ ttl: 60, limit: 100 }],
     }),
     JwtModule.registerAsync({
       global: true,

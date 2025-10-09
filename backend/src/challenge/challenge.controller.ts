@@ -1,10 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { ChallengeService } from './challenge.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
 import { JwtAuthGuard } from '../auth-guard/jwt-auth.guard';
 import { ChallengeOwnershipGuard } from './challenge-ownership.guard';
-import { ApiTags, ApiBearerAuth, ApiBody, ApiOkResponse, ApiCreatedResponse, ApiParam, ApiOperation } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBody,
+  ApiOkResponse,
+  ApiCreatedResponse,
+  ApiParam,
+} from '@nestjs/swagger';
 import { ChallengeEntity } from './entities/challenge.entity';
 
 @ApiTags('Challenge')
@@ -21,7 +36,10 @@ export class ChallengeController {
   }
 
   @Get()
-  @ApiOkResponse({ description: 'Liste des challenges', type: [ChallengeEntity] })
+  @ApiOkResponse({
+    description: 'Liste des challenges',
+    type: [ChallengeEntity],
+  })
   findAll() {
     return this.challengeService.findAll();
   }
@@ -38,7 +56,10 @@ export class ChallengeController {
   @ApiBody({ type: UpdateChallengeDto })
   @ApiOkResponse({ description: 'Challenge mis à jour', type: ChallengeEntity })
   @UseGuards(JwtAuthGuard, ChallengeOwnershipGuard)
-  update(@Param('id') id: string, @Body() updateChallengeDto: UpdateChallengeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateChallengeDto: UpdateChallengeDto,
+  ) {
     return this.challengeService.update(id, updateChallengeDto);
   }
 

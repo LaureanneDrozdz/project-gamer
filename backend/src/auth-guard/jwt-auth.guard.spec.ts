@@ -16,5 +16,4 @@ describe('JwtAuthGuard', () => {
   it('should be defined', () => {
     expect(guard).toBeDefined();
   });
-
 });

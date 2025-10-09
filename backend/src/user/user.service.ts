@@ -26,8 +26,8 @@ export class UserService {
         },
       });
 
-  const { password_hash, ...result } = user;
-  return new UserEntity(result);
+      const { password_hash, ...result } = user;
+      return new UserEntity(result);
     } catch (error) {
       throw new BadRequestException(`Invalid Data: ${error.message}`);
     }
@@ -55,8 +55,8 @@ export class UserService {
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-  const { password_hash, ...result } = user;
-  return new UserEntity(result);
+    const { password_hash, ...result } = user;
+    return new UserEntity(result);
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {

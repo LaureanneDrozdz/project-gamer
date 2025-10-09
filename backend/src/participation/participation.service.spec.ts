@@ -160,11 +160,12 @@ describe('ParticipationService', () => {
         include: { user: true },
       });
 
-      expect({...result!, created_at: result!.created_at.toISOString()}).toMatchObject({
-       
-          ...participation,
-          created_at: participation.created_at.toISOString(),
-      
+      expect({
+        ...result!,
+        created_at: result!.created_at.toISOString(),
+      }).toMatchObject({
+        ...participation,
+        created_at: participation.created_at.toISOString(),
       });
     });
 

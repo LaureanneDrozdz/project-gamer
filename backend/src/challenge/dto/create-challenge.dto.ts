@@ -1,5 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString, IsBoolean, IsOptional, IsUrl, IsUUID } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  IsBoolean,
+  IsOptional,
+  IsUrl,
+  IsUUID,
+} from 'class-validator';
 import { Trim, Escape } from 'class-sanitizer';
 
 enum Difficulty {

@@ -5,7 +5,10 @@ import { AuthentificationService } from '../authentification/authentification.se
 
 @Injectable()
 export class ChallengeOwnershipGuard extends OwnershipGuard {
-  constructor(challengeService: ChallengeService, authService: AuthentificationService) {
-    super(challengeService,authService );
+  constructor(
+    challengeService: ChallengeService,
+    authService: AuthentificationService,
+  ) {
+    super(challengeService, authService);
   }
 }

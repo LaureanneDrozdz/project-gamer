@@ -62,5 +62,4 @@ export class ParticipationEntity implements Participation {
   constructor(participation: Participation) {
     Object.assign(this, participation);
   }
-
 }

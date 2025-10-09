@@ -8,7 +8,6 @@ import { UpdateParticipationDto } from './dto/update-participation.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthentificationService } from '../authentification/authentification.service';
 
-
 const mockJwtService = {
   verifyAsync: jest.fn(),
 };
@@ -33,7 +32,6 @@ const mockAuthService = {
   decodeToken: jest.fn(),
 };
 
-
 describe('ParticipationController', () => {
   let controller: ParticipationController;
   let jwtGuard: JwtAuthGuard;
@@ -53,7 +51,9 @@ describe('ParticipationController', () => {
 
     controller = module.get<ParticipationController>(ParticipationController);
     jwtGuard = module.get<JwtAuthGuard>(JwtAuthGuard);
-    ownershipGuard = module.get<ParticipationOwnershipGuard>(ParticipationOwnershipGuard);
+    ownershipGuard = module.get<ParticipationOwnershipGuard>(
+      ParticipationOwnershipGuard,
+    );
   });
 
   afterEach(() => {
@@ -70,8 +70,9 @@ describe('ParticipationController', () => {
         user_id: 'user-1',
         challenge_id: 'challenge-1',
         validated: true,
-        video_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley",
-        description: 'Description de la participation'
+        video_url:
+          'https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley',
+        description: 'Description de la participation',
       };
       const req = { user: { id: 'user-1' } };
       const createdParticipation = { id: '1', ...createDto, user_id: 'user-1' };
@@ -122,11 +123,12 @@ describe('ParticipationController', () => {
   describe('findOne', () => {
     it('should return the participation', async () => {
       const participation = {
-        id: 'participation-1', 
+        id: 'participation-1',
         user_id: 'user-1',
         challenge_id: 'challenge-1',
         validated: true,
-        video_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley',
+        video_url:
+          'https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley',
         description: 'Description de la participation',
         created_at: new Date('2024-01-01T00:00:00Z'),
       };
@@ -134,13 +136,15 @@ describe('ParticipationController', () => {
 
       const result = await controller.findOne('participation-1');
       expect(result).toEqual(participation);
-      expect(mockParticipationService.findOne).toHaveBeenCalledWith('participation-1');
+      expect(mockParticipationService.findOne).toHaveBeenCalledWith(
+        'participation-1',
+      );
     });
   });
 
   describe('update', () => {
     it('should update participation if user is authorized', async () => {
-     const updateDto: UpdateParticipationDto = { validated: true };
+      const updateDto: UpdateParticipationDto = { validated: true };
       const updatedParticipation = { id: 'participation-1', ...updateDto };
 
       mockParticipationService.update.mockResolvedValue(updatedParticipation);
@@ -149,7 +153,10 @@ describe('ParticipationController', () => {
 
       const result = await controller.update('participation-1', updateDto);
       expect(result).toEqual(updatedParticipation);
-      expect(mockParticipationService.update).toHaveBeenCalledWith('participation-1', updateDto);
+      expect(mockParticipationService.update).toHaveBeenCalledWith(
+        'participation-1',
+        updateDto,
+      );
     });
   });
 
@@ -162,7 +169,9 @@ describe('ParticipationController', () => {
 
       const result = await controller.remove('participation-1');
       expect(result).toEqual({ deleted: true });
-      expect(mockParticipationService.remove).toHaveBeenCalledWith('participation-1');
+      expect(mockParticipationService.remove).toHaveBeenCalledWith(
+        'participation-1',
+      );
     });
   });
 });

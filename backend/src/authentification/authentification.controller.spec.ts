@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthentificationController } from './authentification.controller';
 import { AuthentificationService } from './authentification.service';
 import { UnauthorizedException } from '@nestjs/common';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+import { CreateUserDto, Roles } from '../user/dto/create-user.dto';
 import { SignInDto } from './dto/sign-in.dto';
 
 describe('AuthentificationController', () => {
@@ -19,11 +19,16 @@ describe('AuthentificationController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthentificationController],
       providers: [
-        { provide: AuthentificationService, useValue: mockAuthentificationService },
+        {
+          provide: AuthentificationService,
+          useValue: mockAuthentificationService,
+        },
       ],
     }).compile();
 
-    controller = module.get<AuthentificationController>(AuthentificationController);
+    controller = module.get<AuthentificationController>(
+      AuthentificationController,
+    );
     service = module.get<AuthentificationService>(AuthentificationService);
   });
 
@@ -33,12 +38,17 @@ describe('AuthentificationController', () => {
 
   describe('signIn', () => {
     it('should call service.signIn and return access token', async () => {
-      const signInDto: SignInDto = { email: 'john.doe@mail.com', password: 'password123' };
+      const signInDto: SignInDto = {
+        email: 'john.doe@mail.com',
+        password: 'password123',
+      };
       const result = { accessToken: 'token' };
       mockAuthentificationService.signIn.mockResolvedValue(result);
 
       expect(await controller.signIn(signInDto)).toEqual(result);
-      expect(mockAuthentificationService.signIn).toHaveBeenCalledWith(signInDto);
+      expect(mockAuthentificationService.signIn).toHaveBeenCalledWith(
+        signInDto,
+      );
     });
   });
 
@@ -49,12 +59,15 @@ describe('AuthentificationController', () => {
         email: 'john.doe@mail.com',
         password: 'password123',
         avatar_url: 'https://randomuser.me/api/portraits/men/75.jpg',
+        role: Roles.USER,
       };
       const result = { accessToken: 'token' };
       mockAuthentificationService.signUp.mockResolvedValue(result);
 
       expect(await controller.signUp(createUserDto)).toEqual(result);
-      expect(mockAuthentificationService.signUp).toHaveBeenCalledWith(createUserDto);
+      expect(mockAuthentificationService.signUp).toHaveBeenCalledWith(
+        createUserDto,
+      );
     });
   });
 
@@ -70,7 +83,9 @@ describe('AuthentificationController', () => {
       mockAuthentificationService.decodeToken.mockReturnValue(decodedPayload);
 
       expect(controller.decodeToken(fakeToken)).toEqual(decodedPayload);
-      expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith('faketoken123');
+      expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith(
+        'faketoken123',
+      );
     });
 
     it('should trim token if spaces', () => {
@@ -79,7 +94,9 @@ describe('AuthentificationController', () => {
       mockAuthentificationService.decodeToken.mockReturnValue(decodedPayload);
 
       expect(controller.decodeToken(fakeToken)).toEqual(decodedPayload);
-      expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith('faketoken123');
+      expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith(
+        'faketoken123',
+      );
     });
   });
 });

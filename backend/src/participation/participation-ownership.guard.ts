@@ -5,7 +5,10 @@ import { AuthentificationService } from '../authentification/authentification.se
 
 @Injectable()
 export class ParticipationOwnershipGuard extends OwnershipGuard {
-  constructor(participationService: ParticipationService, authService: AuthentificationService) {
+  constructor(
+    participationService: ParticipationService,
+    authService: AuthentificationService,
+  ) {
     super(participationService, authService);
   }
 }

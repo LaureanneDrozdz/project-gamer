@@ -81,8 +81,6 @@ describe('ChallengeService', () => {
       expect(result).toEqual(createdChallenge);
     });
 
-    
-
     it('should throw BadRequestException on prisma error', async () => {
       const dto: CreateChallengeDto = {
         title: '',
@@ -168,8 +166,8 @@ describe('ChallengeService', () => {
       const result = await service.findOne('challenge-1');
 
       expect(result).toMatchObject({
-          ...challenge,
-          created_at: new Date(challenge.created_at).toISOString(),
+        ...challenge,
+        created_at: new Date(challenge.created_at).toISOString(),
       });
     });
 
@@ -195,7 +193,6 @@ describe('ChallengeService', () => {
 
       expect(result).toEqual(updatedChallenge);
     });
-
   });
 
   describe('remove', () => {

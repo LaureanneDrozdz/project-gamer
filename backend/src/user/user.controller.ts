@@ -1,4 +1,3 @@
-
 import {
   Controller,
   Get,
@@ -12,7 +11,14 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags, ApiOkResponse, ApiBody, ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOkResponse,
+  ApiBody,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 
 @ApiTags('Users')
@@ -20,15 +26,20 @@ import { UserEntity } from './entities/user.entity';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-
   @Get('leaderboard')
-  @ApiQuery({ name: 'limit', required: false, description: 'Nombre maximum de résultats à retourner' })
-  @ApiResponse({ description: 'Classement des meilleurs utilisateurs', type: [UserEntity] })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    description: 'Nombre maximum de résultats à retourner',
+  })
+  @ApiResponse({
+    description: 'Classement des meilleurs utilisateurs',
+    type: [UserEntity],
+  })
   leaderboard(@Query('limit') limit?: string) {
     const top = limit ? parseInt(limit) : 10;
     return this.userService.getLeaderboard(top);
   }
-
 
   @Post()
   @ApiBody({ type: CreateUserDto })
@@ -41,21 +52,21 @@ export class UserController {
     return this.userService.create(userCreateInput);
   }
 
-
   @Get()
-  @ApiResponse({ description: 'Liste de tous les utilisateurs', type: [UserEntity] })
+  @ApiResponse({
+    description: 'Liste de tous les utilisateurs',
+    type: [UserEntity],
+  })
   findAll() {
     return this.userService.findAll();
   }
 
-
   @Get(':id')
   @ApiParam({ name: 'id', description: "ID de l'utilisateur" })
-  @ApiOkResponse({ description: 'Détail de l\'utilisateur', type: UserEntity })
+  @ApiOkResponse({ description: "Détail de l'utilisateur", type: UserEntity })
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
-
 
   @Patch(':id')
   @ApiParam({ name: 'id', description: "ID de l'utilisateur à mettre à jour" })
@@ -64,7 +75,6 @@ export class UserController {
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
-
 
   @Delete(':id')
   @ApiParam({ name: 'id', description: "ID de l'utilisateur à supprimer" })

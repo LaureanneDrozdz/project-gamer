@@ -15,11 +15,13 @@ describe('OwnershipGuard', () => {
       decodeToken: jest.fn(),
     };
 
-    guard = new OwnershipGuard(resourceService, authService as AuthentificationService);
+    guard = new OwnershipGuard(
+      resourceService,
+      authService as AuthentificationService,
+    );
   });
 
   it('should be defined', () => {
     expect(guard).toBeDefined();
   });
-
 });

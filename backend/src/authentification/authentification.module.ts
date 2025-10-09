@@ -3,14 +3,10 @@ import { AuthentificationService } from './authentification.service';
 import { UserModule } from '../user/user.module';
 import { AuthentificationController } from './authentification.controller';
 
-
-
 @Module({
-  imports: [UserModule,
-  ],
+  imports: [UserModule],
   providers: [AuthentificationService],
   controllers: [AuthentificationController],
-  exports: [AuthentificationService], 
-
+  exports: [AuthentificationService],
 })
 export class AuthentificationModule {}

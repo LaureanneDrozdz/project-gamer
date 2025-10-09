@@ -3,7 +3,7 @@ import { AuthentificationService } from './authentification.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+import { CreateUserDto, Roles } from '../user/dto/create-user.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import * as bcrypt from 'bcrypt';
 describe('AuthentificationService', () => {
@@ -33,21 +33,21 @@ describe('AuthentificationService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
-    describe('comparePasswords', () => {
-        it('should return true when passwords match', async () => {
-            const password = 'password';
-            const hashed = await bcrypt.hash(password, 10);
-            const result = await service.comparePasswords(password, hashed);
-            expect(result).toBe(true);
-        });
-
-        it('should return false when passwords do not match', async () => {
-            const password = 'password';
-            const hashed = await bcrypt.hash('otherPassword', 10);
-            const result = await service.comparePasswords(password, hashed);
-            expect(result).toBe(false);
-        });
+  describe('comparePasswords', () => {
+    it('should return true when passwords match', async () => {
+      const password = 'password';
+      const hashed = await bcrypt.hash(password, 10);
+      const result = await service.comparePasswords(password, hashed);
+      expect(result).toBe(true);
     });
+
+    it('should return false when passwords do not match', async () => {
+      const password = 'password';
+      const hashed = await bcrypt.hash('otherPassword', 10);
+      const result = await service.comparePasswords(password, hashed);
+      expect(result).toBe(false);
+    });
+  });
 
   describe('signIn', () => {
     it('should return a token', async () => {
@@ -117,9 +117,10 @@ describe('AuthentificationService', () => {
     it('should throw an error if email is invalid', async () => {
       const user: CreateUserDto = {
         userName: 'johndoe',
-        email: 'john.doe.mail.com', 
+        email: 'john.doe.mail.com',
         password: 'StrongPassword123!',
         avatar_url: 'https://randomuser.me/api/portraits/men/75.jpg',
+        role: Roles.USER,
       };
 
       await expect(service.signUp(user)).rejects.toThrow(BadRequestException);
@@ -131,6 +132,7 @@ describe('AuthentificationService', () => {
         email: 'john.doe@mail.com',
         password: 'weak',
         avatar_url: 'https://randomuser.me/api/portraits/men/75.jpg',
+        role: Roles.USER,
       };
 
       await expect(service.signUp(user)).rejects.toThrow(BadRequestException);
@@ -142,6 +144,7 @@ describe('AuthentificationService', () => {
         email: 'john.doe@mail.com',
         password: 'StrongPassword123!',
         avatar_url: 'https://randomuser.me/api/portraits/men/75.jpg',
+        role: Roles.USER,
       };
 
       mockUsersService.create.mockRejectedValue(
@@ -159,6 +162,7 @@ describe('AuthentificationService', () => {
         email: 'john.doe@mail.com',
         password: 'StrongPassword123!',
         avatar_url: 'https://randomuser.me/api/portraits/men/75.jpg',
+        role: Roles.USER,
       };
 
       const createdUser = {

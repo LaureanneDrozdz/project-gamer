@@ -1,10 +1,25 @@
-import { Body, Controller, Get, Headers, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException } from "@nestjs/common";
-import { CreateUserDto } from "../user/dto/create-user.dto";
-import { SignInDto } from "./dto/sign-in.dto";
-import { AuthentificationService } from "./authentification.service";
-import { ApiBearerAuth, ApiBody, ApiOkResponse, ApiResponse } from "@nestjs/swagger";
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { SignInDto } from './dto/sign-in.dto';
+import { AuthentificationService } from './authentification.service';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { Response } from 'express';
-import { Request } from "express";
+import { Request } from 'express';
 
 @Controller('auth')
 export class AuthentificationController {
@@ -13,31 +28,37 @@ export class AuthentificationController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @ApiBody({
-    type: SignInDto
+    type: SignInDto,
   })
   @ApiOkResponse({
-    description: 'Login successful, sets access token cookie'
+    description: 'Login successful, sets access token cookie',
   })
-  async signIn(@Body() data: SignInDto, @Res({ passthrough: true }) res: Response ) {
+  async signIn(
+    @Body() data: SignInDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { accessToken } = await this.authentificationService.signIn(data);
     res.cookie('token', accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000, 
-  });
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
     return { success: true };
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('signup')
   @ApiBody({
-    type: CreateUserDto
+    type: CreateUserDto,
   })
   @ApiOkResponse({
     description: 'Registration successful, sets access token cookie',
   })
-  async signUp(@Body() data: CreateUserDto, @Res({ passthrough: true }) res: Response) {
+  async signUp(
+    @Body() data: CreateUserDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { accessToken } = await this.authentificationService.signUp(data);
     res.cookie('token', accessToken, {
       httpOnly: true,
@@ -53,7 +74,7 @@ export class AuthentificationController {
   @ApiBearerAuth()
   @ApiResponse({
     description: 'Returns the decoded payload of the JWT',
-    type: 'object'
+    type: 'object',
   })
   decodeToken(@Req() req: Request) {
     const token = req.cookies?.token;
@@ -62,5 +83,4 @@ export class AuthentificationController {
     }
     return this.authentificationService.decodeToken(token);
   }
-
 }

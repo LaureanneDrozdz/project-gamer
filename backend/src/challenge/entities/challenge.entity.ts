@@ -54,8 +54,8 @@ export class ChallengeEntity implements Challenge {
   })
   user_id: string;
 
-   @ApiProperty({
-    description: "Image de couverture du challenge",
+  @ApiProperty({
+    description: 'Image de couverture du challenge',
     example: 'https://via.assets.so/game.webp?id=99',
   })
   image_url: string;
