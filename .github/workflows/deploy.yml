@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: 'none'
 
       - name: Install dependencies
         run: npm install
@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: 'none'
 
       - name: Install dependencies
         run: npm install
@@ -63,7 +63,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: 'none'
 
       - name: Install dependencies & build
         working-directory: frontend
@@ -91,7 +91,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: 'none'
 
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -128,7 +128,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: 'none'
 
       - name: Install Lighthouse CI
         run: npm install -g @lhci/cli
@@ -173,7 +173,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: 'none'
 
       - name: Build frontend for GitHub Pages
         working-directory: frontend
