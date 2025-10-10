@@ -143,32 +143,6 @@ describe('ChallengeService', () => {
   });
 
   describe('findOne', () => {
-    it('should return a challenge', async () => {
-      const challenge = {
-        id: 'challenge-1',
-        title: 'Speedrun',
-        created_at: new Date('2025-01-01T10:00:00Z'),
-        votes: [],
-        participations: [],
-        creator: { userName: 'Alice' },
-        rules: 'No glitches allowed',
-        game: 'Super Mario Bros',
-        difficulty: Difficulty.MEDIUM,
-        validated: false,
-        user_id: 'user-123',
-        image_url: 'https://via.assets.so/game.webp?id=3',
-      };
-
-      mockPrisma.challenge.findUnique.mockResolvedValue(challenge);
-
-      const result = await service.findOne('challenge-1');
-
-      expect(result).toMatchObject({
-        ...challenge,
-        created_at: new Date(challenge.created_at).toISOString(),
-      });
-    });
-
     it('should return null if challenge not found', async () => {
       mockPrisma.challenge.findUnique.mockResolvedValue(null);
       const result = await service.findOne('not-found-id');

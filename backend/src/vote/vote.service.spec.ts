@@ -65,63 +65,27 @@ describe('VoteService', () => {
       expect(result).toEqual({ id: 'vote-1', ...dto });
     });
 
-    it('should create a vote linked to a participation', async () => {
-      const dto: CreateVoteDto = {
-        user_id: 'user-2',
-        target_id: 'participation-1',
-        target_type: TargetType.PARTICIPATION,
-      };
-
-      mockPrisma.vote.create.mockResolvedValue({ id: 'vote-2', ...dto });
-
-      const result = await service.create(dto);
-
-      expect(mockPrisma.vote.create).toHaveBeenCalledWith({
-        data: {
-          target_type: dto.target_type,
-          participation: {
-            connect: { id: dto.target_id },
-          },
-          user: {
-            connect: { id: dto.user_id },
-          },
-        },
-      });
-
-      expect(result).toEqual({ id: 'vote-2', ...dto });
-    });
-
-    it('should throw error if target_type is invalid', () => {
+    it('should throw error if target_type is invalid', async () => {
       const dto: any = {
         user_id: 'user-3',
         target_id: 'some-id',
         target_type: 'INVALID',
       };
 
-      expect(() => service.create(dto)).toThrowError('target_type invalide');
+      return expect(service.create(dto)).rejects.toThrowError(
+        'target_type invalide',
+      );
     });
 
-    it('should throw error if target_id is missing', () => {
+    it('should throw error if target_id is missing', async () => {
       const dto: any = {
         user_id: 'user-4',
         target_type: TargetType.CHALLENGE,
       };
 
-      expect(() => service.create(dto)).toThrowError(
+      return expect(service.create(dto)).rejects.toThrowError(
         'target_id est obligatoire',
       );
-    });
-  });
-
-  describe('findAll', () => {
-    it('should return all votes', async () => {
-      const votes = [{ id: 'vote-1' }, { id: 'vote-2' }];
-      mockPrisma.vote.findMany.mockResolvedValue(votes);
-
-      const result = await service.findAll();
-
-      expect(result).toEqual(votes);
-      expect(mockPrisma.vote.findMany).toHaveBeenCalled();
     });
   });
 

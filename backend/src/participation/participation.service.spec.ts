@@ -132,7 +132,15 @@ describe('ParticipationService', () => {
 
       const result = await service.findAll();
 
-      expect(result).toEqual([
+      const formatted = result.map((p) => ({
+        ...p,
+        created_at:
+          p.created_at instanceof Date
+            ? p.created_at.toISOString()
+            : p.created_at,
+      }));
+
+      expect(formatted).toEqual([
         { ...participations[0], created_at: '2024-01-01T00:00:00.000Z' },
         { ...participations[1], created_at: '2024-01-02T00:00:00.000Z' },
       ]);

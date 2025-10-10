@@ -28,7 +28,6 @@ describe('AuthentificationController', () => {
     controller = module.get<AuthentificationController>(
       AuthentificationController,
     );
-    service = module.get<AuthentificationService>(AuthentificationService);
   });
 
   it('should be defined', () => {

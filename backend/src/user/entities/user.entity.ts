@@ -5,8 +5,12 @@ import { Roles, User } from '@prisma/client';
 import { VoteEntity } from '../../vote/entities/vote.entity';
 
 export class UserEntity implements User {
-  constructor(user: UserEntity) {
+  constructor(user: Partial<User>) {
     Object.assign(this, user);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    delete this.password_hash;
   }
 
   @ApiProperty({

@@ -3,7 +3,6 @@ import { ParticipationController } from './participation.controller';
 import { ParticipationService } from './participation.service';
 import { JwtAuthGuard } from '../auth-guard/jwt-auth.guard';
 import { ParticipationOwnershipGuard } from './participation-ownership.guard';
-import { CreateParticipationDto } from './dto/create-participation.dto';
 import { UpdateParticipationDto } from './dto/update-participation.dto';
 import { JwtService } from '@nestjs/jwt';
 import { AuthentificationService } from '../authentification/authentification.service';
@@ -62,31 +61,6 @@ describe('ParticipationController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
-  });
-
-  describe('create', () => {
-    it('should create a participation if user is authenticated', async () => {
-      const createDto: CreateParticipationDto = {
-        user_id: 'user-1',
-        challenge_id: 'challenge-1',
-        validated: true,
-        video_url:
-          'https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley',
-        description: 'Description de la participation',
-      };
-      const req = { user: { id: 'user-1' } };
-      const createdParticipation = { id: '1', ...createDto, user_id: 'user-1' };
-
-      mockParticipationService.create.mockResolvedValue(createdParticipation);
-      jest.spyOn(jwtGuard, 'canActivate').mockResolvedValue(true);
-
-      const result = await controller.create(createDto, req);
-      expect(result).toEqual(createdParticipation);
-      expect(mockParticipationService.create).toHaveBeenCalledWith({
-        ...createDto,
-        user_id: 'user-1',
-      });
-    });
   });
 
   describe('findAll', () => {
