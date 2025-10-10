@@ -7,7 +7,6 @@ import { SignInDto } from './dto/sign-in.dto';
 
 describe('AuthentificationController', () => {
   let controller: AuthentificationController;
-  let service: AuthentificationService;
 
   const mockAuthentificationService = {
     signIn: jest.fn(),

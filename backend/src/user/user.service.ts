@@ -1,18 +1,20 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
-import { User as UserEntity } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
+import { Prisma } from '.prisma/client/default';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
-
+  private readonly logger = new Logger(UserService.name);
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     try {
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
@@ -25,11 +27,10 @@ export class UserService {
           avatar_url: 'https://placehold.co/10',
         },
       });
-
-      const { password_hash, ...result } = user;
-      return new UserEntity(result);
-    } catch (error) {
-      throw new BadRequestException(`Invalid Data: ${error.message}`);
+      return new UserEntity(user);
+    } catch (error: unknown) {
+      this.logger.error('Error creating user', error);
+      throw new BadRequestException(`Invalid Data for User Creation`);
     }
   }
 
@@ -37,8 +38,7 @@ export class UserService {
     const users = await this.prisma.user.findMany();
 
     return users.map((user) => {
-      const { password_hash, ...result } = user;
-      return new UserEntity(result as any);
+      return new UserEntity(user);
     });
   }
 
@@ -48,22 +48,21 @@ export class UserService {
       include: {
         challenges: true,
         participations: true,
-        votes: true,
+        votes: { include: { user: true } },
       },
     });
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    const { password_hash, ...result } = user;
-    return new UserEntity(result);
+    return new UserEntity(user);
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<UserEntity> {
     try {
       await this.findOne(id);
 
-      const data: any = {};
+      const data: Partial<Prisma.UserUpdateInput> = {};
 
       if (updateUserDto.userName) {
         data.userName = updateUserDto.userName;
@@ -86,9 +85,9 @@ export class UserService {
         data,
       });
 
-      const { password_hash, ...result } = updatedUser;
-      return new UserEntity(result);
-    } catch (error) {
+      return new UserEntity(updatedUser);
+    } catch (error: unknown) {
+      this.logger.error('Error updating user', error);
       throw new BadRequestException('Invalid Data for User Update');
     }
   }
@@ -100,8 +99,7 @@ export class UserService {
       where: { id },
     });
 
-    const { password_hash, ...result } = user;
-    return new UserEntity(result);
+    return new UserEntity(user);
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
@@ -112,9 +110,7 @@ export class UserService {
     if (!user) {
       return null;
     }
-
-    const { password_hash, ...result } = user;
-    return new UserEntity(result);
+    return new UserEntity(user);
   }
   async findByEmailWithPassword(email: string): Promise<UserEntity | null> {
     return this.prisma.user.findUnique({ where: { email } });

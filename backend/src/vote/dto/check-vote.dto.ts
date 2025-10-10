@@ -1,12 +1,5 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { IsEnum, IsNotEmpty, IsUUID } from 'class-validator';
 import { TargetType } from '@prisma/client';
-import { Trim } from 'class-sanitizer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CheckVoteDto {

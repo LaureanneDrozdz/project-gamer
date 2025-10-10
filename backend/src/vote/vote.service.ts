@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateVoteDto } from './dto/create-vote.dto';
 import { UpdateVoteDto } from './dto/update-vote.dto';
@@ -9,7 +9,7 @@ import { VoteEntity } from './entities/vote.entity';
 @Injectable()
 export class VoteService {
   constructor(private prisma: PrismaService) {}
-
+  private readonly logger = new Logger(VoteService.name);
   async create(createVoteDto: CreateVoteDto) {
     const { user_id, target_id, target_type, ...rest } = createVoteDto;
     if (!target_id) {
@@ -71,6 +71,7 @@ export class VoteService {
       });
       return new VoteEntity(vote);
     } catch (error) {
+      this.logger.error('Error updating vote', error);
       throw new NotFoundException(`Vote with id ${id} not found`);
     }
   }
@@ -81,7 +82,8 @@ export class VoteService {
         where: { id },
       });
       return new VoteEntity(vote);
-    } catch (error: any) {
+    } catch (error) {
+      this.logger.error('Error removing vote', error);
       throw new NotFoundException(`Vote with id ${id} not found`);
     }
   }

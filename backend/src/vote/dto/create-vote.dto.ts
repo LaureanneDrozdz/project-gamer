@@ -1,12 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Trim } from 'class-sanitizer';
 import { IsEnum, IsNotEmpty, IsUUID } from 'class-validator';
-
-enum TargetType {
-  CHALLENGE = 'CHALLENGE',
-  PARTICIPATION = 'PARTICIPATION',
-}
-
+import { TargetType } from '@prisma/client';
 export class CreateVoteDto {
   @ApiProperty({
     description: 'ID de la cible du vote (challenge ou participation)',

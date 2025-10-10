@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   UseGuards,
-  Req,
 } from '@nestjs/common';
 import { ParticipationService } from './participation.service';
 import { CreateParticipationDto } from './dto/create-participation.dto';
@@ -35,11 +34,8 @@ export class ParticipationController {
     type: ParticipationEntity,
   })
   @UseGuards(JwtAuthGuard)
-  create(@Body() createParticipationDto: CreateParticipationDto, @Req() req) {
-    return this.participationService.create({
-      ...createParticipationDto,
-      user_id: req.user.id,
-    });
+  create(@Body() createParticipationDto: CreateParticipationDto) {
+    return this.participationService.create(createParticipationDto);
   }
 
   @Get()

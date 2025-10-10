@@ -1,13 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { VoteService } from './vote.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { TargetType } from './entities/vote.entity';
+import { TargetType } from '@prisma/client';
 import { CreateVoteDto } from './dto/create-vote.dto';
 import { CheckVoteDto } from './dto/check-vote.dto';
 
 describe('VoteService', () => {
   let service: VoteService;
-  let prisma: PrismaService;
 
   const mockPrisma = {
     vote: {
@@ -31,7 +30,6 @@ describe('VoteService', () => {
     }).compile();
 
     service = module.get<VoteService>(VoteService);
-    prisma = module.get<PrismaService>(PrismaService);
   });
   afterEach(() => {
     jest.clearAllMocks();

@@ -9,12 +9,7 @@ import {
   IsUUID,
 } from 'class-validator';
 import { Trim, Escape } from 'class-sanitizer';
-
-enum Difficulty {
-  EASY = 'EASY',
-  MEDIUM = 'MEDIUM',
-  HARD = 'HARD',
-}
+import { Difficulty } from '@prisma/client';
 
 export class CreateChallengeDto {
   @ApiProperty({

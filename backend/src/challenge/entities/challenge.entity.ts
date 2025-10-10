@@ -1,13 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserEntity } from '../../user/entities/user.entity';
 import { VoteEntity } from '../../vote/entities/vote.entity';
-import { Challenge } from '@prisma/client';
-
-export enum Difficulty {
-  EASY = 'EASY',
-  MEDIUM = 'MEDIUM',
-  HARD = 'HARD',
-}
+import { Challenge, Difficulty } from '@prisma/client';
 
 export class ChallengeEntity implements Challenge {
   @ApiProperty({
@@ -58,7 +52,7 @@ export class ChallengeEntity implements Challenge {
     description: 'Image de couverture du challenge',
     example: 'https://via.assets.so/game.webp?id=99',
   })
-  image_url: string;
+  image_url: string | null;
 
   @ApiProperty({
     description: 'Statut de validation du challenge',

@@ -8,7 +8,7 @@ describe('JwtAuthGuard', () => {
   beforeEach(() => {
     jwtService = {
       verifyAsync: jest.fn(),
-    } as any;
+    } as unknown as JwtService;
 
     guard = new JwtAuthGuard(jwtService);
   });

@@ -3,11 +3,10 @@ import { ChallengeService } from './challenge.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { BadRequestException } from '@nestjs/common';
-import { Difficulty } from './entities/challenge.entity';
+import { Difficulty } from '@prisma/client';
 
 describe('ChallengeService', () => {
   let service: ChallengeService;
-  let prisma: PrismaService;
 
   const mockPrisma = {
     challenge: {
@@ -31,7 +30,6 @@ describe('ChallengeService', () => {
     }).compile();
 
     service = module.get<ChallengeService>(ChallengeService);
-    prisma = module.get<PrismaService>(PrismaService);
   });
 
   afterEach(() => {

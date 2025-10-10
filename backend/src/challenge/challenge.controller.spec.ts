@@ -5,7 +5,7 @@ import { AuthentificationService } from '../authentification/authentification.se
 import { JwtAuthGuard } from '../auth-guard/jwt-auth.guard';
 import { ChallengeOwnershipGuard } from './challenge-ownership.guard';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
-import { Difficulty } from './entities/challenge.entity';
+import { Difficulty } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 
 const mockChallengeService = {

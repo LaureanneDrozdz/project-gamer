@@ -3,11 +3,7 @@ import { UserEntity } from '../../user/entities/user.entity';
 import { ChallengeEntity } from '../../challenge/entities/challenge.entity';
 import { ParticipationEntity } from '../../participation/entities/participation.entity';
 import { Vote } from '@prisma/client';
-
-export enum TargetType {
-  CHALLENGE = 'CHALLENGE',
-  PARTICIPATION = 'PARTICIPATION',
-}
+import { TargetType } from '@prisma/client';
 
 export class VoteEntity implements Vote {
   @ApiProperty({
@@ -59,7 +55,7 @@ export class VoteEntity implements Vote {
     type: ParticipationEntity,
     nullable: true,
   })
-  participation?: ParticipationEntity  | null;
+  participation?: ParticipationEntity | null;
 
   constructor(vote: Vote) {
     Object.assign(this, vote);

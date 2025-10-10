@@ -77,7 +77,7 @@ export class AuthentificationController {
     type: 'object',
   })
   decodeToken(@Req() req: Request) {
-    const token = req.cookies?.token;
+    const token = req.cookies?.token as string | undefined;
     if (!token) {
       throw new UnauthorizedException('Authentication required');
     }

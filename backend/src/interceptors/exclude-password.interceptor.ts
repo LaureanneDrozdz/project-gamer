@@ -15,7 +15,7 @@ export class ExcludePasswordInterceptor implements NestInterceptor {
       .pipe(map((data) => this.excludePasswordFromResponse(data)));
   }
 
-  private excludePasswordFromResponse(data: any): any {
+  private excludePasswordFromResponse(data: unknown): unknown {
     if (!data) return data;
 
     if (Array.isArray(data)) {

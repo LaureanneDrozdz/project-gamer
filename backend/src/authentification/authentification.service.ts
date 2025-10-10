@@ -5,13 +5,16 @@ import { SignInDto } from './dto/sign-in.dto';
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from 'types';
 
 @Injectable()
 export class AuthentificationService {
+  private readonly logger = new Logger(AuthentificationService.name);
   constructor(
     private usersService: UserService,
     private jwtService: JwtService,
@@ -53,11 +56,6 @@ export class AuthentificationService {
       id: apiUser?.id,
       name: user.userName,
       email: user.email,
-      created_at: user.created_at,
-      avatar_url: user.avatar_url,
-      challenges: user.challenges,
-      participations: user.participations,
-      votes: user.votes,
       role: user.role,
     };
     return {
@@ -80,13 +78,7 @@ export class AuthentificationService {
     }
     const payload = {
       id: user.id,
-      name: user.userName,
       email: user.email,
-      created_at: user.created_at,
-      avatar_url: user.avatar_url,
-      challenges: user.challenges,
-      participations: user.participations,
-      votes: user.votes,
       role: user.role,
     };
     return {
@@ -94,10 +86,11 @@ export class AuthentificationService {
     };
   }
 
-  decodeToken(token: string) {
+  decodeToken(token: string): JwtPayload {
     try {
-      return this.jwtService.verify(token);
-    } catch (err) {
+      return this.jwtService.verify<JwtPayload>(token);
+    } catch (err: unknown) {
+      this.logger.error('Error decoding token', err);
       throw new UnauthorizedException('Invalid or expired token');
     }
   }

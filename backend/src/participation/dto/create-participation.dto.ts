@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Escape, Trim } from 'class-sanitizer';
+import { Escape } from 'class-sanitizer';
 import {
   IsNotEmpty,
   IsString,

@@ -5,7 +5,7 @@ import { JwtAuthGuard } from '../auth-guard/jwt-auth.guard';
 import { VoteOwnershipGuard } from './vote-ownership.guard';
 import { CreateVoteDto } from './dto/create-vote.dto';
 import { CheckVoteDto } from './dto/check-vote.dto';
-import { TargetType } from './entities/vote.entity';
+import { TargetType } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { AuthentificationService } from '../authentification/authentification.service';
 

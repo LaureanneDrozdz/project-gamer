@@ -12,10 +12,11 @@ interface ResourceService {
   findOne(id: string | number): Promise<{ user_id?: string | number } | null>;
 }
 
-interface DecodedToken {
-  id: string | number;
-  role?: string;
-}
+type AuthRequest = Request & {
+  cookies?: Record<string, unknown>;
+  user?: Record<string, unknown>;
+  params?: Record<string, unknown>;
+};
 
 @Injectable()
 export class OwnershipGuard implements CanActivate {
@@ -25,21 +26,21 @@ export class OwnershipGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const request = context.switchToHttp().getRequest<AuthRequest>();
 
-    const token = request.cookies?.token;
+    const token = request.cookies?.token as string | undefined;
     if (!token) {
       throw new UnauthorizedException('Token manquant');
     }
-    const decodedToken = this.authService.decodeToken(token) as DecodedToken;
-
-    const resourceId = request.params.id;
+    const decodedToken = this.authService.decodeToken(token);
+    const resourceId = request.params?.id;
     if (!resourceId) {
       throw new UnauthorizedException('ID de ressource manquant');
     }
 
-    const resource = await this.resourceService.findOne(resourceId);
+    const resource = await this.resourceService.findOne(
+      resourceId as string | number,
+    );
     if (!resource) {
       throw new UnauthorizedException('Ressource introuvable');
     }

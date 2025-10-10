@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateParticipationDto } from './dto/create-participation.dto';
 import { UpdateParticipationDto } from './dto/update-participation.dto';
@@ -7,7 +7,7 @@ import { ParticipationEntity } from './entities/participation.entity';
 @Injectable()
 export class ParticipationService {
   constructor(private prisma: PrismaService) {}
-
+  private readonly logger = new Logger(ParticipationService.name);
   async create(createParticipationDto: CreateParticipationDto) {
     const { user_id, challenge_id, ...rest } = createParticipationDto;
 
@@ -37,6 +37,7 @@ export class ParticipationService {
       });
       return new ParticipationEntity(participation);
     } catch (error) {
+      this.logger.error('Error creating participation', error);
       throw new BadRequestException(
         'Erreur lors de la création de la participation',
       );
@@ -71,6 +72,7 @@ export class ParticipationService {
       });
       return new ParticipationEntity(participation);
     } catch (error) {
+      this.logger.error('Error updating participation', error);
       throw new BadRequestException(
         'Erreur lors de la mise à jour de la participation',
       );
@@ -84,6 +86,7 @@ export class ParticipationService {
       });
       return new ParticipationEntity(participation);
     } catch (error) {
+      this.logger.error('Error removing participation', error);
       throw new BadRequestException(
         'Erreur lors de la suppression de la participation',
       );

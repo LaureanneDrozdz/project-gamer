@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { UpdateChallengeDto } from './dto/update-challenge.dto';
@@ -7,6 +7,7 @@ import { ChallengeEntity } from './entities/challenge.entity';
 @Injectable()
 export class ChallengeService {
   constructor(private prisma: PrismaService) {}
+  private readonly logger = new Logger(ChallengeService.name);
 
   async create(createChallengeDto: CreateChallengeDto) {
     try {
@@ -27,6 +28,7 @@ export class ChallengeService {
       });
       return new ChallengeEntity(challenge);
     } catch (error) {
+      this.logger.error('Error creating challenge', error);
       throw new BadRequestException('invalid data');
     }
   }
@@ -69,13 +71,19 @@ export class ChallengeService {
       });
       return new ChallengeEntity(challenge);
     } catch (error) {
+      this.logger.error('Error updating challenge', error);
       throw new BadRequestException('invalid data');
     }
   }
 
   async remove(id: string) {
-    return await this.prisma.challenge.delete({
-      where: { id },
-    });
+    try {
+      return await this.prisma.challenge.delete({
+        where: { id },
+      });
+    } catch (error) {
+      this.logger.error('Error removing challenge', error);
+      throw new BadRequestException('invalid data');
+    }
   }
 }

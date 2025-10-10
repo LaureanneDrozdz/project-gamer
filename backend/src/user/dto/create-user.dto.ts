@@ -26,12 +26,13 @@ export class CreateUserDto {
   @Trim()
   @Length(3, 20)
   @Matches(/^[a-zA-Z0-9_]+$/, {
-    message: "Le nom d'utilisateur ne peut contenir que des lettres, chiffres et underscores.",
+    message:
+      "Le nom d'utilisateur ne peut contenir que des lettres, chiffres et underscores.",
   })
   userName: string;
 
   @ApiProperty({
-    description: "L\'adresse email unique de l\'utilisateur'",
+    description: "L'adresse email unique de l'utilisateur'",
     example: 'john.doe@example.com',
   })
   @IsEmail()
@@ -41,7 +42,7 @@ export class CreateUserDto {
   email: string;
 
   @ApiProperty({
-    description: "Le mot de passe de l\'uilisateur",
+    description: "Le mot de passe de l'uilisateur",
     example: 'password123',
     minLength: 8,
   })
@@ -51,7 +52,7 @@ export class CreateUserDto {
   password: string;
 
   @ApiProperty({
-    description: "L\URL de l\avatar de l\'utilisateur",
+    description: "L'URL de l'avatar de l'utilisateur",
     example: 'https://example.com/avatar.jpg/johndoe.png',
   })
   @IsUrl()
@@ -59,7 +60,7 @@ export class CreateUserDto {
   avatar_url: string;
 
   @ApiProperty({
-    description: 'Rôle de l\'utilisateur',
+    description: "Rôle de l'utilisateur",
     enum: Roles,
     example: 'USER',
   })
