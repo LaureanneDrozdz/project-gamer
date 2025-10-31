@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Challenge } from '@/types';
+import formatDate from '@/lib/formatDate';
 
 type ChallengeCardProps = {
   challenge: Challenge;
@@ -63,8 +64,7 @@ const ChallengeCard = ({ challenge }: ChallengeCardProps) => {
             {challenge.title}
           </p>
           <p className="text-md text-primary">
-            Créé le:
-            {new Date(challenge.created_at).toLocaleDateString()}
+            Créé le: {formatDate(challenge.created_at)}
           </p>
           <p className="text-sm text-gray-600">
             {participationCount} participation

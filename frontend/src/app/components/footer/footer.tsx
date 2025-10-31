@@ -9,14 +9,14 @@ const footer = () => {
         <span className="logo">GamerChallenges</span>
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 text-center">
           <Link
-            href="/mentions-legales"
+            href="/legalNotes"
             className="text-blanc hover:text-secondary text-sm"
             aria-label="Lire les mentions légales"
           >
             Mentions légales
           </Link>
           <Link
-            href="/confidentialite"
+            href="/confidentialPolicy"
             className="text-blanc hover:text-secondary text-sm"
             aria-label="Lire la politique de confidentialité"
           >

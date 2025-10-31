@@ -1,6 +1,7 @@
 import { Challenge } from '@/types';
 import ChallengeStatsBar from './ChallengeStatsBar';
 import { memo } from 'react';
+import { parseToDate, formatDate } from '@/lib/formatDate';
 
 export type ChallengeInfoSideProps = {
   challenge: Challenge;
@@ -11,9 +12,10 @@ const ChallengeInfoSide = memo(function ChallengeInfoSide({
 }: ChallengeInfoSideProps) {
   const getEndDate = (startDate: string | undefined): string => {
     if (!startDate) return 'Date de fin non disponible';
-    const date = new Date(startDate);
+    const date = parseToDate(startDate);
+    if (!date) return 'Date de fin non disponible';
     date.setMonth(date.getMonth() + 1); // Ajoute 1 mois
-    return date.toLocaleDateString('fr-FR', {
+    return formatDate(date, {
       day: 'numeric',
       month: 'long',
       year: 'numeric',

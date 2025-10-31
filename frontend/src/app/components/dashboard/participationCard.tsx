@@ -1,5 +1,6 @@
 'use client';
 import { apiFetch } from '@/lib/api';
+import formatDate from '@/lib/formatDate';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -55,11 +56,11 @@ export function ParticipationCard({
           </a>
           <span className="block mt-2 text-xs text-noir/60">
             Soumis le{' '}
-            {new Intl.DateTimeFormat('fr-FR', {
+            {formatDate(participation.created_at, {
               year: 'numeric',
               month: 'long',
               day: 'numeric',
-            }).format(new Date(participation.created_at))}
+            })}
           </span>
         </div>
       </Link>

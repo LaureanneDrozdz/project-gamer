@@ -5,7 +5,7 @@ import { ParticipationEntity } from '../../participation/entities/participation.
 import { Vote } from '@prisma/client';
 import { TargetType } from '@prisma/client';
 
-export class VoteEntity implements Vote {
+export class VoteEntity {
   @ApiProperty({
     description: 'Identifiant unique du vote',
     example: '123e4567-e89b-12d3-a456-426614174000',
@@ -35,29 +35,35 @@ export class VoteEntity implements Vote {
     description: 'Date de création du vote',
     example: '2025-05-15T10:30:00Z',
   })
-  created_at: Date;
+  created_at: string;
 
   @ApiProperty({
     description: "L'utilisateur qui a voté",
-    type: UserEntity,
+    type: () => UserEntity,
   })
   user: UserEntity;
 
   @ApiProperty({
     description: 'Le challenge ciblé (si target_type est CHALLENGE)',
-    type: ChallengeEntity,
+    type: () => ChallengeEntity,
     nullable: true,
   })
   challenge?: ChallengeEntity | null;
 
   @ApiProperty({
     description: 'La participation ciblée (si target_type est PARTICIPATION)',
-    type: ParticipationEntity,
+    type: () => ParticipationEntity,
     nullable: true,
   })
   participation?: ParticipationEntity | null;
 
   constructor(vote: Vote) {
     Object.assign(this, vote);
+    // normalize created_at
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.created_at = vote.created_at instanceof Date
+      ? vote.created_at.toISOString()
+      : (vote.created_at as unknown as string);
   }
 }

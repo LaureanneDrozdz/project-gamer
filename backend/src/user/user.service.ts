@@ -113,7 +113,9 @@ export class UserService {
     return new UserEntity(user);
   }
   async findByEmailWithPassword(email: string): Promise<UserEntity | null> {
-    return this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findUnique({ where: { email } });
+    if (!user) return null;
+    return new UserEntity(user);
   }
 
   async getLeaderboard(limit = 10) {

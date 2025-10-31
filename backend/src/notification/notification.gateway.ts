@@ -48,6 +48,17 @@ export class NotificationGateway implements OnGatewayInit, OnGatewayConnection, 
     });
   }
 
+  // Nest's OnGatewayInit requires `afterInit`; keep existing logic in onGatewayInit
+  // and delegate from afterInit so the class satisfies the interface without
+  // duplicating the initialization code.
+  afterInit(server?: Server) {
+    try {
+      this.onGatewayInit();
+    } catch (err) {
+      this.logger.error('Error during afterInit', err as any);
+    }
+  }
+
   async handleConnection(client: Socket) {
     try {
       // Prefer token in auth for sockets, fallback to cookie named 'token'

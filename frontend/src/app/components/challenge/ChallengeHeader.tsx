@@ -3,6 +3,7 @@ import { memo } from 'react';
 import { faUsers } from '@fortawesome/free-solid-svg-icons/faUsers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Challenge } from '@/types';
+import formatDate from '@/lib/formatDate';
 
 type ChallengeHeaderProps = {
   challenge: Challenge;
@@ -18,7 +19,7 @@ const ChallengeHeader = memo(function ChallengeHeader({
       : challenge?.creator;
 
   const formattedDate = challenge?.created_at
-    ? new Date(challenge.created_at).toLocaleDateString('fr-FR', {
+    ? formatDate(challenge.created_at, {
         weekday: 'long',
         year: 'numeric',
         month: 'long',

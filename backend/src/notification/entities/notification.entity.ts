@@ -23,9 +23,15 @@ export class NotificationEntity {
   read: boolean;
 
   @ApiProperty()
-  created_at: Date;
+  created_at: string;
 
   constructor(notification: Partial<NotificationEntity>) {
     Object.assign(this, notification || {});
+    // normalize created_at
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.created_at = notification?.created_at instanceof Date
+      ? notification.created_at.toISOString()
+      : (notification?.created_at as unknown as string);
   }
 }

@@ -4,13 +4,20 @@ import { ParticipationEntity } from '../../participation/entities/participation.
 import { Roles, User } from '@prisma/client';
 import { VoteEntity } from '../../vote/entities/vote.entity';
 
-export class UserEntity implements User {
+export class UserEntity {
   constructor(user: Partial<User>) {
     Object.assign(this, user);
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     delete this.password_hash;
+
+    // Normalize created_at to ISO string for API consumers
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.created_at = user?.created_at instanceof Date
+      ? user.created_at.toISOString()
+      : (user?.created_at as unknown as string);
   }
 
   @ApiProperty({
@@ -47,23 +54,27 @@ export class UserEntity implements User {
     description: 'Date de création du compte',
     example: '2025-05-15T10:30:00Z',
   })
-  created_at: Date;
+  created_at: string;
 
   @ApiProperty({
     description: "Challenges créés par l'utilisateur",
-    type: [ChallengeEntity],
+    // Lazy resolver + isArray to prevent circular reference issues in Swagger
+    type: () => ChallengeEntity,
+    isArray: true,
   })
   challenges?: ChallengeEntity[];
 
   @ApiProperty({
     description: "Participations de l'utilisateur",
-    type: [ParticipationEntity],
+    type: () => ParticipationEntity,
+    isArray: true,
   })
   participations?: ParticipationEntity[];
 
   @ApiProperty({
     description: "Votes de l'utilisateur",
-    type: [VoteEntity],
+    type: () => VoteEntity,
+    isArray: true,
   })
   votes?: VoteEntity[];
 

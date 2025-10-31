@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import type { Socket } from 'socket.io-client';
 
-type NotificationPayload = {
+export type NotificationPayload = {
   id?: string;
   actor_id: string;
   action: string;
@@ -13,7 +14,7 @@ type NotificationPayload = {
 export function useNotifications() {
   const [notifications, setNotifications] = useState<NotificationPayload[]>([]);
   const [connected, setConnected] = useState(false);
-  const socketRef = useRef<any | null>(null);
+  const socketRef = useRef<Socket | null>(null);
 
   const fetchUnread = useCallback(async () => {
     try {
@@ -22,10 +23,10 @@ export function useNotifications() {
         credentials: 'include',
       });
       if (!res.ok) return;
-      const data = await res.json();
+      const data = (await res.json()) as NotificationPayload[];
       setNotifications((prev) => {
         const ids = new Set(prev.map((p) => p.id));
-        const merged = [...data.filter((n: any) => !ids.has(n.id)), ...prev];
+        const merged = [...data.filter((n: NotificationPayload) => !ids.has(n.id)), ...prev];
         return merged;
       });
     } catch (err) {
@@ -37,8 +38,8 @@ export function useNotifications() {
     // only run in browser
     if (typeof window === 'undefined') return;
 
-    let mounted = true;
-    let socket: any = null;
+  let mounted = true;
+  let socket: Socket | null = null;
 
     // dynamic import to avoid SSR problems
     import('socket.io-client').then(({ io }) => {
@@ -75,7 +76,7 @@ export function useNotifications() {
         });
       });
 
-      socket.on('connect_error', (err: any) => {
+      socket.on('connect_error', (err: unknown) => {
         // optional debug
         // console.warn('socket connect_error', err);
       });
