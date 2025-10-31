@@ -31,7 +31,7 @@ const Hero = () => {
         <div className="flex flex-col lg:flex-row font-semibold items-center justify-center gap-6 mt-11">
           <CreateChallengeModal />
 
-          <Button label="Voir les challenges" className="cta-base cta-button" />
+          <Button label="Voir les challenges" className="cta-base cta-button" href='/challenges'></Button>
         </div>
       </div>
     </section>

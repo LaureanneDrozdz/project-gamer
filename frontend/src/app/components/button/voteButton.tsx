@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { useAuth } from '@/lib/auth-context';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 
 type TargetType = 'CHALLENGE' | 'PARTICIPATION';
 
@@ -86,13 +87,13 @@ export const VoteButton = ({
   return (
     <button
       onClick={handleVoteToggle}
-      className="flex items-center gap-1 text-red-500 hover:text-red-600"
+      className="flex items-center gap-1 cursor-pointer"
       aria-pressed={hasVoted}
       aria-label={label}
     >
       <FontAwesomeIcon
-        icon={faHeart}
-        fill={hasVoted ? 'currentColor' : 'none'}
+        icon={hasVoted ? faHeartSolid : faHeartRegular}
+        color={hasVoted ? 'red' : undefined}
       />
     </button>
   );

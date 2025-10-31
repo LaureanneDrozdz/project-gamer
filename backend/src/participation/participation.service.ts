@@ -45,23 +45,37 @@ export class ParticipationService {
   }
 
   async findAll() {
-    const participations = await this.prisma.participation.findMany();
-    return participations.map(
-      (participation) => new ParticipationEntity(participation),
-    );
+    const participations = await this.prisma.participation.findMany({
+      include: {
+        votes: true,
+      },
+    });
+
+    return participations.map((participation) => new ParticipationEntity(participation));
   }
 
   async findOne(id: string) {
     const participation = await this.prisma.participation.findUnique({
       where: { id },
       include: {
-        user: true,
+        votes: true,
       },
     });
 
     if (!participation) return null;
 
     return new ParticipationEntity(participation);
+  }
+
+  async findByChallenge(challenge_id: string) {
+    const res = await this.prisma.participation.findMany({
+      where: { challenge_id },
+      include: {
+        votes: true,
+      },
+    });
+
+    return res.map((participation) => new ParticipationEntity(participation));
   }
 
   async update(id: string, updateParticipationDto: UpdateParticipationDto) {

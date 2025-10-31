@@ -37,7 +37,11 @@ export class ChallengeService {
     const res = await this.prisma.challenge.findMany({
       include: {
         votes: true,
-        participations: true,
+        participations: {
+          select: {
+            votes: true,
+          },
+        },
       },
     });
     return res.map((challenge) => new ChallengeEntity(challenge));
@@ -49,7 +53,11 @@ export class ChallengeService {
 
       include: {
         votes: true,
-        participations: true,
+        participations:{
+          select: {
+            votes: true,
+          },  
+        },
         creator: {
           select: {
             userName: true,

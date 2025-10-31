@@ -82,4 +82,14 @@ export class ParticipationController {
   remove(@Param('id') id: string) {
     return this.participationService.remove(id);
   }
+
+  @Get('challenge/:challenge_id')
+  @ApiParam({ name: 'challenge_id', description: 'ID du challenge' })
+  @ApiOkResponse({
+    description: 'Liste des participations pour un challenge donné',
+    type: [ParticipationEntity],
+  })
+  findByChallenge(@Param('challenge_id') challenge_id: string) {
+    return this.participationService.findByChallenge(challenge_id);
+  }
 }

@@ -4,10 +4,9 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
-import { apiFetch } from '@/lib/api';
 import Select from 'react-select';
 import { fetchGames } from '@/lib/games';
-
+import { apiFetch } from '@/lib/api';
 type GameOption = {
   label: string;
   value: {
@@ -17,7 +16,7 @@ type GameOption = {
 };
 
 export default function CreateChallengeModal() {
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
   const [submitError, setSubmitError] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -26,6 +25,7 @@ export default function CreateChallengeModal() {
   const [game, setGame] = useState<GameOption | null>(null);
   const [difficulty, setDifficulty] = useState('EASY');
   const [isOpen, setIsOpen] = useState(false);
+  const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState('');
 
@@ -85,7 +85,14 @@ export default function CreateChallengeModal() {
   return (
     <div className="relative">
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          // If user is not logged in, show a login prompt modal
+          if (!isLoggedIn) {
+            setShowLoginPrompt(true);
+            return;
+          }
+          setIsOpen(true);
+        }}
         className="cta-base cta-button"
         aria-haspopup="dialog"
       >
@@ -174,6 +181,52 @@ export default function CreateChallengeModal() {
                     {submitError}
                   </p>
                 )}
+              </div>
+            </div>
+          </div>,
+          document.getElementById('modal-root') as HTMLElement
+        )}
+
+      {showLoginPrompt &&
+        typeof window !== 'undefined' &&
+        createPortal(
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div
+              className="bg-white rounded-lg shadow-xl w-full max-w-md p-6 relative"
+              role="dialog"
+              aria-labelledby="login-prompt-title"
+              aria-describedby="login-prompt-desc"
+            >
+              <button
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 text-xl cursor-pointer"
+                onClick={() => setShowLoginPrompt(false)}
+                aria-label="Fermer"
+                
+              >
+                X
+              </button>
+
+              <h2 id="login-prompt-title" className="text-xl font-semibold mb-4 text-black">
+                Connexion requise
+              </h2>
+
+              <p id="login-prompt-desc" className="mb-4 text-gray-700">
+                Vous devez être connecté·e pour créer un challenge.
+              </p>
+
+              <div className="flex gap-3 justify-end">
+                <button
+                  onClick={() => setShowLoginPrompt(false)}
+                  className="px-4 py-2 rounded border cursor-pointer"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={() => router.push('/auth/signin')}
+                  className="px-4 py-2 rounded bg-[var(--cta)] text-[var(--noir)] cursor-pointer"
+                >
+                  Se connecter
+                </button>
               </div>
             </div>
           </div>,

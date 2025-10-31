@@ -2,14 +2,13 @@ export type Participation = {
   id: string;
   video_url: string;
   title: string;
-  votes: number;
   challenge: Challenge;
   challenge_id: string;
   user_id: number;
   validated: boolean;
   created_at: string;
   description: string;
-  nb_votes: number;
+  votes: Vote[];
 };
 
 export type Challenge = {
