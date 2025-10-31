@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { AuthentificationService } from '../authentification/authentification.service';
 
-// Minimal local types to avoid unsafe `any` usage while keeping the guard generic.
 interface ResourceService {
   findOne(id: string | number): Promise<{ user_id?: string | number } | null>;
 }
@@ -17,6 +16,7 @@ type AuthRequest = Request & {
   user?: Record<string, unknown>;
   params?: Record<string, unknown>;
 };
+
 
 @Injectable()
 export class OwnershipGuard implements CanActivate {

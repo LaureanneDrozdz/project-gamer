@@ -11,7 +11,6 @@
     "format": "prettier --write 'src/**/*.{ts,tsx,js,jsx}'",
     "format:check": "prettier --check 'src/**/*.{ts,tsx,js,jsx}'",
     "pa11y-ci:run": "pa11y-ci --config ./pa11yci.json"
-    
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
@@ -21,7 +20,8 @@
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-select": "^5.10.1"
+    "react-select": "^5.10.1",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

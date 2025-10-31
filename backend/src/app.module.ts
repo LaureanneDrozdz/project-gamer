@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { ChallengeModule } from './challenge/challenge.module';
 import { ParticipationModule } from './participation/participation.module';
 import { VoteModule } from './vote/vote.module';
+import { EventsModule } from './events/events.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthentificationModule } from './authentification/authentification.module';
 import { JwtModule } from '@nestjs/jwt';
@@ -32,6 +33,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
       }),
       inject: [ConfigService],
     }),
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
