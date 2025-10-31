@@ -1,0 +1,57 @@
+@startuml archi_from_image
+title Project Gamer - Architecture
+
+skinparam rectangle {
+  Shadowing false
+}
+
+left to right direction
+
+actor "Clients / Browser" as Clients
+
+node "Reverse Proxy\nCaddy\n(image: caddy:latest)\nports: 80/443" as Caddy {
+  rectangle "Volumes:" as CaddyVol {
+    [./Caddyfile:/etc/caddy/Caddyfile]
+    [caddy_data:/data]
+    [caddy_config:/config]
+  }
+}
+
+cloud "Frontend\nNext.js + TailwindCSS\n(image: node:20-alpine)\nport: 5173 (dev)" as Frontend {
+  rectangle "Volumes:" as FrontVol {
+    [./frontend:/app/frontend]
+    [/app/frontend/node_modules]
+  }
+}
+
+rectangle "Backend (NestJS)\n(image: node:20-alpine)\nport: 3000" as Backend {
+  component "Modules:\n- Auth (JWT)\n- Challenge\n- Participation\n- Notification\n- Vote\n- User\n- Events" as Modules
+  database "Prisma (ORM)\n(schema + migrations)" as Prisma
+  rectangle "Volumes:" as BackVol {
+    [./backend:/usr/src/backend]
+    [/usr/src/backend/node_modules]
+  }
+}
+
+database "PostgreSQL\n(image: postgres:17-alpine)\nport: 5432" as Postgres {
+  rectangle "Volumes:" as DbVol {
+    [./db:/var/lib/postgresql/data]
+  }
+}
+
+' Connections
+Clients -down-> Caddy : HTTP(S) requests
+Caddy --> Frontend : proxy / -> frontend
+Caddy --> Backend : proxy /api -> backend (3000)
+
+Frontend --> Backend : API requests (HTTP 3000)
+
+Prisma --> Postgres : SQL queries (5432)
+
+note right of Caddy
+  - TLS termination
+  - routes: / -> frontend
+  - routes: /api -> backend
+end note
+
+@enduml

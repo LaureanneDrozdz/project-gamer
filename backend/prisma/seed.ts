@@ -40,47 +40,61 @@ async function main() {
     },
   });
 
-  const randomId = Math.floor(Math.random() * 50) + 1;
-  const challenge1 = await prisma.challenge.create({
-    data: {
-      title: "Speedrun challenge",
-      description: "Finish the game as fast as possible",
-      rules: "No cheats, no glitches",
-      game: "SuperFastGame",
-      difficulty: Difficulty.MEDIUM,
-      validated: true,
-      image_url: `https://via.assets.so/game.webp?id=${randomId}`,
-      creator: { connect: { id: user1.id } },
-    },
-  });
-
-  
-  const participation1 = await prisma.participation.create({
-    
-    data: {
-      user: { connect: { id: user2.id } },           
-      challenge:{connect: {id: challenge1.id}},
-      video_url: "https://www.youtube.com/watch?v=KEpjLAzTod8&ab_channel=olivierhorps",
-      description: "My best run ever!",
-      validated: false,
-    },
-  });
-
-
-  await prisma.vote.create({
-  data: {
-    user: { connect: { id: user1.id } },
-    participation: { connect: { id: participation1.id } },
-    target_type: 'PARTICIPATION',
+const challengeId = "challenge_speedrun_1";
+const randomImage = Math.floor(Math.random() * 1000);
+const challenge1 = await prisma.challenge.upsert({
+  where: { id: challengeId },
+  update: {},
+  create: {
+    title: "Speedrun challenge",
+    description: "Finish the game as fast as possible",
+    rules: "No cheats, no glitches",
+    game: "SuperFastGame",
+    difficulty: Difficulty.MEDIUM,
+    validated: true,
+    image_url: `https://via.assets.so/game.webp?id=${randomImage}`,
+    creator: { connect: { id: user1.id } },
   },
 });
 
-  await prisma.vote.create({
-    data: {
+
+const participationId = "participation_1";
+const participation1 = await prisma.participation.upsert({
+  where: {
+    id: participationId
+  },
+  update: {},
+  create: {
+    user: { connect: { id: user2.id } },
+    challenge: { connect: { id: challenge1.id } },
+    video_url: "https://www.youtube.com/watch?v=KEpjLAzTod8&ab_channel=olivierhorps",
+    description: "My best run ever!",
+    validated: false,
+  },
+});
+
+
+  const voteForParticipationId = `${participation1.id}_participation`;
+  await prisma.vote.upsert({
+    where: { id: voteForParticipationId },
+    update: {},
+    create: {
+      id: voteForParticipationId,
+      user: { connect: { id: user1.id } },
+      participation: { connect: { id: participation1.id } },
+      target_type: TargetType.PARTICIPATION,
+    },
+  });
+
+  const voteForChallengeId = `${challenge1.id}_challenge`;
+  await prisma.vote.upsert({
+    where: { id: voteForChallengeId },
+    update: {},
+    create: {
+      id: voteForChallengeId,
       challenge: { connect: { id: challenge1.id } },
       user: { connect: { id: user2.id } },
       target_type: TargetType.CHALLENGE,
-      
     },
   });
 

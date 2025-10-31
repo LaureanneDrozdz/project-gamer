@@ -79,7 +79,7 @@ export class AuthentificationController {
     description: 'Returns the decoded payload of the JWT',
     type: 'object',
   })
-  // Accept either the full Request (usual runtime) or a raw token (tests pass a string)
+
   decodeToken(reqOrToken: Request | string) {
     if (typeof reqOrToken === 'string') {
       const tokenString = reqOrToken.replace(/^Bearer\s*/i, '').trim();

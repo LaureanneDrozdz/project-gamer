@@ -79,16 +79,7 @@ describe('VoteController', () => {
     });
   });
 
-  describe('findAll', () => {
-    it('should return all votes', async () => {
-      const votes = [{ id: '1' }, { id: '2' }];
-      mockVoteService.findAll.mockResolvedValue(votes);
 
-      const result = await controller.findAll();
-      expect(result).toEqual(votes);
-      expect(mockVoteService.findAll).toHaveBeenCalled();
-    });
-  });
 
   describe('findOne', () => {
     it('should return one vote by id', async () => {

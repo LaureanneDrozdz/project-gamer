@@ -3,16 +3,22 @@ start
 
 :Accéder à la page d'accueil;
 :Choisir un défi;
-:Aller à la page du défi;
-:Lire les règles;
+:Aller à la page du défi auquel participer;
+:Lire les règles du défi;
 
-if (Connecté ?) then (non)
+if (Utilisateur connecté ?) then (non)
   :Se connecter ou créer un compte;
 endif
 
-:Soumettre lien vidéo et description;
-:Confirmer la participation;
+repeat
+  :Soumettre lien vidéo et description de la participation;
+  if (Soumission valide ?) then (non)
+    :Afficher message d'erreur et demander correction;
+  endif
+repeat while (Soumission invalide?)
 
+:Confirmer la participation;
+:Participation envoyée à la validation;
+:Participation en attente de validation par un modérateur;
 stop
 @enduml
-

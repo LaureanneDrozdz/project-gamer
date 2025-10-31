@@ -31,7 +31,8 @@ const LeaderboardItem = memo(
       <tr
         key={index}
         tabIndex={0}
-        className="hover:bg-primary/20 focus:bg-primary/30 transition-colors"
+       className="flex md:table-row flex-col rounded-lg md:rounded-nonemy-2 md:my-0 p-3 md:p-0  bg-white/5 md:bg-transparent backdrop-blur-sm hover:bg-primary/20 focus:bg-primary/30transition-colors
+"
       >
         {/** Medal / Ranking */}
         <td className="px-2 py-4 whitespace-nowrap text-center">
@@ -70,7 +71,7 @@ const LeaderboardItem = memo(
         {/** /User Info */}
         {/** Score */}
         <td className="pl-6 pr-2 py-4 whitespace-nowrap">
-          <div className="text-sm ">
+          <div className="text-sm md:">
             <span className="sr-only">Score :</span>
             {score}
             <span className="ml-2" title="Trophée" aria-label="Trophée">

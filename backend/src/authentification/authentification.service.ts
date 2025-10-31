@@ -20,13 +20,14 @@ export class AuthentificationService {
     private jwtService: JwtService,
   ) {}
 
-  async comparePasswords(
+  private async comparePasswords(
     password: string,
     hashedPassword: string,
   ): Promise<boolean> {
-    return await bcrypt.compare(password, hashedPassword);
+    return bcrypt.compare(password, hashedPassword);
   }
 
+  
   checkEmailFormat(email: string) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -46,9 +47,6 @@ export class AuthentificationService {
   }
 
   async signUp(data: CreateUserDto): Promise<{ accessToken: string }> {
-    this.checkEmailFormat(data.email);
-    this.checkPasswordFormat(data.password);
-
     const newUser = { ...data };
     const user = await this.usersService.create(newUser);
     const apiUser = await this.usersService.findByEmail(data.email);

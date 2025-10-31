@@ -3,9 +3,7 @@
 rectangle "Frontend" {
   [React] as react
   [Tailwind CSS] as tailwind
-  [React Router] as react_router
-  [React Query] as react_query
-  [Axios] as axios
+
 }
 
 rectangle "Backend" {

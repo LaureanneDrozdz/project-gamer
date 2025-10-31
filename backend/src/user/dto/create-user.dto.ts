@@ -18,7 +18,7 @@ export enum Roles {
 
 export class CreateUserDto {
   @ApiProperty({
-    description: "Le nom d'utilisateur unique",
+    description: "Username",
     example: 'johndoe',
   })
   @IsString()
@@ -27,12 +27,12 @@ export class CreateUserDto {
   @Length(3, 20)
   @Matches(/^[a-zA-Z0-9_]+$/, {
     message:
-      "Le nom d'utilisateur ne peut contenir que des lettres, chiffres et underscores.",
+      "Username can only contain letters, numbers, and underscores.",
   })
   userName: string;
 
   @ApiProperty({
-    description: "L'adresse email unique de l'utilisateur'",
+    description: "User's unique email address",
     example: 'john.doe@example.com',
   })
   @IsEmail()
