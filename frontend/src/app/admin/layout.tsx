@@ -5,7 +5,9 @@ import { apiFetch } from '@/lib/api';
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   // Try common cookie names that may store a JWT
-  const token = cookies().get('token')?.value ?? cookies().get('auth')?.value ?? cookies().get('admin_token')?.value;
+  
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value ?? cookieStore.get('auth')?.value ?? cookieStore.get('admin_token')?.value;
 
   // If there's no login cookie, redirect to signin immediately
   if (!token) {

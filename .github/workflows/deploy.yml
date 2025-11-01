@@ -115,31 +115,10 @@ jobs:
     name: Deploy to Railway
     runs-on: ubuntu-latest
     needs: [build-and-push-backend, build-and-push-frontend]
+    container: ghcr.io/railwayapp/cli:latest
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install Railway CLI
-        run: |
-          npm i -g @railway/cli || npm i -g railway
-
-      - name: Login to Railway
-        env:
-          RAILWAY_API_KEY: ${{ secrets.RAILWAY_API_KEY }}
-        run: |
-          set -e
-          if command -v railway >/dev/null 2>&1; then
-            railway login --apiKey "$RAILWAY_API_KEY" || true
-          else
-            echo "railway CLI not found"
-            exit 1
-          fi
-
       - name: Log in to Docker Hub (for deploy pulls)
         uses: docker/login-action@v2
         with:
@@ -160,14 +139,11 @@ jobs:
           docker pull "$DOCKERHUB_USER/project-frontend:$GITHUB_SHA" || true
 
       - name: Trigger Railway deploy
-        env:
-          RAILWAY_API_KEY: ${{ secrets.RAILWAY_API_KEY }}
-        run: |
-          railway up --yes || railway deploy || true
+        run: railway up
 
       - name: Run migrations on Railway
         env:
-          RAILWAY_API_KEY: ${{ secrets.RAILWAY_API_KEY }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RUN_DB_SEED: ${{ secrets.RUN_DB_SEED }}
         run: |
           # Execute Prisma migrations inside Railway environment to avoid exposing DATABASE_URL
@@ -193,12 +169,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-build
-          path: frontend/out
 
       - name: Start frontend server
         working-directory: frontend
@@ -252,13 +222,6 @@ jobs:
 
       - name: Install Lighthouse CI
         run: npm install -g @lhci/cli
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-build
-          path: frontend/out
-
       - name: Start frontend server
         working-directory: frontend
         run: |
