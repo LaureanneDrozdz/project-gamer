@@ -145,7 +145,6 @@ jobs:
     name: Deploy to Railway
     runs-on: ubuntu-latest
     needs: [build-and-push-backend, build-and-push-frontend]
-    if: ${{ secrets.RAILWAY_API_KEY != '' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -197,7 +196,6 @@ jobs:
           railway up --yes || railway deploy || true
 
       - name: Run migrations on Railway
-        if: ${{ secrets.RAILWAY_API_KEY != '' && secrets.RUN_DB_SEED != 'skip' }}
         env:
           RAILWAY_API_KEY: ${{ secrets.RAILWAY_API_KEY }}
           RUN_DB_SEED: ${{ secrets.RUN_DB_SEED }}
@@ -253,7 +251,6 @@ jobs:
           fi
 
       - name: Run Pa11y accessibility tests (deployed)
-        if: ${{ secrets.RAILWAY_FRONTEND_URL != '' }}
         working-directory: frontend
         run: |
           URL="${{ secrets.RAILWAY_FRONTEND_URL }}"
@@ -261,7 +258,6 @@ jobs:
           npx pa11y "$URL" 2>&1 | tee pa11y-report.txt || true
 
       - name: Run Pa11y accessibility tests (local)
-        if: ${{ secrets.RAILWAY_FRONTEND_URL == '' }}
         working-directory: frontend
         run: |
           # Capture Pa11y output to a file for reporting
@@ -313,16 +309,14 @@ jobs:
           fi
 
       - name: Run Lighthouse CI (deployed)
-        if: ${{ secrets.RAILWAY_FRONTEND_URL != '' }}
         working-directory: frontend
         run: |
           URL="${{ secrets.RAILWAY_FRONTEND_URL }}"
           echo "Running LHCI against $URL"
           npx @lhci/cli collect --url="$URL" --config=./.lighthouserc.js 2>&1 | tee lhci-collect.txt || true
           npx @lhci/cli assert --config=./.lighthouserc.js 2>&1 | tee lhci-assert.txt || true
-
+          
       - name: Run Lighthouse CI (local)
-        if: ${{ secrets.RAILWAY_FRONTEND_URL == '' }}
         working-directory: frontend
         run: |
           # collect artifacts and save output
