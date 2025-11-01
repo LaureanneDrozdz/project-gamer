@@ -23,7 +23,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-         
+
       - name: Install dependencies
         run: npm install
         working-directory: ${{ github.workspace }}/${{ matrix.project }}
@@ -79,7 +79,8 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/project-backend:${{ github.sha }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/project-backend:latest 
+            ${{ secrets.DOCKERHUB_USERNAME }}/project-backend:latest
+
   build-frontend:
     runs-on: ubuntu-latest
     needs: [lint]
@@ -140,9 +141,8 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/project-frontend:${{ github.sha }}
             ${{ secrets.DOCKERHUB_USERNAME }}/project-frontend:latest
 
-
   deploy-to-railway:
-    name: Deploy to Railway 
+    name: Deploy to Railway
     runs-on: ubuntu-latest
     needs: [build-and-push-backend, build-and-push-frontend]
     if: ${{ secrets.RAILWAY_API_KEY != '' }}
@@ -194,7 +194,6 @@ jobs:
         env:
           RAILWAY_API_KEY: ${{ secrets.RAILWAY_API_KEY }}
         run: |
-
           railway up --yes || railway deploy || true
 
       - name: Run migrations on Railway
@@ -211,9 +210,7 @@ jobs:
             echo "Running DB seed on Railway..."
             railway run -- npx prisma db seed || railway run -- node prisma/seed.js || true
           fi
- 
 
-  
   accessibility:
     runs-on: ubuntu-latest
     needs: build-frontend
