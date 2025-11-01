@@ -81,40 +81,9 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/project-backend:${{ github.sha }}
             ${{ secrets.DOCKERHUB_USERNAME }}/project-backend:latest
 
-  build-frontend:
-    runs-on: ubuntu-latest
-    needs: [lint]
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Install dependencies & build
-        working-directory: frontend
-        run: |
-          npm install
-          npm run build
-          # If the site can be exported statically, export to `out` so we can serve it in later jobs
-          npm run export
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL || 'http://localhost:3000' }}
-          SERVER_API_URL: ${{ secrets.SERVER_API_URL || 'http://localhost:3000' }}
-          NEXT_PUBLIC_RAWG_API_KEY: ${{ secrets.NEXT_PUBLIC_RAWG_API_KEY }}
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-build
-          # upload the static export directory so accessibility/lighthouse can serve it
-          path: frontend/out
-
   build-and-push-frontend:
     name: Build and push frontend to Docker Hub
     runs-on: ubuntu-latest
-    needs: build-frontend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -211,7 +180,7 @@ jobs:
 
   accessibility:
     runs-on: ubuntu-latest
-    needs: build-frontend
+    needs: deploy-to-railway
     steps:
       - name: Disable AppArmor (required for Chrome)
         run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
@@ -271,7 +240,7 @@ jobs:
 
   lighthouse:
     runs-on: ubuntu-latest
-    needs: build-frontend
+    needs: deploy-to-railway
     steps:
       - uses: actions/checkout@v4
 
@@ -315,7 +284,7 @@ jobs:
           echo "Running LHCI against $URL"
           npx @lhci/cli collect --url="$URL" --config=./.lighthouserc.js 2>&1 | tee lhci-collect.txt || true
           npx @lhci/cli assert --config=./.lighthouserc.js 2>&1 | tee lhci-assert.txt || true
-          
+
       - name: Run Lighthouse CI (local)
         working-directory: frontend
         run: |
