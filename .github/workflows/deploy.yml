@@ -141,7 +141,7 @@ jobs:
         run: |
           # Install Railway CLI on the Ubuntu runner so we can run `railway up` and `railway run`.
           # Installing via npm is a straightforward approach on the runner.
-          npm install -g railway || true
+          npm install -g @railway/cli || true
 
       - name: Trigger Railway deploy
         run: railway up
