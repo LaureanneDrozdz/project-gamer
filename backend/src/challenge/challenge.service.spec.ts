@@ -3,7 +3,8 @@ import { ChallengeService } from './challenge.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateChallengeDto } from './dto/create-challenge.dto';
 import { BadRequestException } from '@nestjs/common';
-import { Difficulty } from '@prisma/client';
+import { Challenge, Difficulty } from '@prisma/client';
+import { ChallengeEntity } from './entities/challenge.entity';
 
 describe('ChallengeService', () => {
   let service: ChallengeService;
@@ -53,6 +54,8 @@ describe('ChallengeService', () => {
         id: 'challenge-1',
         ...dto,
         created_at: new Date(),
+        votes: undefined,
+        creator: undefined,
       };
 
       mockPrisma.challenge.create.mockResolvedValue(createdChallenge);
@@ -76,7 +79,9 @@ describe('ChallengeService', () => {
         },
       });
 
-      expect(result).toEqual(createdChallenge);
+      expect(result).toEqual(
+        new ChallengeEntity(createdChallenge as Challenge),
+      );
     });
 
     it('should throw BadRequestException on prisma error', async () => {
@@ -133,7 +138,7 @@ describe('ChallengeService', () => {
       const result = await service.findAll();
       const formatted = result.map((challenge) => ({
         ...challenge,
-        created_at: challenge.created_at.toISOString(),
+        created_at: challenge.created_at,
       }));
       expect(formatted).toEqual([
         { ...challenges[0], created_at: '2025-01-01T10:00:00.000Z' },

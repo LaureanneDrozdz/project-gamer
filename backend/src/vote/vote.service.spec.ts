@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { VoteService } from './vote.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { TargetType } from '@prisma/client';
+import { EventBusService } from '../events/event-bus.service';
 import { CreateVoteDto } from './dto/create-vote.dto';
 import { CheckVoteDto } from './dto/check-vote.dto';
 
@@ -25,6 +26,10 @@ describe('VoteService', () => {
         {
           provide: PrismaService,
           useValue: mockPrisma,
+        },
+        {
+          provide: EventBusService,
+          useValue: { emit: jest.fn(), on: jest.fn(), once: jest.fn() },
         },
       ],
     }).compile();

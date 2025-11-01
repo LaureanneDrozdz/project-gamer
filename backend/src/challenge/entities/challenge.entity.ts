@@ -85,8 +85,9 @@ export class ChallengeEntity {
     // Ensure created_at is serialized as ISO string
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.created_at = challenge.created_at instanceof Date
-      ? challenge.created_at.toISOString()
-      : (challenge.created_at as unknown as string);
+    this.created_at =
+      challenge.created_at instanceof Date
+        ? challenge.created_at.toISOString()
+        : (challenge.created_at as unknown as string);
   }
 }

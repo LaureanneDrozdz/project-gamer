@@ -6,7 +6,7 @@ export const parseToDate = (
   const d = input instanceof Date ? input : new Date(input);
     if (isNaN(d.getTime())) return null;
     return d;
-  } catch (e) {
+  } catch {
     return null;
   }
 };

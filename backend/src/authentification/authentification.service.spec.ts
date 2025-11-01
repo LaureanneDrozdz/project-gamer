@@ -6,6 +6,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto, Roles } from '../user/dto/create-user.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import * as bcrypt from 'bcrypt';
+
 describe('AuthentificationService', () => {
   let service: AuthentificationService;
   const mockUsersService = {

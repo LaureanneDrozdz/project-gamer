@@ -28,7 +28,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
       // not an admin
       redirect('/auth/signin');
     }
-  } catch (e) {
+  } catch {
     // on any error, redirect to signin
     redirect('/auth/signin');
   }

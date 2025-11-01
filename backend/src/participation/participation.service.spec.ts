@@ -134,10 +134,7 @@ describe('ParticipationService', () => {
 
       const formatted = result.map((p) => ({
         ...p,
-        created_at:
-          p.created_at instanceof Date
-            ? p.created_at.toISOString()
-            : p.created_at,
+        created_at: p.created_at,
       }));
 
       expect(formatted).toEqual([
@@ -157,7 +154,7 @@ describe('ParticipationService', () => {
         video_url:
           'https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstley',
         description: 'Description de la participation',
-        created_at: new Date('2024-01-01T00:00:00Z'),
+        created_at: '2024-01-01T00:00:00Z',
       };
 
       mockPrisma.participation.findUnique.mockResolvedValue(participation);
@@ -165,15 +162,15 @@ describe('ParticipationService', () => {
 
       expect(prisma.participation.findUnique).toHaveBeenCalledWith({
         where: { id: 'participation-1' },
-        include: { user: true },
+        include: { votes: true },
       });
 
       expect({
         ...result!,
-        created_at: result!.created_at.toISOString(),
+        created_at: result!.created_at,
       }).toMatchObject({
         ...participation,
-        created_at: participation.created_at.toISOString(),
+        created_at: participation.created_at,
       });
     });
 

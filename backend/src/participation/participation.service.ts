@@ -51,7 +51,9 @@ export class ParticipationService {
       },
     });
 
-    return participations.map((participation) => new ParticipationEntity(participation));
+    return participations.map(
+      (participation) => new ParticipationEntity(participation),
+    );
   }
 
   async findOne(id: string) {

@@ -41,7 +41,7 @@ export default function AdminPage() {
       });
       setUsers((s) => s.filter((u) => u.id !== id));
       alert('Utilisateur supprimé');
-    } catch (e) {
+    } catch{
       alert('Échec suppression utilisateur');
     }
   }
@@ -55,8 +55,7 @@ export default function AdminPage() {
      
       setChallenges((s) => s.filter((c) => c.id !== id));
       alert('Challenge supprimé');
-    } catch (e) {
-      console.error(e);
+    } catch {
       alert('Échec suppression challenge');
     }
   }
@@ -69,7 +68,7 @@ export default function AdminPage() {
       });
       setParticipations((s) => s.filter((p) => p.id !== id));
       alert('Participation supprimée');
-    } catch (e) {
+    } catch  {
       alert('Échec suppression participation');
     }
   }
@@ -85,8 +84,7 @@ export default function AdminPage() {
 
       setChallenges((s) => s.map((c) => (c.id === id ? updated : c)));
       alert(`Challenge ${newVal ? 'validé' : 'dévalidé'}`);
-    } catch (e) {
-      console.error(e);
+    } catch {
       alert('Échec mise à jour challenge');
     }
   }

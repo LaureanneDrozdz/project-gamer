@@ -1,6 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { EventBusService } from 'src/events/event-bus.service';
+import { EventBusService } from '../events/event-bus.service';
 import { CreateVoteDto } from './dto/create-vote.dto';
 import { UpdateVoteDto } from './dto/update-vote.dto';
 import { TargetType } from '@prisma/client';
@@ -9,7 +9,10 @@ import { VoteEntity } from './entities/vote.entity';
 
 @Injectable()
 export class VoteService {
-  constructor(private prisma: PrismaService, private eventBus: EventBusService) {}
+  constructor(
+    private prisma: PrismaService,
+    private eventBus: EventBusService,
+  ) {}
   private readonly logger = new Logger(VoteService.name);
   async create(createVoteDto: CreateVoteDto) {
     const { user_id, target_id, target_type, ...rest } = createVoteDto;
@@ -51,10 +54,14 @@ export class VoteService {
     try {
       let ownerId: string | undefined;
       if (target_type === TargetType.CHALLENGE) {
-        const challenge = await this.prisma.challenge.findUnique({ where: { id: target_id } });
+        const challenge = await this.prisma.challenge.findUnique({
+          where: { id: target_id },
+        });
         ownerId = challenge?.user_id;
       } else if (target_type === TargetType.PARTICIPATION) {
-        const participation = await this.prisma.participation.findUnique({ where: { id: target_id } });
+        const participation = await this.prisma.participation.findUnique({
+          where: { id: target_id },
+        });
         ownerId = participation?.user_id;
       }
       if (ownerId && ownerId !== user_id) {

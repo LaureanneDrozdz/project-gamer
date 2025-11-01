@@ -17,7 +17,6 @@ type AuthRequest = Request & {
   params?: Record<string, unknown>;
 };
 
-
 @Injectable()
 export class OwnershipGuard implements CanActivate {
   constructor(

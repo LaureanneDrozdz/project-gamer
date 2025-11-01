@@ -20,14 +20,13 @@ export class AuthentificationService {
     private jwtService: JwtService,
   ) {}
 
-  private async comparePasswords(
+  async comparePasswords(
     password: string,
     hashedPassword: string,
   ): Promise<boolean> {
     return bcrypt.compare(password, hashedPassword);
   }
 
-  
   checkEmailFormat(email: string) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -47,18 +46,23 @@ export class AuthentificationService {
   }
 
   async signUp(data: CreateUserDto): Promise<{ accessToken: string }> {
-    const newUser = { ...data };
-    const user = await this.usersService.create(newUser);
-    const apiUser = await this.usersService.findByEmail(data.email);
-    const payload = {
-      id: apiUser?.id,
-      name: user.userName,
-      email: user.email,
-      role: user.role,
-    };
-    return {
-      accessToken: await this.jwtService.signAsync(payload),
-    };
+    try {
+      const user = await this.usersService.create({ ...data });
+      const apiUser = await this.usersService.findByEmail(data.email);
+      const payload = {
+        id: apiUser?.id,
+        name: user.userName,
+        email: user.email,
+        role: user.role,
+      };
+      return {
+        accessToken: await this.jwtService.signAsync(payload),
+      };
+    } catch (err: unknown) {
+      if (err instanceof BadRequestException) throw err;
+      this.logger.error('Error during signUp', err);
+      throw new BadRequestException('Unable to create user');
+    }
   }
 
   async signIn(data: SignInDto): Promise<{ accessToken: string }> {

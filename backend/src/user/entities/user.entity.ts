@@ -15,9 +15,10 @@ export class UserEntity {
     // Normalize created_at to ISO string for API consumers
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.created_at = user?.created_at instanceof Date
-      ? user.created_at.toISOString()
-      : (user?.created_at as unknown as string);
+    this.created_at =
+      user?.created_at instanceof Date
+        ? user.created_at.toISOString()
+        : (user?.created_at as unknown as string);
   }
 
   @ApiProperty({

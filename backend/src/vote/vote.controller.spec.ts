@@ -79,8 +79,6 @@ describe('VoteController', () => {
     });
   });
 
-
-
   describe('findOne', () => {
     it('should return one vote by id', async () => {
       const vote = { id: '1' };

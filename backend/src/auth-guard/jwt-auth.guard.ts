@@ -17,11 +17,11 @@ type AuthRequest = Request & {
 export class JwtAuthGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    
     const request = context.switchToHttp().getRequest<AuthRequest>();
 
     const cookies = request.cookies as Record<string, unknown> | undefined;
-    const token = typeof cookies?.token === 'string' ? cookies.token : undefined;
+    const token =
+      typeof cookies?.token === 'string' ? cookies.token : undefined;
     if (!token) {
       throw new UnauthorizedException('Token manquant');
     }

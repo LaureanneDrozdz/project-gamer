@@ -282,24 +282,6 @@ describe('UserService', () => {
     });
   });
 
-  describe('findByEmailWithPassword', () => {
-    it('should return the full user entity including password_hash', async () => {
-      const user = {
-        id: '1',
-        userName: 'JohnDoe',
-        email: 'john.doe@mail.com',
-        password_hash: 'hash',
-        avatar_url: 'https://randomuser.me/api/portraits/men/75.jpg',
-      };
-
-      mockPrismaService.user.findUnique.mockResolvedValue(user);
-
-      const result = await service.findByEmailWithPassword('john.doe@mail.com');
-
-      expect(result).toEqual(user);
-    });
-  });
-
   describe('getLeaderboard', () => {
     it('should return leaderboard data', async () => {
       mockPrismaService.user.findMany

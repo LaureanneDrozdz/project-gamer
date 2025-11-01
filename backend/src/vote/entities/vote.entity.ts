@@ -62,8 +62,9 @@ export class VoteEntity {
     // normalize created_at
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.created_at = vote.created_at instanceof Date
-      ? vote.created_at.toISOString()
-      : (vote.created_at as unknown as string);
+    this.created_at =
+      vote.created_at instanceof Date
+        ? vote.created_at.toISOString()
+        : (vote.created_at as unknown as string);
   }
 }

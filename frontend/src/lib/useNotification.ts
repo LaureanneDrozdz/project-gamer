@@ -29,7 +29,7 @@ export function useNotifications() {
         const merged = [...data.filter((n: NotificationPayload) => !ids.has(n.id)), ...prev];
         return merged;
       });
-    } catch (err) {
+    } catch {
       // handle error
     }
   }, []);
@@ -77,8 +77,11 @@ export function useNotifications() {
       });
 
       socket.on('connect_error', (err: unknown) => {
-        // optional debug
-        // console.warn('socket connect_error', err);
+        // log connect errors for debugging
+        // note: keep this active so `err` is used and doesn't trigger lint rules
+        // it can be silenced in production if desired
+        // eslint-disable-next-line no-console
+        console.warn('socket connect_error', err);
       });
 
       socket.on('reconnect', () => {
@@ -107,7 +110,7 @@ export function useNotifications() {
       const updated = await res.json();
       setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
       return updated;
-    } catch (err) {
+    } catch {
       // handle error
       return null;
     }

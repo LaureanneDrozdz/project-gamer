@@ -66,8 +66,9 @@ export class ParticipationEntity {
     // Prisma may return a Date object; convert to ISO string for consistency
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.created_at = participation.created_at instanceof Date
-      ? participation.created_at.toISOString()
-      : (participation.created_at as unknown as string);
+    this.created_at =
+      participation.created_at instanceof Date
+        ? participation.created_at.toISOString()
+        : (participation.created_at as unknown as string);
   }
 }

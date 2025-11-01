@@ -85,7 +85,9 @@ export class AuthentificationController {
     @Res({ passthrough: true }) res?: Response,
   ) {
     const result = await this.authentificationService.signIn(data);
-    const payload = this.authentificationService.decodeToken(result.accessToken);
+    const payload = this.authentificationService.decodeToken(
+      result.accessToken,
+    );
     if (!payload || payload.role !== 'ADMIN') {
       throw new UnauthorizedException('Admin credentials required');
     }
@@ -107,7 +109,6 @@ export class AuthentificationController {
     description: 'Returns the decoded payload of the JWT',
     type: 'object',
   })
-
   decodeToken(reqOrToken: Request | string) {
     if (typeof reqOrToken === 'string') {
       const tokenString = reqOrToken.replace(/^Bearer\s*/i, '').trim();

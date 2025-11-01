@@ -4,44 +4,67 @@ import { EventBusService } from 'src/events/event-bus.service';
 
 @Injectable()
 export class NotificationService implements OnModuleInit {
-  constructor(private prisma: PrismaService, private eventBus: EventBusService) {}
+  constructor(
+    private prisma: PrismaService,
+    private eventBus: EventBusService,
+  ) {}
   private readonly logger = new Logger(NotificationService.name);
-    
+
   onModuleInit() {
     // listen to vote.created events
-    this.eventBus.on('vote.created', async (payload: any) => {
-      try {
-        const { userId: ownerId, actorId, targetType, targetId } = payload;
-        if (!ownerId || ownerId === actorId) return;
-        const p: any = this.prisma as any;
+    this.eventBus.on('vote.created', (payload: unknown) => {
+      void (async () => {
         try {
-          const created = await p.notification.create({
-            data: {
+          const obj = payload as Record<string, unknown>;
+          const ownerId = (obj.userId ?? obj.user_id) as string | undefined;
+          const actorId = (obj.actorId ?? obj.actor_id) as string | undefined;
+          const targetType = (obj.targetType ?? obj.target_type) as
+            | string
+            | undefined;
+          const targetId = (obj.targetId ?? obj.target_id) as
+            | string
+            | undefined;
+          if (!ownerId || !actorId || ownerId === actorId) return;
+          const p = this.prisma;
+          try {
+            const data = {
               user_id: ownerId,
               actor_id: actorId,
-              action: 'LIKE',
-              target_type: targetType,
-              target_id: targetId,
-            },
-          });
-          // emit notification.created for gateway to push
-          this.eventBus.emit('notification.created', created);
-        } catch (e: any) {
-          if (e?.code === 'P2002') {
-            this.logger.debug('Duplicate notification ignored');
-          } else {
-            throw e;
+              action: 'LIKE' as const,
+              ...(targetType ? { target_type: targetType } : {}),
+              ...(targetId ? { target_id: targetId } : {}),
+            };
+            const created = await p.notification.create({
+              data: data as unknown as Parameters<
+                typeof p.notification.create
+              >[0]['data'],
+            });
+            // emit notification.created for gateway to push
+            this.eventBus.emit('notification.created', created);
+          } catch (e: unknown) {
+            if (typeof e === 'object' && e !== null && 'code' in e) {
+              const code = (e as Record<string, unknown>)['code'];
+              if (code === 'P2002') {
+                this.logger.debug('Duplicate notification ignored');
+              } else {
+                throw e;
+              }
+            } else {
+              throw e;
+            }
           }
+        } catch (err: unknown) {
+          this.logger.error(
+            'Failed to create notification from event',
+            err as Error,
+          );
         }
-      } catch (err) {
-        // swallow errors - logging could be added
-        this.logger.error('Failed to create notification from event', err as any);
-      }
+      })();
     });
   }
 
   async getUserNotifications(userId: string, onlyUnread = false) {
-    const p: any = this.prisma as any;
+    const p = this.prisma;
     return p.notification.findMany({
       where: { user_id: userId, ...(onlyUnread ? { read: false } : {}) },
       orderBy: { created_at: 'desc' },
@@ -50,8 +73,10 @@ export class NotificationService implements OnModuleInit {
 
   async markAsRead(notificationId: string, userId: string) {
     // ensure the notification belongs to the user
-  const p: any = this.prisma as any;
-  const existing = await p.notification.findUnique({ where: { id: notificationId } });
+    const p = this.prisma;
+    const existing = await p.notification.findUnique({
+      where: { id: notificationId },
+    });
     if (!existing || existing.user_id !== userId) {
       throw new Error('Notification not found or access denied');
     }
@@ -63,8 +88,10 @@ export class NotificationService implements OnModuleInit {
   }
 
   async remove(notificationId: string, userId: string) {
-  const p: any = this.prisma as any;
-  const existing = await p.notification.findUnique({ where: { id: notificationId } });
+    const p = this.prisma;
+    const existing = await p.notification.findUnique({
+      where: { id: notificationId },
+    });
     if (!existing || existing.user_id !== userId) {
       throw new Error('Notification not found or access denied');
     }
@@ -75,8 +102,7 @@ export class NotificationService implements OnModuleInit {
   }
 
   async getUnreadCount(userId: string) {
-    const p: any = this.prisma as any;
+    const p = this.prisma;
     return p.notification.count({ where: { user_id: userId, read: false } });
   }
-
 }

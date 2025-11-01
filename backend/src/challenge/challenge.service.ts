@@ -53,10 +53,10 @@ export class ChallengeService {
 
       include: {
         votes: true,
-        participations:{
+        participations: {
           select: {
             votes: true,
-          },  
+          },
         },
         creator: {
           select: {
