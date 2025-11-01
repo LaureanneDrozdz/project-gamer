@@ -115,7 +115,6 @@ jobs:
     name: Deploy to Railway
     runs-on: ubuntu-latest
     needs: [build-and-push-backend, build-and-push-frontend]
-    container: ghcr.io/railwayapp/cli:latest
     env:
       RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
     steps:
@@ -137,6 +136,12 @@ jobs:
           echo "Pulling frontend images..."
           docker pull "$DOCKERHUB_USER/project-frontend:latest" || true
           docker pull "$DOCKERHUB_USER/project-frontend:$GITHUB_SHA" || true
+
+      - name: Install Railway CLI
+        run: |
+          # Install Railway CLI on the Ubuntu runner so we can run `railway up` and `railway run`.
+          # Installing via npm is a straightforward approach on the runner.
+          npm install -g railway || true
 
       - name: Trigger Railway deploy
         run: railway up
