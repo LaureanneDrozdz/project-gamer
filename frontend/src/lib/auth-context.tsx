@@ -176,5 +176,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isLoggedIn: user !== null,
   };
 
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

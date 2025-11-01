@@ -70,4 +70,19 @@ export class ChallengeController {
   remove(@Param('id') id: string) {
     return this.challengeService.remove(id);
   }
+
+
+  @Patch('challenge/:id/validate')
+  @ApiParam({ name: 'id', description: 'ID du challenge' })
+  @ApiBody({ schema: { properties: { validated: { type: 'boolean' } } } })
+  @ApiOkResponse({ description: 'Challenge validation status updated', type: ChallengeEntity })
+  @UseGuards(JwtAuthGuard, ChallengeOwnershipGuard)
+  async setChallengeValidated(
+    @Param('id') id: string,
+    @Body() body: { validated: boolean },
+  ) {
+    const { validated } = body;
+    return this.challengeService.validateChallenge(id, validated);
+  }
+
 }

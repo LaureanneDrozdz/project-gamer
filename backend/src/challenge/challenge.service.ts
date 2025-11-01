@@ -95,4 +95,17 @@ export class ChallengeService {
       throw new BadRequestException('invalid data');
     }
   }
+
+  async validateChallenge(id: string, validated: boolean) {
+    try {
+      const challenge = await this.prisma.challenge.update({
+        where: { id },
+        data: { validated },
+      });
+      return new ChallengeEntity(challenge);
+    } catch (error) {
+      this.logger.error('Error validating challenge', error);
+      throw new BadRequestException('invalid data');
+    }
+  }
 }

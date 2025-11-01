@@ -72,6 +72,34 @@ export class AuthentificationController {
     return result;
   }
 
+  @HttpCode(HttpStatus.OK)
+  @Post('admin-login')
+  @ApiBody({
+    type: SignInDto,
+  })
+  @ApiOkResponse({
+    description: 'Admin login successful, sets admin_token cookie',
+  })
+  async adminSignIn(
+    @Body() data: SignInDto,
+    @Res({ passthrough: true }) res?: Response,
+  ) {
+    const result = await this.authentificationService.signIn(data);
+    const payload = this.authentificationService.decodeToken(result.accessToken);
+    if (!payload || payload.role !== 'ADMIN') {
+      throw new UnauthorizedException('Admin credentials required');
+    }
+    if (res && result?.accessToken) {
+      res.cookie('admin_token', result.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+    }
+    return { ok: true };
+  }
+
   @Get('me')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
