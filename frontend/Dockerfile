@@ -19,10 +19,8 @@ ARG NEXT_PUBLIC_API_URL
 # `process.env.NEXT_PUBLIC_API_URL` are available during `npm run build`.
 ENV SERVER_API_URL=${SERVER_API_URL}
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-
-RUN npm run build
-# Copy application source and build
 COPY . .
+RUN npm run build
 
 # Production image
 FROM node:20-alpine AS production
