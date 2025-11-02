@@ -4,7 +4,7 @@ WORKDIR /usr/src/backend
 
 # Install all deps (including dev) so prisma and build tools are available
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 # Copy source and generate the Prisma client, then build the app
 
