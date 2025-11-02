@@ -5,5 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE "User" DROP COLUMN "roles",
-ADD COLUMN     "role" "Roles" NOT NULL DEFAULT 'USER';
+ALTER TABLE "User" RENAME COLUMN "roles" TO "role";
