@@ -6,7 +6,9 @@ COPY package*.json ./
 
 RUN npm install
 
-
 COPY . .
 
-CMD ["npm", "run", "build"]
+RUN npx prisma generate
+RUN npm run build
+
+CMD ["npm", "run", "start:prod"]
