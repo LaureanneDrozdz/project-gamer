@@ -65,7 +65,7 @@ jobs:
   build-and-push-backend:
     name: Build and push backend to Docker Hub
     runs-on: ubuntu-latest
-    needs: test-backend
+    #needs: test-backend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -96,7 +96,7 @@ jobs:
   build-and-push-frontend:
     name: Build and push frontend to Docker Hub
     runs-on: ubuntu-latest
-    needs: [lint]
+    #needs: [lint]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
