@@ -147,7 +147,8 @@ jobs:
           railway run --service="$SERVICE_BACKEND" -- npx prisma migrate deploy --preview-feature || true
           if [ "$RUN_DB_SEED" = 'true' ]; then
             echo "Running DB seed on Railway (service: $SERVICE_BACKEND)..."
-            railway run --service "$SERVICE_BACKEND" -- npx prisma db seed || railway run --service="$SERVICE_BACKEND" -- node prisma/seed.ts || true
+            # Prefer prisma's seed command which will execute the script configured in package.json
+            railway run --service "$SERVICE_BACKEND" -- npx prisma db seed || railway run --service "$SERVICE_BACKEND" -- npm run seed || true
           fi
 
   accessibility:

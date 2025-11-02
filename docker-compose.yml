@@ -31,10 +31,10 @@ services:
     command: >
       sh -c "
         # 1) Generate the Prisma client
-        npx prisma migrate deploy &&
-        npx prisma db push &&
-        npx prisma db seed &&
-        npm run start:dev
+        # npx prisma migrate deploy &&
+        # npx prisma db push &&
+        #npx prisma db seed &&
+        # npm run start:dev
       "
     env_file:
       - docker.env

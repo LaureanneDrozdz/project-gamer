@@ -3,8 +3,7 @@ FROM node:20-alpine AS builder
 
 # Use a consistent working directory for builder and final image
 WORKDIR /usr/src/backend
-RUN chown -R node:node /usr/src/backend
-USER node
+
 
 # Copy package files first to take advantage of Docker layer caching
 COPY package*.json ./
@@ -29,7 +28,12 @@ USER node
 
 # Install only production dependencies
 COPY package*.json ./
-RUN npm install --omit=dev
+# Copy node_modules from the builder stage (builder installed all deps).
+# This avoids running `npm install` again in the final image which can fail
+# in some CI environments (exit code 243) and ensures the generated Prisma
+# client is present. If you prefer a slimmer image, we can instead run
+# `npm ci --omit=dev` here as root before switching to the node user.
+COPY --from=builder /usr/src/backend/node_modules ./node_modules
 
 # Copy build output and the generated Prisma client from builder
 COPY --from=builder /usr/src/backend/dist ./dist
