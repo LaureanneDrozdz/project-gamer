@@ -34,7 +34,7 @@ COPY package*.json ./
 
 COPY --from=builder /usr/src/frontend/node_modules ./node_modules
 COPY --from=builder /usr/src/frontend/dist ./next
-COPY --from=builder /app/public ./public
+COPY --from=builder /usr/src/frontend/public ./public
 
 EXPOSE 5173
 CMD ["npm", "run", "start"]
