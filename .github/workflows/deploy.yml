@@ -142,11 +142,11 @@ jobs:
       - name: Deploy backend to Railway
         run: |
           echo "Deploying backend to Railway..."
-          railway up --image ${{ secrets.DOCKERHUB_USERNAME }}/project-backend:${{ github.sha }} --service="$SERVICE_BACKEND" --detach
+          railway deployment create --service="$SERVICE_BACKEND" --image ${{ secrets.DOCKERHUB_USERNAME }}/project-backend:${{ github.sha }}
       - name: Deploy frontend to Railway
         run: |
           echo "Deploying frontend to Railway..."
-          railway up --image ${{ secrets.DOCKERHUB_USERNAME }}/project-frontend:${{ github.sha }} --service="$SERVICE_FRONTEND" --detach
+          railway deployment create --service="$SERVICE_FRONTEND" --image ${{ secrets.DOCKERHUB_USERNAME }}/project-frontend:${{ github.sha }}
       - name: Run migrations on Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
