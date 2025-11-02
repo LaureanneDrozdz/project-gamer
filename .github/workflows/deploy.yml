@@ -142,11 +142,11 @@ jobs:
       - name: Deploy backend to Railway
         run: |
           echo "Deploying backend to Railway..."
-          railway redeploy --service="$SERVICE_BACKEND"
+          railway redeploy --service="$SERVICE_BACKEND" --yes
       - name: Deploy frontend to Railway
         run: |
           echo "Deploying frontend to Railway..."
-          railway redeploy --service="$SERVICE_FRONTEND" 
+          railway redeploy --service="$SERVICE_FRONTEND" --yes
       - name: Run migrations on Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
