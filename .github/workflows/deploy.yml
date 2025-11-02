@@ -8,6 +8,18 @@ on:
       - main
 
 jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    # This job intentionally has no 'needs' so the workflow contains at least one root job.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
   #lint:
   #  strategy:
   #      matrix:
