@@ -120,44 +120,18 @@ jobs:
       SERVICE_BACKEND: 53938932-3d5b-4924-ad59-69a071951e1f
       SERVICE_FRONTEND: 65464a4f-6bbb-4584-8cb4-85e2210ced24
     steps:
-      - name: Log in to Docker Hub (for deploy pulls)
-        uses: docker/login-action@v2
-        with:
-          registry: docker.io
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Pull backend & frontend images from Docker Hub
-        env:
-          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
-          GITHUB_SHA: ${{ github.sha }}
-        run: |
-          echo "Pulling backend images..."
-          docker pull "$DOCKERHUB_USER/project-backend:latest" || true
-          docker pull "$DOCKERHUB_USER/project-backend:$GITHUB_SHA" || true
-          echo "Pulling frontend images..."
-          docker pull "$DOCKERHUB_USER/project-frontend:latest" || true
-          docker pull "$DOCKERHUB_USER/project-frontend:$GITHUB_SHA" || true
 
       - name: Install Railway CLI
         run: |
           # Install Railway CLI on the Ubuntu runner so we can run `railway up` and `railway run`.
           # Installing via npm is a straightforward approach on the runner.
           npm install -g @railway/cli || true
-
-      - name: Trigger Railway deploy for Front
-        run: railway up --service=${{ env.SERVICE_FRONTEND }}
-
-      - name: Trigger Railway deploy for Backend
-        run: railway up --service=${{ env.SERVICE_BACKEND }}
-        
+  
       - name: Run migrations on Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RUN_DB_SEED: ${{ secrets.RUN_DB_SEED }}
         run: |
-          # Execute Prisma migrations inside Railway environment to avoid exposing DATABASE_URL
-          # This assumes the project is linked in Railway and the default service has node/prisma available
           echo "Running Prisma migrations on Railway..."
           railway run -- npx prisma migrate deploy --preview-feature || true
           if [ "$RUN_DB_SEED" = 'true' ]; then
