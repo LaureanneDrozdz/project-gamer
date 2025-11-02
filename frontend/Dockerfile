@@ -12,6 +12,15 @@ RUN npm install
 
 # Copy application source and build
 COPY . .
+# Build-time args: allow passing API base URLs into the build (used by src/lib/api.ts)
+ARG SERVER_API_URL
+ARG NEXT_PUBLIC_API_URL
+
+# Expose build args as env vars so `process.env.SERVER_API_URL` and
+# `process.env.NEXT_PUBLIC_API_URL` are available during `npm run build`.
+ENV SERVER_API_URL=${SERVER_API_URL}
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+
 RUN npm run build
 
 # Production image

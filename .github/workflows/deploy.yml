@@ -107,9 +107,11 @@ jobs:
         with:
           context: ./frontend
           no-cache: true
+          # Pass both server and client API URLs from repository secrets into the Docker build.
+          # Ensure you set a secret named SERVER_API_URL in the repository Actions secrets.
           build-args: |
-            SERVER_API_URL=${{ secrets.PUBLIC_API_URL }}
-            NEXT_PUBLIC_API_URL=${{ secrets.PUBLIC_API_URL }}
+            SERVER_API_URL=${{ secrets.SERVER_API_URL }}
+            NEXT_PUBLIC_API_URL=${{ secrets.SERVER_API_URL }}
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/project-frontend:${{ github.sha }}
