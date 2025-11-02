@@ -116,20 +116,7 @@ jobs:
         run: |
           echo "Deploying frontend to Railway..."
           railway redeploy --service="$SERVICE_FRONTEND" --yes
-      - name: Run migrations on Railway
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RUN_DB_SEED: ${{ secrets.RUN_DB_SEED }}
-        run: |
-          echo "Running Prisma migrations on Railway (service: $SERVICE_BACKEND)..."
-          # Target the specific backend service when running migrations/seeds so Railway CLI
-          # doesn't try to guess among multiple services
-          railway run --service="$SERVICE_BACKEND" -- npx prisma migrate deploy --preview-feature || true
-          if [ "$RUN_DB_SEED" = 'true' ]; then
-            echo "Running DB seed on Railway (service: $SERVICE_BACKEND)..."
-            # Prefer prisma's seed command which will execute the script configured in package.json
-            railway run --service "$SERVICE_BACKEND" -- npx prisma db seed || railway run --service "$SERVICE_BACKEND" -- npm run seed || true
-          fi
+     
 
   accessibility:
     runs-on: ubuntu-latest
