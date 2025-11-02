@@ -76,6 +76,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./backend
+          no-cache: true
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/project-backend:${{ github.sha }}
@@ -106,6 +107,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: ./frontend
+          no-cache: true
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/project-frontend:${{ github.sha }}
@@ -133,7 +135,6 @@ jobs:
           RUN_DB_SEED: ${{ secrets.RUN_DB_SEED }}
         run: |
           echo "Running Prisma migrations on Railway..."
-          railway run -- npx prisma migrate deploy --preview-feature || true
           if [ "$RUN_DB_SEED" = 'true' ]; then
             echo "Running DB seed on Railway..."
             railway run -- npx prisma db seed || railway run -- node prisma/seed.js || true
