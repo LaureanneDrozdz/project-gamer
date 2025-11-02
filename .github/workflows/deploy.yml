@@ -21,11 +21,11 @@ jobs:
           node-version: '22'
 
   lint:
+    name: Lint (frontend & backend)
+    runs-on: ubuntu-latest
     strategy:
-        matrix:
-        project:
-          - frontend
-          - backend
+      matrix:
+        project: [frontend, backend]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -123,7 +123,7 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/project-frontend:${{ github.sha }}
             ${{ secrets.DOCKERHUB_USERNAME }}/project-frontend:latest
-            
+
   deploy-to-railway:
     name: Deploy to Railway
     runs-on: ubuntu-latest
