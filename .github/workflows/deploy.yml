@@ -128,16 +128,26 @@ jobs:
           # Install Railway CLI on the Ubuntu runner so we can run `railway up` and `railway run`.
           # Installing via npm is a straightforward approach on the runner.
           npm install -g @railway/cli || true
-  
+      - name: Deploy backend to Railway
+        run: |
+          echo "Deploying backend to Railway..."
+          railway up --service="$SERVICE_BACKEND" --detach
+      - name: Deploy frontend to Railway
+        run: |
+          echo "Deploying frontend to Railway..."
+          railway up --service="$SERVICE_FRONTEND" --detach
       - name: Run migrations on Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RUN_DB_SEED: ${{ secrets.RUN_DB_SEED }}
         run: |
-          echo "Running Prisma migrations on Railway..."
+          echo "Running Prisma migrations on Railway (service: $SERVICE_BACKEND)..."
+          # Target the specific backend service when running migrations/seeds so Railway CLI
+          # doesn't try to guess among multiple services
+          railway run --service="$SERVICE_BACKEND" -- npx prisma migrate deploy --preview-feature || true
           if [ "$RUN_DB_SEED" = 'true' ]; then
-            echo "Running DB seed on Railway..."
-            railway run -- npx prisma db seed || railway run -- node prisma/seed.js || true
+            echo "Running DB seed on Railway (service: $SERVICE_BACKEND)..."
+            railway run --service "$SERVICE_BACKEND" -- npx prisma db seed || railway run --service="$SERVICE_BACKEND" -- node prisma/seed.ts || true
           fi
 
   accessibility:
