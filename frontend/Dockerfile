@@ -10,8 +10,7 @@ COPY package*.json ./
 # Install all dependencies (including dev) so prisma and build tools are available
 RUN npm install
 
-# Copy application source and build
-COPY . .
+
 # Build-time args: allow passing API base URLs into the build (used by src/lib/api.ts)
 ARG SERVER_API_URL
 ARG NEXT_PUBLIC_API_URL
@@ -22,6 +21,8 @@ ENV SERVER_API_URL=${SERVER_API_URL}
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
 RUN npm run build
+# Copy application source and build
+COPY . .
 
 # Production image
 FROM node:20-alpine AS production
