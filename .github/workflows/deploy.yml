@@ -8,18 +8,6 @@ on:
       - main
 
 jobs:
-  prepare:
-    name: Prepare
-    runs-on: ubuntu-latest
-    # This job intentionally has no 'needs' so the workflow contains at least one root job.
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
   lint:
     name: Lint (frontend & backend)
     runs-on: ubuntu-latest
@@ -96,7 +84,7 @@ jobs:
   build-and-push-frontend:
     name: Build and push frontend to Docker Hub
     runs-on: ubuntu-latest
-    #needs: [lint]
+    needs: [lint]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -119,6 +107,9 @@ jobs:
         with:
           context: ./frontend
           no-cache: true
+          build-args: |
+            SERVER_API_URL=${{ secrets.PUBLIC_API_URL }}
+            NEXT_PUBLIC_API_URL=${{ secrets.PUBLIC_API_URL }}
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/project-frontend:${{ github.sha }}
