@@ -18,7 +18,7 @@ echo "listen_addresses='*'" >> /var/lib/postgresql/data/postgresql.conf
 pg_ctl -D /var/lib/postgresql/data start
 
 # Créer l'utilisateur et la base de données
-psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
+psql -v ON_ERROR_STOP=1 --username "$DATABASE_URL" <<-EOSQL
     CREATE USER gamer WITH PASSWORD 'gamer';
     CREATE DATABASE gamerchallenge;
     GRANT ALL PRIVILEGES ON DATABASE gamerchallenge TO gamer;
