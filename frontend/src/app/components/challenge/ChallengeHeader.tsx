@@ -31,7 +31,7 @@ const ChallengeHeader = memo(function ChallengeHeader({
     <>
       {/** Hero section */}
       <section
-        className="relative px-4 py-4 md:px-8 md:py-6"
+        className="relative px-2 py-3 md:px-4 md:py-2"
         aria-label="Image du challenge"
       >
         <div className="flex justify-center items-center relative w-full h-[40vh] md:h-[60vh] rounded-3xl overflow-hidden bg-radial-[at_50%_50%] from-secondary via-primary to-black shadow-[inset_0_0_400px_rgba(0,0,0,1)]">
@@ -65,13 +65,13 @@ const ChallengeHeader = memo(function ChallengeHeader({
       </section>
       {/** Title and creator section */}
       <section
-        className="mb-6"
+        className="relative px-2 py-3 md:px-4 md:py-4"
         aria-labelledby="challenge-header-title"
         role="region"
       >
         <h1
           id="challenge-title"
-          className="text-3xl md:text-4xl text-shadow-sm text-shadow-secondary font-bold mb-2 font-primary"
+          className="text-3xl md:text-4xl font-bold mb-2 font-primary"
         >
           {challenge.title || 'Titre du challenge inconnu'}
         </h1>

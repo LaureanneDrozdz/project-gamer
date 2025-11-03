@@ -75,13 +75,13 @@ export default function ParticipationBlock({
   };
 
   return (
-    <div className="mb-8">
-      <h2 className="text-xl font-bold mb-6 font-primary">
+    <div className="mb-6">
+      <h2 className="text-xl font-bold mb-4 font-primary">
         Participez au Challenge
       </h2>
       {isParticipationSubmitted ? (
         <div
-          className="bg-secondary border-l-4 border-primary text-primary p-4 rounded-lg shadow-md flex items-center gap-4"
+          className="bg-secondary border-l-4 border-primary text-primary p-3 rounded-lg shadow-md flex items-center gap-4"
           role="alert"
         >
           <FontAwesomeIcon icon={faCircleCheck} className="text-primary" />
@@ -94,7 +94,7 @@ export default function ParticipationBlock({
         </div>
       ) : hasUserParticipated ? (
         <div
-          className="bg-secondary border-l-4 border-primary text-primary p-4 rounded-lg shadow-md flex items-center gap-4"
+          className="bg-secondary border-l-4 border-primary text-primary p-3 rounded-lg shadow-md flex items-center gap-4"
           role="alert"
         >
           <FontAwesomeIcon icon={faCircleInfo} className="text-primary" />

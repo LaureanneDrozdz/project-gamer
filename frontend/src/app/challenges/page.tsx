@@ -7,8 +7,8 @@ export default async function ChallengesView() {
 
   return (
     <section className="w-4/5 mx-auto my-11">
-      <div className="flex items-center justify-between mb-6">
-        <h1 id="challenges-heading" className="text-xl font-bold">
+      <div className="flex flex-col md:flex-col  justify-between mb-6">
+        <h1 id="challenges-heading" className="text-4xl font-bold text-left mb-2 lg:mb-6">
           Challenges
         </h1>
         <ChallengesList challenges={challenges} showFilters={true} />

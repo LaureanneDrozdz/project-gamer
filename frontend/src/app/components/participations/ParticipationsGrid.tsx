@@ -23,8 +23,8 @@ const ParticipationsGrid = ({ challenge }: ParticipationsGridProps) => {
       className="md:col-span-1"
       aria-label="Liste des participations au challenge"
     >
-      <h2 className="text-xl font-bold mb-6 font-primary">Participations</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <h2 className="text-xl font-bold mb-4 font-primary">Participations</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {participations && participations.length > 0 ? (
           participations.map((participation) => (
             <ParticipationCard

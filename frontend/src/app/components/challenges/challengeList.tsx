@@ -51,6 +51,11 @@ export default function ChallengesList({
         {visibleChallenges.map((challenge) => (
           <ChallengeCard key={challenge.id} challenge={challenge} />
         ))}
+        {filteredChallenges.length === 0 && (
+          <p className="text-gray-600 mt-2" role="status">
+            Aucun challenge ne correspond aux critères sélectionnés.
+          </p>
+        )}
       </div>
 
       {showFilters && visibleCount < filteredChallenges.length && (

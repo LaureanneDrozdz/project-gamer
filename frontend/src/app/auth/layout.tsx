@@ -10,11 +10,11 @@ export const metadata = {
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
-    <section className="min-h-screen flex flex-col bg-primary">
-      <div className="bg-white flex-1 flex items-center justify-center p-4 h-full">
+    <section className="md:min-h-full flex flex-col bg-primary my-10">
+      <div className="bg-white flex-1 flex md:items-center justify-center p-4 h-full">
         <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row bg-transparent rounded-lg h-full items-stretch lg:min-h-[700px]">
           {/* Left Panel - Form */}
-          <main className="w-full lg:w-1/2 bg-white p-6 sm:p-8 border-2 border-primary rounded-lg lg:rounded-r-none lg:rounded-l-lg flex flex-col flex-1">
+          <main className="w-full lg:w-1/2 bg-white px-2 py-4 sm:p-6 border-2 border-primary rounded-lg lg:rounded-r-none lg:rounded-l-lg flex flex-col flex-1">
             {children}
           </main>
 

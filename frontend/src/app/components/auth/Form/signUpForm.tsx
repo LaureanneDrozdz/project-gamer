@@ -83,6 +83,17 @@ export default function SignUpForm({ onSignup, signupError }: SignUpFormProps) {
         />
       </div>
 
+      <div className="flex items-center space-x-3">
+        <input
+          type="checkbox"
+          id="terms"
+          required
+          className="h-4 w-4 rounded text-primary focus:ring-primary"
+        />
+        <label htmlFor="terms" className="label mb-0">
+          J&apos;accepte les termes et conditions
+        </label>
+      </div>
       <button
         type="submit"
         className="w-full bg-cta text-noir py-3 rounded font-semibold"

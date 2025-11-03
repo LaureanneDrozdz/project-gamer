@@ -7,10 +7,16 @@ type ChallengeFiltersProps = {
 
 export function ChallengeFilters({ filter, onChange }: ChallengeFiltersProps) {
   return (
-    <div className="space-x-2" role="group" aria-label="Filtres des challenges">
+    <div
+      className="flex flex-col sm:flex-row sm:items-center gap-2 mb-4 lg:mb-6"
+      role="group"
+      aria-label="Filtres des challenges" 
+    >
+      <h2 className="text-xl font-semibold mb-2 sm:mb-0 sm:mr-4">Filtres</h2>
+
       <button
         onClick={() => onChange('all')}
-        className={`px-4 py-1 rounded ${
+        className={`w-full sm:w-auto px-4 py-2 rounded-md text-sm text-center ${
           filter === 'all' ? 'bg-cta text-noir' : 'border'
         }`}
         aria-pressed={filter === 'all'}
@@ -19,9 +25,10 @@ export function ChallengeFilters({ filter, onChange }: ChallengeFiltersProps) {
       >
         Tous
       </button>
+
       <button
         onClick={() => onChange('with')}
-        className={`px-4 py-1 rounded ${
+        className={`w-full sm:w-auto px-4 py-2 rounded-md text-sm text-center ${
           filter === 'with' ? 'bg-cta text-noir' : 'border'
         }`}
         aria-pressed={filter === 'with'}
@@ -30,9 +37,10 @@ export function ChallengeFilters({ filter, onChange }: ChallengeFiltersProps) {
       >
         Avec participations
       </button>
+
       <button
         onClick={() => onChange('without')}
-        className={`px-4 py-1 rounded ${
+        className={`w-full sm:w-auto px-4 py-2 rounded-md text-sm text-center ${
           filter === 'without' ? 'bg-cta text-noir' : 'border'
         }`}
         aria-pressed={filter === 'without'}
