@@ -4,7 +4,7 @@ export const Pacifico = localFont({
   src: [
     {
       path: '../../public/assets/fonts/Pacifico-Regular.woff',
-      weight: '400',
+      weight: '400 700 900',
       style: 'normal',
     },
   ],
@@ -15,7 +15,7 @@ export const Raleway = localFont({
   src: [
     {
       path: '../../public/assets/fonts/Raleway-VariableFont_wght.woff',
-      weight: '100 900',
+      weight: '100 700 900',
       style: 'normal',
     },
   ],

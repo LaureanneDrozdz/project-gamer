@@ -3,7 +3,7 @@ import Link from 'next/link';
 function DesktopNav() {
   return (
     <nav
-      className="hidden md:flex space-x-6"
+      className="hidden lg:flex space-x-6"
       aria-label="Navigation principale"
     >
       <ul className="flex space-x-6 m-0 p-0 list-none">

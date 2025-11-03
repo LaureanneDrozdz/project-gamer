@@ -7,7 +7,7 @@ import Image from 'next/image';
 const Hero = () => {
   return (
     <section
-      className="relative w-full h-[50vh] min-h-[25rem] md:min-h-[35rem] grid grid-cols-1 md:grid-cols-2 items-center justify-center md:relative md:px-11 lg:px-20"
+      className="relative w-full h-[50vh] min-h-[25rem] md:min-h-[35rem] flex items-center justify-center md:relative md:px-11 lg:px-20"
       role="banner"
     >
       <Image
@@ -20,11 +20,13 @@ const Hero = () => {
         className="absolute inset-0 object-cover object-center md:object-left z-0"
         sizes="100vw"
       />
-      <div className="md:col-start-2 items-center justify-center w-[95%] md:w-full md:max-w-[45rem] mx-auto px-11 md:px-3 relative z-5 bg-secondary/25 backdrop-blur-sm py-6 ">
-        <h1 className="text-2xl md:text-2xl lg:text-5xl text-center pb-2 text-shadow-lg text-blanc">
+      {/* Dark overlay so the foreground text pops */}
+      <div className="absolute inset-0 bg-black/65 z-0 pointer-events-none" aria-hidden="true" />
+      <div className="items-center justify-center w-full md:max-w-[45rem] mx-auto px-11 md:px-3 relative z-20 py-6 text-center ">
+        <h1 className="text-4xl lg:text-6xl text-center pb-2 text-shadow-lg text-blanc font-semibold">
           Relevez le défi !
         </h1>
-        <h2 className="text-xl md:text-2xl lg:text-3xl lg:py-11 flex justify-center items-center text-center w-full text-blanc">
+        <h2 className="text-2xl  lg:text-4xl lg:py-11 text-center w-full text-blanc font-semibold ">
           Rejoignez la communauté des gamers et prouvez vos compétences
         </h2>
 

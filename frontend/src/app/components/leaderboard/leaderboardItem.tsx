@@ -31,18 +31,19 @@ const LeaderboardItem = memo(
       <tr
         key={index}
         tabIndex={0}
-       className="flex md:table-row flex-col rounded-lg md:rounded-nonemy-2 md:my-0 p-3 md:p-0  bg-white/5 md:bg-transparent backdrop-blur-sm hover:bg-primary/20 focus:bg-primary/30transition-colors
-"
+        className={
+          "flex md:table-row flex-row flex-wrap md:flex-nowrap rounded-lg md:rounded-none my-2 md:my-0 p-3 md:p-0 bg-white/5 md:bg-transparent hover:bg-primary/20 focus:bg-primary/30 transition-colors"
+        }
       >
         {/** Medal / Ranking */}
-        <td className="px-2 py-4 whitespace-nowrap text-center">
-          <div className="flex items-center">
+        <td className="flex-shrink-0 w-12 md:w-auto inline md:table-cell px-2 py-4 whitespace-nowrap text-center">
+          <div className="flex items-center justify-center">
             {index + 1 <= 3 ? (
               <FontAwesomeIcon
                 icon={faMedal}
-                className={`w-5 h-5 ${getMedalColor(index)}`}
-                title={`Rang ${index + 1}`}
+                className={` ${getMedalColor(index)} drop-shadow-md`}
                 aria-label={`Médaille du rang ${index + 1}`}
+                size='2x'
               />
             ) : (
               <span>
@@ -54,14 +55,14 @@ const LeaderboardItem = memo(
         </td>
         {/** /Medal / Ranking */}
         {/** User Info */}
-        <td className="px-2 py-4 whitespace-nowrap">
-          <div className="flex items-center">
+      <td className="flex-1 min-w-0 inline md:w-auto px-2 py-4 whitespace-nowrap">
+          <div className="flex flex-row items-center md:items-center">
             <Image
               src={imageUser}
               alt={`${username} avatar`}
               width={40}
               height={40}
-              className="rounded-full mr-3 object-cover"
+              className="rounded-full mr-3 object-cover flex-shrink-0"
             />
             <div>
               <div className="text-sm font-medium">{username}</div>
@@ -70,12 +71,18 @@ const LeaderboardItem = memo(
         </td>
         {/** /User Info */}
         {/** Score */}
-        <td className="pl-6 pr-2 py-4 whitespace-nowrap">
-          <div className="text-sm md:">
+        <td className="flex-shrink-0 w-full md:w-auto pl-6 pr-2 py-4 whitespace-nowrap">
+          <div className="flex items-center md:justify-end text-sm md:text-lg">
             <span className="sr-only">Score :</span>
-            {score}
+
+            <span className="text-lg"><span className="font-bold mr-1">Score:</span>{score}</span>
             <span className="ml-2" title="Trophée" aria-label="Trophée">
-              <FontAwesomeIcon icon={faTrophy} aria-hidden="true" />
+              <FontAwesomeIcon
+                icon={faTrophy}
+                aria-hidden="true"
+                className="drop-shadow-md text-yellow-600"
+                size="lg"
+              />
             </span>
           </div>
         </td>

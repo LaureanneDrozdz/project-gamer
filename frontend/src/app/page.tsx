@@ -14,10 +14,10 @@ export default async function Home() {
     <>
       <Hero />
 
-      <main className="w-full my-11 px-7 md:px-14 py-7">
+      <main className="w-full md:my-11 px-4 md:px-10 lg:px-20 xxl:px-40 py-7">
         {/* Section Challenges */}
         <section aria-labelledby="trending-challenges">
-          <h3 className="text-2xl font-bold mb-6" id="trending-challenges">
+          <h3 className="text-2xl font-bold mb-6 lg:mb-8" id="trending-challenges">
             {' '}
             Défis tendance
           </h3>
@@ -25,10 +25,10 @@ export default async function Home() {
         </section>
         {/* /Section Challenges */}
         {/* Section Leaderboard */}
-        <section>
-          <h3 className="text-2xl font-bold mb-6">Leaderboard</h3>
+        <section className='mt-20'>
+          <h3 className="text-2xl font-bold mb-6 lg:mb-8">Leaderboard</h3>
 
-          <div className="bg-white rounded-xl p-6">
+          <div className="bg-white rounded-xl md:p-6">
             <Leaderboard
               leaderboard={leaderboard}
               color="text-gray-600"

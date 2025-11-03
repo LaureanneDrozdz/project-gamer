@@ -22,7 +22,7 @@ const Leaderboard = ({
         centered ? 'max-w-4xl mx-auto' : ''
       } ${backgroundColor} mt-4`}
     >
-      <div className="overflow-x-auto">
+      <div>
         <table className="w-full" aria-label="Classement des joueurs">
           <caption className="sr-only">Classement des joueurs</caption>
           <thead className="sr-only">

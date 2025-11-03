@@ -10,12 +10,12 @@ function MobileMenu() {
   return (
     <nav
       id={menuId}
-      className="md:hidden absolute top-full left-0 right-0 bg-primary flex-col items-center py-4 space-y-4 z-10 shadow-lg flex"
+      className="lg:hidden relative top-full left-0 right-0 bg-primary flex flex-col items-center py-4 space-y-4 z-10 shadow-lg"
       aria-label="Navigation mobile"
       role="menu"
       tabIndex={-1}
     >
-      <ul className="flex flex-col space-y-4 m-0 p-0 list-none">
+      <ul className="flex flex-col items-center space-y-4 m-0 p-0 list-none">
         <li role="none">
           <Link
             href="/"
@@ -43,7 +43,11 @@ function MobileMenu() {
             Leaderboard
           </Link>
         </li>
-        <li role="none">{isLoggedIn ? <ProfileMenu /> : <AuthButtons />}</li>
+        <li role="none">{isLoggedIn ? <ProfileMenu /> : (
+          <div className='flex flex-col gap-3'>
+            <AuthButtons />
+          </div>
+        )}</li>
       </ul>
     </nav>
   );

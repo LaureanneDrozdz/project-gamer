@@ -7,7 +7,7 @@ function BurgerButton({
 }) {
   return (
     <button
-      className="md:hidden text-blanc z-10"
+      className="lg:hidden text-blanc z-10"
       onClick={toggle}
       aria-label={isOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
       aria-expanded={isOpen}

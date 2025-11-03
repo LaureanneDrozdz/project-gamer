@@ -12,12 +12,13 @@ type ChallengeCardProps = {
 const ChallengeCard = ({ challenge }: ChallengeCardProps) => {
   const participationCount = challenge.participations?.length ?? 0;
   const getDifficultyBg = (difficulty: string) => {
+    console.log('Difficulty:', difficulty);
     switch (difficulty) {
-      case 'easy':
+      case 'EASY':
         return 'bg-green-500';
-      case 'medium':
+      case 'MEDIUM':
         return 'bg-yellow-500';
-      case 'hard':
+      case 'HARD':
         return 'bg-red-500';
       default:
         return 'bg-gray-400';
@@ -28,11 +29,11 @@ const ChallengeCard = ({ challenge }: ChallengeCardProps) => {
   return (
     <Link
       href={`/details/${challenge.id}`}
-      className="block group"
+      className="block group w-full md:w-2/5 lg:w-auto"
       key={challenge.id}
     >
       <div
-        className="bg-white rounded-xl shadow-md overflow-hidden w-[95%] mx-auto max-w-sm group-hover:shadow-lg transition-shadow"
+        className="bg-white rounded-xl shadow-md overflow-hidden w-[95%] lg:min-w-[400px]  group-hover:shadow-lg transition-shadow"
         role="listitem"
         aria-label={`Challenge ${challenge.title}`}
         aria-describedby={challengeDetailsId}
