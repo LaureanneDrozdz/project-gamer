@@ -32,7 +32,7 @@ export default function Header() {
         <div
           className={`lg:hidden min-h-[300px] absolute top-full left-0 right-0 bg-primary flex-col items-center py-4 space-y-4 z-10 shadow-lg ${isMenuOpen ? 'flex' : 'hidden'}`}
         >
-          <MobileMenu />
+          <MobileMenu toggle={toggleMenu} />
         </div>
       </header>
     </div>

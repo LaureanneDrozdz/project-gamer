@@ -17,7 +17,9 @@ export default function SignInPage() {
       await login({ email, password });
       router.replace('/');
     } catch (err: unknown) {
+      
       setError(
+        
         err instanceof Error ? err.message : 'Erreur lors de la connexion'
       );
     }

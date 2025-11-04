@@ -1,6 +1,6 @@
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+import { CreateUserDto, Roles } from '../user/dto/create-user.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import {
   BadRequestException,
@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from 'types';
+import { SignUpDto } from './dto/sign-up.dto';
 
 @Injectable()
 export class AuthentificationService {
@@ -45,9 +46,12 @@ export class AuthentificationService {
     return true;
   }
 
-  async signUp(data: CreateUserDto): Promise<{ accessToken: string }> {
+  async signUp(data: SignUpDto): Promise<{ accessToken: string }> {
     try {
-      const user = await this.usersService.create({ ...data });
+      const randomImage = `https://avatar.iran.liara.run/public/[${Math.floor(Math.random() * 10)}]`;
+      const createUserDto: CreateUserDto = { ...data, role: Roles.USER, avatar_url: randomImage };
+      const user = await this.usersService.create(createUserDto);
+
       const apiUser = await this.usersService.findByEmail(data.email);
       const payload = {
         id: apiUser?.id,

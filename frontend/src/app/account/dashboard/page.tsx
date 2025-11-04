@@ -41,7 +41,7 @@ export default function AccountDashboardPage() {
   if (!user) return null;
 
   return (
-    <main className="mt-[10%] w-full max-w-2xl mx-auto bg-blanc rounded-xl shadow-lg p-8 flex flex-col gap-8">
+    <main className="mt-5  w-full max-w-2xl mx-auto  rounded-xl  p-8 flex flex-col gap-8">
       <ProfileHeader user={user} />
 
       {/* Stats */}

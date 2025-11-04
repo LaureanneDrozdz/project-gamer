@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Post,
   Res,
+  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from '../user/dto/create-user.dto';
@@ -19,6 +20,8 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { Request } from 'express';
+import { Sign } from 'crypto';
+import { SignUpDto } from './dto/sign-up.dto';
 
 @Controller('auth')
 export class AuthentificationController {
@@ -45,19 +48,20 @@ export class AuthentificationController {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
     }
+    console.log('Set-Cookie:', result.accessToken);
     return result;
   }
 
   @HttpCode(HttpStatus.OK)
   @Post('signup')
   @ApiBody({
-    type: CreateUserDto,
+    type: SignUpDto,
   })
   @ApiOkResponse({
     description: 'Registration successful, sets access token cookie',
   })
   async signUp(
-    @Body() data: CreateUserDto,
+    @Body() data: SignUpDto,
     @Res({ passthrough: true }) res?: Response,
   ) {
     const result = await this.authentificationService.signUp(data);
@@ -120,6 +124,7 @@ export class AuthentificationController {
     if (!token) {
       throw new UnauthorizedException('Authentication required');
     }
+    
     return this.authentificationService.decodeToken(token);
   }
 }

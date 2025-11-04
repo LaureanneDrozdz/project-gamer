@@ -3,9 +3,13 @@ import AuthButtons from './authButtons';
 import ProfileMenu from './profileMenu';
 import { useAuth } from '@/lib/auth-context';
 
-function MobileMenu() {
+type MobileMenuProps = {
+  toggle: () => void;
+};
+
+function MobileMenu({ toggle }: MobileMenuProps) {
   const menuId = 'mobile-menu';
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
 
   return (
     <nav
@@ -43,11 +47,31 @@ function MobileMenu() {
             Leaderboard
           </Link>
         </li>
-        <li role="none">{isLoggedIn ? <ProfileMenu /> : (
-          <div className='flex flex-col gap-3'>
-            <AuthButtons />
-          </div>
-        )}</li>
+        <li role="none">
+          {isLoggedIn ? (
+            <div className="flex flex-col items-center gap-2">
+              <Link
+                href="/account/dashboard"
+                className="text-blanc hover:text-secondary"
+                role="menuitem"
+                onClick={() => { toggle(); }}
+              >
+                Mon Profil
+              </Link>
+              <button
+                onClick={() => logout()}
+                className="text-blanc hover:text-secondary"
+                role="menuitem"
+              >
+                Déconnexion
+              </button>
+            </div>
+          ) : (
+            <div className='flex flex-col gap-3'>
+              <AuthButtons />
+            </div>
+          )}
+        </li>
       </ul>
     </nav>
   );

@@ -43,7 +43,7 @@ export default function ChallengesList({
     <>
       {showFilters && <ChallengeFilters filter={filter} onChange={setFilter} />}
       <div
-        className="flex flex-wrap justify-start gap-6"
+        className="flex justify-start flex-wrap md:justify-center lg:justify-start  gap-6 md:gap-4 xl:gap-4"
         role="list"
         id="challenge-list"
         aria-label="Liste des challenges"
