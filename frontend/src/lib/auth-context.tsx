@@ -96,21 +96,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   //lorsque login,
   // store token, setUser(, et push le navigateur to /dashboard (la homepage devrait etre /dashboard).
   async function login(data: { email: string; password: string }) {
-    // 1) hit login → get the token
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+    // 1) hit login via the shared apiFetch wrapper so base URL and credentials
+    // are handled consistently (server vs client).
+    await baseApiFetch('/auth/login', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: "include",
       body: JSON.stringify(data),
     });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || 'Login failed');
-    }
-
 
     // 3) *now* fetch the real user profile
-    const profile = await baseApiFetch('/auth/me', { method: 'GET', credentials: "include" });
+    const profile = await baseApiFetch('/auth/me', { method: 'GET' });
     setUser({
       id: profile.id,
       userName: profile.name,
@@ -129,19 +123,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     email: string;
     password: string;
   }) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
+    // Use apiFetch so the request goes through the Next rewrite in the browser
+    // or directly to SERVER_API_URL on the server. apiFetch will throw on error.
+    await baseApiFetch('/auth/signup', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || 'Signup failed');
-    }
-  
 
     // Fetch “/auth/me”
-    const profile = await baseApiFetch('/auth/me', { method: 'GET', credentials: "include" });
+    const profile = await baseApiFetch('/auth/me', { method: 'GET' });
     setUser({
       id: profile.id,
       userName: profile.name,
