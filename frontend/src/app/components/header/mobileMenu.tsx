@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import AuthButtons from './authButtons';
-import ProfileMenu from './profileMenu';
 import { useAuth } from '@/lib/auth-context';
 
 type MobileMenuProps = {
