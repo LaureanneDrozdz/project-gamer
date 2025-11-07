@@ -1,5 +1,3 @@
-import type { NextConfig } from "next";
-
 const nextConfig = {
   images: {
     domains: [
@@ -38,4 +36,6 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+// Export as CommonJS so Node/builders that expect `next.config.js` can load it
+// without ESM/TS parsing issues.
+module.exports = nextConfig;
