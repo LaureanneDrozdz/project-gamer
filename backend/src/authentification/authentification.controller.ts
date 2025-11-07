@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Post,
   Res,
+  Req,
   UnauthorizedException,
 } from '@nestjs/common';
 import { SignInDto } from './dto/sign-in.dto';
@@ -110,18 +111,14 @@ export class AuthentificationController {
     description: 'Returns the decoded payload of the JWT',
     type: 'object',
   })
-  decodeToken(reqOrToken: Request | string) {
-    if (typeof reqOrToken === 'string') {
-      const tokenString = reqOrToken.replace(/^Bearer\s*/i, '').trim();
-      if (!tokenString)
-        throw new UnauthorizedException('Authentication required');
-      return this.authentificationService.decodeToken(tokenString);
-    }
-    const token = reqOrToken.cookies?.token as string | undefined;
+  // Route handler: inject the request using @Req so `cookies` is defined
+  decodeToken(@Req() req: Request) {
+    // If called as a route, expect cookies to exist on the request
+    const token = req?.cookies?.token as string | undefined;
     if (!token) {
       throw new UnauthorizedException('Authentication required');
     }
-    
+
     return this.authentificationService.decodeToken(token);
   }
 }
