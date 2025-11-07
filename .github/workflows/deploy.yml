@@ -113,6 +113,7 @@ jobs:
           build-args: |
             SERVER_API_URL=${{ secrets.SERVER_API_URL }}
             NEXT_PUBLIC_API_URL=${{ secrets.SERVER_API_URL }}
+            NEXT_PUBLIC_RAWG_API_KEY=${{ secrets.NEXT_PUBLIC_RAWG_API_KEY }}
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/project-frontend:${{ github.sha }}
