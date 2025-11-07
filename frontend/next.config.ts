@@ -11,6 +11,16 @@ const nextConfig: NextConfig = {
       "rawg.io",
       "media.rawg.io"
     ],
+    // Allow Next's image optimizer to fetch these remote hosts explicitly.
+    // Some Next versions require `remotePatterns` for external fetches.
+    remotePatterns: [
+      { protocol: 'https', hostname: 'randomuser.me', pathname: '/**' },
+      { protocol: 'https', hostname: 'via.assets.so', pathname: '/**' },
+      { protocol: 'https', hostname: 'www.worldhistory.org', pathname: '/**' },
+      { protocol: 'https', hostname: 'rawg.io', pathname: '/**' },
+      { protocol: 'https', hostname: 'media.rawg.io', pathname: '/**' },
+      { protocol: 'https', hostname: 'placehold.co', pathname: '/**' }
+    ],
   },
 
   async rewrites() {
