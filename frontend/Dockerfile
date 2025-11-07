@@ -1,7 +1,7 @@
 # Étape 1 : Build de l'application
 FROM node:20-alpine AS builder
 
-
+USER node
 WORKDIR /usr/src/frontend
 
 # Copy package files first to take advantage of Docker layer caching
@@ -36,10 +36,6 @@ COPY --from=builder /usr/src/frontend/node_modules ./node_modules
 COPY --from=builder /usr/src/frontend/.next ./.next
 COPY --from=builder /usr/src/frontend/public ./public
 
-RUN mkdir -p /app/frontend/.next/cache/images \
-	&& mkdir -p /usr/src/frontend/.next/cache/images || true \
-	&& chmod -R 0777 /app/frontend/.next || true \
-	&& chmod -R 0777 /usr/src/frontend/.next || true
 
 EXPOSE 5173
 CMD ["npm", "run", "start"]
