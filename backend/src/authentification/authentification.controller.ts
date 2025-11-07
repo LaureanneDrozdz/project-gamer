@@ -6,10 +6,8 @@ import {
   HttpStatus,
   Post,
   Res,
-  Req,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateUserDto } from '../user/dto/create-user.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { AuthentificationService } from './authentification.service';
 import {
@@ -20,7 +18,6 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { Request } from 'express';
-import { Sign } from 'crypto';
 import { SignUpDto } from './dto/sign-up.dto';
 
 @Controller('auth')
