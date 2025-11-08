@@ -25,6 +25,14 @@ export class AuthentificationService {
     password: string,
     hashedPassword: string,
   ): Promise<boolean> {
+    // Guard against undefined inputs which cause bcrypt to throw
+    if (!password || !hashedPassword) {
+      this.logger.warn('comparePasswords called with missing arguments', {
+        passwordProvided: password,
+        hashedPasswordProvided: hashedPassword,
+      });
+      return false;
+    }
     return bcrypt.compare(password, hashedPassword);
   }
 
@@ -74,7 +82,7 @@ export class AuthentificationService {
     if (!user) {
       throw new NotFoundException();
     }
-
+    console.log('User found:', user);
     const isPasswordValid = await this.comparePasswords(
       data.password,
       user.password_hash,
