@@ -48,7 +48,7 @@ export const VoteButton = ({
     };
 
     checkVote();
-  }, [targetId, user?.id, targetType]);
+  }, [targetId, user?.id, targetType, voteId, hasVoted]);
 
   const handleVoteToggle = async () => {
     if (!user?.id) {

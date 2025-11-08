@@ -1,6 +1,5 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { EventBusService } from '../events/event-bus.service';
 import { CreateVoteDto } from './dto/create-vote.dto';
 import { UpdateVoteDto } from './dto/update-vote.dto';
 import { TargetType } from '@prisma/client';
@@ -11,7 +10,6 @@ import { VoteEntity } from './entities/vote.entity';
 export class VoteService {
   constructor(
     private prisma: PrismaService,
-    private eventBus: EventBusService,
   ) {}
   private readonly logger = new Logger(VoteService.name);
   async create(createVoteDto: CreateVoteDto) {
@@ -36,6 +34,18 @@ export class VoteService {
     } else {
       throw new Error('target_type invalide');
     }
+    // Prevent duplicate votes: if this user already voted for this target, reject
+    const existing = await this.prisma.vote.findFirst({
+      where: {
+        user_id,
+        ...(target_type === TargetType.CHALLENGE
+          ? { challenge_id: target_id }
+          : { participation_id: target_id }),
+      },
+    });
+    if (existing) {
+      throw new ConflictException('User has already voted for this target');
+    }
     const vote = await this.prisma.vote.create({
       data: {
         ...rest,
@@ -49,34 +59,7 @@ export class VoteService {
         },
       },
     });
-    // publish event for the owner so subscribers can react
-    // TODO Refactor to a method
-    try {
-      let ownerId: string | undefined;
-      if (target_type === TargetType.CHALLENGE) {
-        const challenge = await this.prisma.challenge.findUnique({
-          where: { id: target_id },
-        });
-        ownerId = challenge?.user_id;
-      } else if (target_type === TargetType.PARTICIPATION) {
-        const participation = await this.prisma.participation.findUnique({
-          where: { id: target_id },
-        });
-        ownerId = participation?.user_id;
-      }
-      if (ownerId && ownerId !== user_id) {
-        this.eventBus.emit('vote.created', {
-          userId: ownerId,
-          actorId: user_id,
-          targetType: target_type,
-          targetId: target_id,
-          voteId: vote.id,
-        });
-      }
-    } catch (err) {
-      this.logger.error('Failed to publish vote.created event', err);
-    }
-
+    
     return new VoteEntity(vote);
   }
 
