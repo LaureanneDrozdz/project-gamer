@@ -121,4 +121,12 @@ export class AuthentificationController {
 
     return this.authentificationService.decodeToken(token);
   }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('token');
+    res.clearCookie('admin_token');
+    return { message: 'Déconnexion réussie' };
+  }
 }
