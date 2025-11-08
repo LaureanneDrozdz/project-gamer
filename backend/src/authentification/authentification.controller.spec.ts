@@ -77,11 +77,10 @@ describe('AuthentificationController', () => {
       );
     });
 
-    it('should extract token and call service.decodeToken', () => {
-      const fakeToken = 'Bearer faketoken123';
+    it('should extract token from cookie and call service.decodeToken', () => {
       const decodedPayload = { id: 'user-id' };
       mockAuthentificationService.decodeToken.mockReturnValue(decodedPayload);
-      const req = { headers: { authorization: fakeToken } } as any;
+      const req = { cookies: { token: 'faketoken123' } } as any;
 
       expect(controller.decodeToken(req)).toEqual(decodedPayload);
       expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith(
@@ -89,15 +88,14 @@ describe('AuthentificationController', () => {
       );
     });
 
-    it('should trim token if spaces', () => {
-      const fakeToken = 'Bearer   faketoken123  ';
+    it('should pass through token even if it has surrounding spaces (no trimming in controller)', () => {
       const decodedPayload = { id: 'user-id' };
       mockAuthentificationService.decodeToken.mockReturnValue(decodedPayload);
-      const req = { headers: { authorization: fakeToken } } as any;
+      const req = { cookies: { token: '  faketoken123  ' } } as any;
 
       expect(controller.decodeToken(req)).toEqual(decodedPayload);
       expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith(
-        'faketoken123',
+        '  faketoken123  ',
       );
     });
   });
