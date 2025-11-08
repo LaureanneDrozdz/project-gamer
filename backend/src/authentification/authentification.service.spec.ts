@@ -86,7 +86,7 @@ describe('AuthentificationService', () => {
           email: 'john.doe@mail.com',
           password: 'wrongPassword',
         }),
-      ).rejects.toThrow(NotFoundException);
+      ).rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw NotFoundException if password is invalid', async () => {
