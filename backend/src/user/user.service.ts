@@ -10,6 +10,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { UserEntity } from './entities/user.entity';
 import { Prisma } from '.prisma/client/default';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -112,10 +113,12 @@ export class UserService {
     }
     return new UserEntity(user);
   }
-  async findByEmailWithPassword(email: string): Promise<UserEntity | null> {
+  // Return the raw Prisma User object (includes password_hash) so
+  // authentication code can compare passwords.
+  async findByEmailWithPassword(email: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) return null;
-    return new UserEntity(user);
+    return user;
   }
 
   async getLeaderboard(limit = 10) {

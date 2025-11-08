@@ -46,7 +46,6 @@ export class AuthentificationController {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
     }
-    console.log('Set-Cookie:', result.accessToken);
     return result;
   }
 

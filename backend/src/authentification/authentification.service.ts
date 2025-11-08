@@ -80,15 +80,16 @@ export class AuthentificationService {
   async signIn(data: SignInDto): Promise<{ accessToken: string }> {
     const user = await this.usersService.findByEmailWithPassword(data.email);
     if (!user) {
-      throw new NotFoundException();
+      throw new UnauthorizedException('Invalid credentials');
     }
-    console.log('User found:', user);
+
+    this.logger.debug(`User found with id=${user.id}`);
     const isPasswordValid = await this.comparePasswords(
       data.password,
       user.password_hash,
     );
     if (!isPasswordValid) {
-      throw new NotFoundException();
+      throw new UnauthorizedException('Invalid credentials');
     }
     const payload = {
       id: user.id,
