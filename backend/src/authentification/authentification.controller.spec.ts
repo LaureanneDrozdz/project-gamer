@@ -71,16 +71,19 @@ describe('AuthentificationController', () => {
 
   describe('decodeToken', () => {
     it('should throw UnauthorizedException if authorization header is missing', () => {
-      expect(() => controller.decodeToken('')).toThrow(UnauthorizedException);
-      expect(() => controller.decodeToken('')).toThrow(UnauthorizedException);
+      const emptyReq = { cookies: {} } as any;
+      expect(() => controller.decodeToken(emptyReq)).toThrow(
+        UnauthorizedException,
+      );
     });
 
     it('should extract token and call service.decodeToken', () => {
       const fakeToken = 'Bearer faketoken123';
       const decodedPayload = { id: 'user-id' };
       mockAuthentificationService.decodeToken.mockReturnValue(decodedPayload);
+      const req = { headers: { authorization: fakeToken } } as any;
 
-      expect(controller.decodeToken(fakeToken)).toEqual(decodedPayload);
+      expect(controller.decodeToken(req)).toEqual(decodedPayload);
       expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith(
         'faketoken123',
       );
@@ -90,8 +93,9 @@ describe('AuthentificationController', () => {
       const fakeToken = 'Bearer   faketoken123  ';
       const decodedPayload = { id: 'user-id' };
       mockAuthentificationService.decodeToken.mockReturnValue(decodedPayload);
+      const req = { headers: { authorization: fakeToken } } as any;
 
-      expect(controller.decodeToken(fakeToken)).toEqual(decodedPayload);
+      expect(controller.decodeToken(req)).toEqual(decodedPayload);
       expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith(
         'faketoken123',
       );
