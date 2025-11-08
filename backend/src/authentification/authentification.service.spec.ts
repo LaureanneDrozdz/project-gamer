@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthentificationService } from './authentification.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
-import { BadRequestException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto, Roles } from '../user/dto/create-user.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import * as bcrypt from 'bcrypt';
