@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { PrismaService } from '../prisma/prisma.service';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto, Roles } from './dto/create-user.dto';
 
@@ -171,7 +171,7 @@ describe('UserService', () => {
     it('should throw NotFoundException if user does not exist', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.findOne('5')).rejects.toThrow(UnauthorizedException);
+      await expect(service.findOne('5')).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -247,7 +247,7 @@ describe('UserService', () => {
     it('should throw NotFoundException if user does not exist', async () => {
       mockPrismaService.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.delete('5')).rejects.toThrow(UnauthorizedException);
+      await expect(service.delete('5')).rejects.toThrow(NotFoundException);
     });
   });
 
