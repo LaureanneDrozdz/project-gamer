@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthentificationController } from './authentification.controller';
 import { AuthentificationService } from './authentification.service';
 import { UnauthorizedException } from '@nestjs/common';
+import { Request } from 'express';
 import { CreateUserDto, Roles } from '../user/dto/create-user.dto';
 import { SignInDto } from './dto/sign-in.dto';
 
@@ -71,7 +72,7 @@ describe('AuthentificationController', () => {
 
   describe('decodeToken', () => {
     it('should throw UnauthorizedException if authorization header is missing', () => {
-      const emptyReq = { cookies: {} } as any;
+      const emptyReq = { cookies: {} } as unknown as Request;
       expect(() => controller.decodeToken(emptyReq)).toThrow(
         UnauthorizedException,
       );
@@ -80,7 +81,7 @@ describe('AuthentificationController', () => {
     it('should extract token from cookie and call service.decodeToken', () => {
       const decodedPayload = { id: 'user-id' };
       mockAuthentificationService.decodeToken.mockReturnValue(decodedPayload);
-      const req = { cookies: { token: 'faketoken123' } } as any;
+  const req = { cookies: { token: 'faketoken123' } } as unknown as Request;
 
       expect(controller.decodeToken(req)).toEqual(decodedPayload);
       expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith(
@@ -91,7 +92,7 @@ describe('AuthentificationController', () => {
     it('should pass through token even if it has surrounding spaces (no trimming in controller)', () => {
       const decodedPayload = { id: 'user-id' };
       mockAuthentificationService.decodeToken.mockReturnValue(decodedPayload);
-      const req = { cookies: { token: '  faketoken123  ' } } as any;
+  const req = { cookies: { token: '  faketoken123  ' } } as unknown as Request;
 
       expect(controller.decodeToken(req)).toEqual(decodedPayload);
       expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith(
