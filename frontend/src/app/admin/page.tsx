@@ -1,6 +1,6 @@
 'use client';
 import { apiFetch } from '@/lib/api';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 type User = { id: string; userName?: string; email?: string };
 type Challenge = { id: string; title?: string; description?: string; validated?: boolean };
