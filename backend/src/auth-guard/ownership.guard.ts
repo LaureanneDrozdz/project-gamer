@@ -27,10 +27,11 @@ export class OwnershipGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<AuthRequest>();
 
-    const token = request.cookies?.token as string | undefined;
+    const token = request.cookies?.token as string || request.cookies?.admin_token as string || undefined;
     if (!token) {
       throw new UnauthorizedException('Token manquant');
     }
+
     const decodedToken = this.authService.decodeToken(token);
     console.log('OwnershipGuard: decodedToken', decodedToken);
     const resourceId = request.params?.id;
