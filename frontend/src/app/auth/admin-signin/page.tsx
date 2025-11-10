@@ -14,23 +14,18 @@ export default function AdminSignInPage() {
   async function handleSubmit(email: string, password: string) {
     setError('');
     try {
-      const res = await apiFetch(`/auth/admin-login`, {
+     
+      await apiFetch(`/auth/admin-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || 'Admin login failed');
-      }
 
-      const me = await apiFetch(`/auth/profile-admin`, {
+      const profile = await apiFetch(`/auth/profile-admin`, {
         method: 'GET',
         credentials: 'include',
       });
-      if (!me.ok) throw new Error('Unable to fetch profile after login');
-      const profile = await me.json();
       setUser(profile);
       router.replace('/admin');
     } catch (err: unknown) {

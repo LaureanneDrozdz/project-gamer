@@ -12,15 +12,12 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 
   try {
 
-    const res = await apiFetch(`/auth/profile-admin`, {
+    const payload = await apiFetch(`/auth/profile-admin`, {
       method: 'GET',
       headers: { cookie: `admin_token=${tokenValue}` },
       cache: 'no-store',
     });
 
-    if (!res.ok) redirect('/auth/admin-signin');
-
-    const payload = await res.json();
     if (!payload || payload.role !== 'ADMIN') redirect('/auth/admin-signin');
 
     return <>{children}</>;
