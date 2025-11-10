@@ -321,13 +321,13 @@ describe('UserService', () => {
           id: '1',
           userName: 'johndoe',
           avatar_url: 'https://example.com/avatar1.png',
-          score: 18,
+          score: 16,
         },
         {
           id: '2',
           userName: 'janedoe',
           avatar_url: 'https://example.com/avatar2.png',
-          score: 10,
+          score: 8,
         },
       ]);
     });
