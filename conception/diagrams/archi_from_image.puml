@@ -9,14 +9,6 @@ left to right direction
 
 actor "Clients / Browser" as Clients
 
-node "Reverse Proxy\nCaddy\n(image: caddy:latest)\nports: 80/443" as Caddy {
-  rectangle "Volumes:" as CaddyVol {
-    [./Caddyfile:/etc/caddy/Caddyfile]
-    [caddy_data:/data]
-    [caddy_config:/config]
-  }
-}
-
 cloud "Frontend\nNext.js + TailwindCSS\n(image: node:20-alpine)\nport: 5173 (dev)" as Frontend {
   rectangle "Volumes:" as FrontVol {
     [./frontend:/app/frontend]
@@ -39,19 +31,13 @@ database "PostgreSQL\n(image: postgres:17-alpine)\nport: 5432" as Postgres {
   }
 }
 
-' Connections
-Clients -down-> Caddy : HTTP(S) requests
-Caddy --> Frontend : proxy / -> frontend
-Caddy --> Backend : proxy /api -> backend (3000)
+
+Clients -down-> Frontend : HTTP(S) requests
 
 Frontend --> Backend : API requests (HTTP 3000)
 
 Prisma --> Postgres : SQL queries (5432)
 
-note right of Caddy
-  - TLS termination
-  - routes: / -> frontend
-  - routes: /api -> backend
-end note
+
 
 @enduml

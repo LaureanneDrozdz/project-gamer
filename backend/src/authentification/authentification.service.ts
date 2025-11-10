@@ -82,7 +82,6 @@ export class AuthentificationService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    this.logger.debug(`User found with id=${user.id}`);
     const isPasswordValid = await this.comparePasswords(
       data.password,
       user.password_hash,

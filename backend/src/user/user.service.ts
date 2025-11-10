@@ -11,6 +11,12 @@ import * as bcrypt from 'bcrypt';
 import { UserEntity } from './entities/user.entity';
 import { Prisma } from '.prisma/client/default';
 import { User } from '@prisma/client';
+// Type describing the shape returned by `fetchUsersForLeaderboard`
+type LeaderboardUser = {
+  id: string;
+  participations: Array<{ votes: Array<{ id: string }> }>;
+  challenges: Array<{ id: string }>;
+};
 
 @Injectable()
 export class UserService {
@@ -19,13 +25,13 @@ export class UserService {
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
     try {
       const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-
+      const avatarUrl = this.fetchAvatarUrl();
       const user = await this.prisma.user.create({
         data: {
           userName: createUserDto.userName,
           email: createUserDto.email,
           password_hash: hashedPassword,
-          avatar_url: 'https://placehold.co/10',
+          avatar_url: avatarUrl,
         },
       });
       return new UserEntity(user);
@@ -121,15 +127,9 @@ export class UserService {
     return user;
   }
 
-  async getLeaderboard(limit = 10) {
-    const weights = {
-      validatedParticipation: 5,
-      vote: 2,
-      challengeCreated: 1,
-    };
-
-    // Retrieve users with their validated participations and the number of votes
-    const users = await this.prisma.user.findMany({
+  // Helper: fetch users with the relations needed to compute leaderboard
+  private async fetchUsersForLeaderboard() {
+    return this.prisma.user.findMany({
       select: {
         id: true,
         participations: {
@@ -141,42 +141,59 @@ export class UserService {
         challenges: { select: { id: true } },
       },
     });
+  }
 
-    const leaderboardData = users.map((user) => {
-      // Number of validated participations
-      const validatedParticipations = user.participations.length;
-      // Number of votes received by the participations
-      const votesOnParticipation = user.participations.reduce(
-        (sum, participation) => sum + participation.votes.length,
-        1,
-      );
-      // Number of challenges created by the user
-      const challengesCreated = user.challenges.length;
+  // Helper: compute the score for a single user record (from prisma select)
+  private calculateScoreForUser(
+    user: LeaderboardUser,
+    weights: { validatedParticipation: number; vote: number; challengeCreated: number; },
+  ) {
+    const validatedParticipations = user.participations.length;
+    const votesOnParticipation = user.participations.reduce(
+      (sum: number, participation: { votes: { id: string }[] }) => sum + participation.votes.length,
+      0,
+    );
+    const challengesCreated = user.challenges.length;
 
-      const score =
-        validatedParticipations * weights.validatedParticipation +
-        votesOnParticipation * weights.vote +
-        challengesCreated * weights.challengeCreated;
+    const score =
+      validatedParticipations * weights.validatedParticipation +
+      votesOnParticipation * weights.vote +
+      challengesCreated * weights.challengeCreated;
 
-      // For each user, return their ID and score
-      return {
-        id: user.id,
-        score,
-      };
-    });
+    return { id: user.id, score };
+  }
 
-    // Sort users by score and keep only the top 'limit' users
-    const topUsers = leaderboardData
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit);
+  private fetchAvatarUrl(): string {
+    // UUID temporaire pour seed de l'avatar
+    const tempUuid = 'temporary-uuid-for-avatar-seed';
+    return `https://api.dicebear.com/9.x/bottts/png?seed=${tempUuid}`;
+  }
 
-    // Fetch username and avatar for the top users
-    const userDetails = await this.prisma.user.findMany({
-      where: { id: { in: topUsers.map((u) => u.id) } },
+  // Helper: fetch display details for a list of user ids
+  private async fetchUserDetailsByIds(ids: string[]) {
+    if (!ids.length) return [];
+    return this.prisma.user.findMany({
+      where: { id: { in: ids } },
       select: { id: true, userName: true, avatar_url: true },
     });
+  }
 
-    // Combine score with user details for the leaderboard
+  // Public method: orchestrates helpers to build the leaderboard
+  async getLeaderboard(limit = 10) {
+    const weights = {
+      validatedParticipation: 5,
+      vote: 2,
+      challengeCreated: 1,
+    };
+
+    const users = await this.fetchUsersForLeaderboard();
+
+    const leaderboardData = users.map((user) => this.calculateScoreForUser(user, weights));
+
+    const topUsers = leaderboardData.sort((a, b) => b.score - a.score).slice(0, limit);
+
+    const userDetails = await this.fetchUserDetailsByIds(topUsers.map((u) => u.id));
+
     const leaderboard = topUsers.map((u) => ({
       ...userDetails.find((d) => d.id === u.id),
       score: u.score,
@@ -184,4 +201,5 @@ export class UserService {
 
     return leaderboard;
   }
+  
 }

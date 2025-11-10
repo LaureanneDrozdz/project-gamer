@@ -17,7 +17,8 @@ const nextConfig = {
       { protocol: 'https', hostname: 'www.worldhistory.org', pathname: '/**' },
       { protocol: 'https', hostname: 'rawg.io', pathname: '/**' },
       { protocol: 'https', hostname: 'media.rawg.io', pathname: '/**' },
-      { protocol: 'https', hostname: 'placehold.co', pathname: '/**' }
+      { protocol: 'https', hostname: 'placehold.co', pathname: '/**' },
+      { protocol: 'https', hostname: 'api.dicebear.com', pathname: '/**' },
     ],
   },
 
@@ -36,6 +37,4 @@ const nextConfig = {
   },
 };
 
-// Export as CommonJS so Node/builders that expect `next.config.js` can load it
-// without ESM/TS parsing issues.
 module.exports = nextConfig;
