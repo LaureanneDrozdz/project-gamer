@@ -159,7 +159,11 @@ jobs:
         run: |
           URL="${{ secrets.RAILWAY_FRONTEND_URL }}"
           echo "Running Pa11y against $URL"
-          npx pa11y "$URL" 2>&1 | tee pa11y-report.txt || true
+          paths=( "/" "/challenges" "/leaderboard" "/auth/signin" )
+          for p in "${paths[@]}"; do
+            echo "==== Testing $URL$p ====" | tee -a pa11y-report.txt
+            npx pa11y "$URL$p" 2>&1 | tee -a pa11y-report.txt || true
+          done
 
       - name: Upload Pa11y report
         uses: actions/upload-artifact@v4
@@ -186,8 +190,8 @@ jobs:
         run: |
           URL="${{ secrets.RAILWAY_FRONTEND_URL }}"
           echo "Running LHCI against $URL"
-          npx @lhci/cli collect --url="$URL" --config=frontend/.lighthouserc.js 2>&1 | tee lhci-collect.txt || true
-          npx @lhci/cli assert --config=frontend/.lighthouserc.js 2>&1 | tee lhci-assert.txt || true
+          npx @lhci/cli collect --url="$URL" --config=./.lighthouserc.js 2>&1 | tee lhci-collect.txt || true
+          npx @lhci/cli assert --config=./.lighthouserc.js 2>&1 | tee lhci-assert.txt || true
 
       - name: Upload Lighthouse artifacts
         uses: actions/upload-artifact@v4
