@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { SignInDto } from './dto/sign-in.dto';
 import { AuthentificationService } from './authentification.service';
+import { UserService } from '../user/user.service';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -23,7 +24,10 @@ import { SignUpDto } from './dto/sign-up.dto';
 
 @Controller('auth')
 export class AuthentificationController {
-  constructor(private authentificationService: AuthentificationService) {}
+  constructor(
+    private authentificationService: AuthentificationService,
+    private usersService: UserService,
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
@@ -110,15 +114,23 @@ export class AuthentificationController {
     description: 'Returns the decoded payload of the JWT',
     type: 'object',
   })
-  // Route handler: inject the request using @Req so `cookies` is defined
-  decodeToken(@Req() req: Request) {
-    // If called as a route, expect cookies to exist on the request
+ 
+  async decodeToken(@Req() req: Request) {
+
     const token = req?.cookies?.token as string | undefined;
     if (!token) {
       throw new UnauthorizedException('Authentication required');
     }
 
-    return this.authentificationService.decodeToken(token);
+    // Decode the token to get the user id, then fetch the full user profile
+    const payload = this.authentificationService.decodeToken(token);
+    // If payload doesn't contain an id, unauthorize
+    if (!payload?.id) {
+      throw new UnauthorizedException('Authentication required');
+    }
+    // Use UserService to fetch the user entity and return it directly
+    const user = await this.usersService.findOne(payload.id);
+    return user;
   }
 
   @Post('logout')

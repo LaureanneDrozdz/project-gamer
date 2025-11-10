@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthentificationController } from './authentification.controller';
 import { AuthentificationService } from './authentification.service';
+import { UserService } from '../user/user.service';
 import { UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateUserDto, Roles } from '../user/dto/create-user.dto';
@@ -14,6 +15,9 @@ describe('AuthentificationController', () => {
     signUp: jest.fn(),
     decodeToken: jest.fn(),
   };
+  const mockUserService = {
+    findOne: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,6 +26,10 @@ describe('AuthentificationController', () => {
         {
           provide: AuthentificationService,
           useValue: mockAuthentificationService,
+        },
+        {
+          provide: UserService,
+          useValue: mockUserService,
         },
       ],
     }).compile();
@@ -71,33 +79,49 @@ describe('AuthentificationController', () => {
   });
 
   describe('decodeToken', () => {
-    it('should throw UnauthorizedException if authorization header is missing', () => {
+    it('should throw UnauthorizedException if authorization header is missing', async () => {
       const emptyReq = { cookies: {} } as unknown as Request;
-      expect(() => controller.decodeToken(emptyReq)).toThrow(
+      await expect(controller.decodeToken(emptyReq)).rejects.toThrow(
         UnauthorizedException,
       );
     });
 
-    it('should extract token from cookie and call service.decodeToken', () => {
+    it('should extract token from cookie, call service.decodeToken and return user entity', async () => {
       const decodedPayload = { id: 'user-id' };
+      const userEntity = {
+        id: 'user-id',
+        userName: 'johndoe',
+        email: 'john.doe@mail.com',
+        created_at: new Date().toISOString(),
+        avatar_url: 'https://example.com/avatar.png',
+        challenges: [],
+        participations: [],
+        votes: [],
+        role: 'USER',
+      };
       mockAuthentificationService.decodeToken.mockReturnValue(decodedPayload);
-  const req = { cookies: { token: 'faketoken123' } } as unknown as Request;
+      mockUserService.findOne.mockResolvedValue(userEntity);
+      const req = { cookies: { token: 'faketoken123' } } as unknown as Request;
 
-      expect(controller.decodeToken(req)).toEqual(decodedPayload);
+      await expect(controller.decodeToken(req)).resolves.toEqual(userEntity);
       expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith(
         'faketoken123',
       );
+      expect(mockUserService.findOne).toHaveBeenCalledWith('user-id');
     });
 
-    it('should pass through token even if it has surrounding spaces (no trimming in controller)', () => {
+    it('should pass through token even if it has surrounding spaces (no trimming in controller)', async () => {
       const decodedPayload = { id: 'user-id' };
+      const userEntity = { id: 'user-id' } as any;
       mockAuthentificationService.decodeToken.mockReturnValue(decodedPayload);
-  const req = { cookies: { token: '  faketoken123  ' } } as unknown as Request;
+      mockUserService.findOne.mockResolvedValue(userEntity);
+      const req = { cookies: { token: '  faketoken123  ' } } as unknown as Request;
 
-      expect(controller.decodeToken(req)).toEqual(decodedPayload);
+      await expect(controller.decodeToken(req)).resolves.toEqual(userEntity);
       expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith(
         '  faketoken123  ',
       );
+      expect(mockUserService.findOne).toHaveBeenCalledWith('user-id');
     });
   });
 });
