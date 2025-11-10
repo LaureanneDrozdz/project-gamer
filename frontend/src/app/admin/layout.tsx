@@ -25,11 +25,6 @@ export default async function AdminLayout({ children }: { children: ReactNode })
       redirect('/auth/admin-signin');
     }
 
-    const payload = await res.json();
-    if (!payload || (payload.role && payload.role !== 'ADMIN')) {
-      // not an admin
-      redirect('/auth/admin-signin');
-    }
   } catch {
     // on any error, redirect to signin
     redirect('/auth/admin-signin');
