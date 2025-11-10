@@ -71,7 +71,7 @@ export class ChallengeController {
     return this.challengeService.remove(id);
   }
 
-  @Patch('challenge/:id/validate')
+  @Patch('validate/:id')
   @ApiParam({ name: 'id', description: 'ID du challenge' })
   @ApiBody({ schema: { properties: { validated: { type: 'boolean' } } } })
   @ApiOkResponse({

@@ -32,7 +32,9 @@ export class OwnershipGuard implements CanActivate {
       throw new UnauthorizedException('Token manquant');
     }
     const decodedToken = this.authService.decodeToken(token);
+    console.log('OwnershipGuard: decodedToken', decodedToken);
     const resourceId = request.params?.id;
+    console.log('OwnershipGuard: resourceId', resourceId);
     if (!resourceId) {
       throw new UnauthorizedException('ID de ressource manquant');
     }
@@ -40,13 +42,15 @@ export class OwnershipGuard implements CanActivate {
     const resource = await this.resourceService.findOne(
       resourceId as string | number,
     );
+    console.log('OwnershipGuard: resource', resource);
     if (!resource) {
       throw new UnauthorizedException('Ressource introuvable');
     }
+    
 
     const isOwner = resource.user_id === decodedToken.id;
     const isAdmin = decodedToken.role === 'ADMIN';
-
+    console.log('OwnershipGuard:', { isOwner, isAdmin });
     if (!isOwner && !isAdmin) {
       throw new ForbiddenException('Accès interdit');
     }

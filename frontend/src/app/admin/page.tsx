@@ -62,8 +62,8 @@ export default function AdminPage() {
       });
       await fetchAdminData();
       alert('Challenge supprimé');
-    } catch {
-      alert('Échec suppression challenge');
+    } catch(error) {
+      alert('Échec suppression challenge'+error);
     }
   }
 
@@ -75,8 +75,8 @@ export default function AdminPage() {
       });
       await fetchAdminData();
       alert('Participation supprimée');
-    } catch {
-      alert('Échec suppression participation');
+    } catch(error) {
+      alert('Échec suppression participation'+error);
     }
   }
 
@@ -84,7 +84,7 @@ export default function AdminPage() {
     const id = challenge.id;
     const newVal = !Boolean(challenge.validated);
     try {
-      await apiFetch(`/challenge/${id}/validate`, {
+      await apiFetch(`/challenge/validate/${id}`, {
         method: 'PATCH',
         body: JSON.stringify({ validated: newVal }),
       });
