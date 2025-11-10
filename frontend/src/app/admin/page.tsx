@@ -1,6 +1,6 @@
 'use client';
 import { apiFetch } from '@/lib/api';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 type User = { id: string; userName?: string; email?: string };
 type Challenge = { id: string; title?: string; description?: string; validated?: boolean };
@@ -11,37 +11,45 @@ export default function AdminPage() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [participations, setParticipations] = useState<Participation[]>([]);
   const [loading, setLoading] = useState(true);
-  
-  useEffect(() => {
+  const [error, setError] = useState<string | null>(null);
+
+  async function fetchAdminData() {
     setLoading(true);
-   
-    Promise.all([
-      apiFetch('/challenge', { next: { revalidate: 60 } }),
-      apiFetch('/participation', { next: { revalidate: 60 } }),
-      apiFetch('/user', { next: { revalidate: 60 } })
-    ])
-      .then(([u, c, p]) => {
-        setUsers(Array.isArray(u) ? u : []);
-        setChallenges(Array.isArray(c) ? c : []);
-        setParticipations(Array.isArray(p) ? p : []);
-      })
-      .catch((err) => {
-        console.error('Failed to load admin data', err);
-      })
-      .finally(() => setLoading(false));
-  }, [users, challenges, participations]);
+    try {
+      const [challengesData, participationsData, usersData] = await Promise.all([
+        apiFetch('/challenge', { next: { revalidate: 60 } }),
+        apiFetch('/participation', { next: { revalidate: 60 } }),
+        apiFetch('/user', { next: { revalidate: 60 } })
+      ]);
+
+
+      setUsers(Array.isArray(usersData) ? usersData : []);
+      setChallenges(Array.isArray(challengesData) ? challengesData : []);
+      setParticipations(Array.isArray(participationsData) ? participationsData : []);
+    } catch {
+      setError(`Failed to load admin data`);
+    } finally {
+        setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchAdminData();
+
+  }, []);
+
 
  
 
   async function deleteUser(id: string) {
     if (!confirm('Supprimer cet utilisateur ?')) return;
     try {
-    await apiFetch(`/user/${id}`, {
+      await apiFetch(`/user/${id}`, {
         method: 'DELETE',
       });
-      setUsers((s) => s.filter((u) => u.id !== id));
+      await fetchAdminData();
       alert('Utilisateur supprimé');
-    } catch{
+    } catch {
       alert('Échec suppression utilisateur');
     }
   }
@@ -49,11 +57,10 @@ export default function AdminPage() {
   async function deleteChallenge(id: string) {
     if (!confirm('Supprimer ce challenge ?')) return;
     try {
-     await apiFetch(`challenge/${id}`, {
+      await apiFetch(`/challenge/${id}`, {
         method: 'DELETE',
       });
-     
-      setChallenges((s) => s.filter((c) => c.id !== id));
+      await fetchAdminData();
       alert('Challenge supprimé');
     } catch {
       alert('Échec suppression challenge');
@@ -66,9 +73,9 @@ export default function AdminPage() {
       await apiFetch(`/admin/participation/${id}`, {
         method: 'DELETE',
       });
-      setParticipations((s) => s.filter((p) => p.id !== id));
+      await fetchAdminData();
       alert('Participation supprimée');
-    } catch  {
+    } catch {
       alert('Échec suppression participation');
     }
   }
@@ -77,12 +84,11 @@ export default function AdminPage() {
     const id = challenge.id;
     const newVal = !Boolean(challenge.validated);
     try {
-      const updated = await apiFetch(`/challenge/${id}/validate`, {
+      await apiFetch(`/challenge/${id}/validate`, {
         method: 'PATCH',
         body: JSON.stringify({ validated: newVal }),
       });
-
-      setChallenges((s) => s.map((c) => (c.id === id ? updated : c)));
+      await fetchAdminData();
       alert(`Challenge ${newVal ? 'validé' : 'dévalidé'}`);
     } catch {
       alert('Échec mise à jour challenge');
@@ -94,6 +100,8 @@ export default function AdminPage() {
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
       {loading ? (
         <p>Chargement...</p>
+      ) : error ? (
+        <p className="text-red-600">{error}</p>
       ) : (
         <div className="grid grid-cols-3 gap-6">
           <section>
