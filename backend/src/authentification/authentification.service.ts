@@ -103,6 +103,31 @@ export class AuthentificationService {
     };
   }
 
+  async signInAdmin(data: SignInDto): Promise<{ accessToken: string }> {
+    const user = await this.usersService.findByEmailWithPassword(data.email);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    const isPasswordValid = await this.comparePasswords(
+      data.password,
+      user.password_hash,
+    );
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    if (user.role !== Roles.ADMIN) {
+      throw new UnauthorizedException('Admin credentials required');
+    }
+    const payload = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    };
+    return {
+      accessToken: await this.jwtService.signAsync(payload),
+    };
+  }
+
   decodeToken(token: string): JwtPayload {
     try {
       return this.jwtService.verify<JwtPayload>(token);

@@ -89,13 +89,7 @@ export class AuthentificationController {
     @Body() data: SignInDto,
     @Res({ passthrough: true }) res?: Response,
   ) {
-    const result = await this.authentificationService.signIn(data);
-    const payload = this.authentificationService.decodeToken(
-      result.accessToken,
-    );
-    if (!payload || payload.role !== 'ADMIN') {
-      throw new UnauthorizedException('Admin credentials required');
-    }
+    const result = await this.authentificationService.signInAdmin(data);
     if (res && result?.accessToken) {
       res.cookie('admin_token', result.accessToken, {
         httpOnly: true,
