@@ -20,6 +20,7 @@ interface User {
 interface AuthContextValue {
   user: User | null;
   isLoading: boolean;
+  setUser(user: User | null): void;
   login(data: { email: string; password: string }): Promise<void>;
   signup(data: {
     userName: string;
@@ -159,6 +160,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value: AuthContextValue = {
     user,
     isLoading,
+    setUser,
     login,
     signup,
     logout,

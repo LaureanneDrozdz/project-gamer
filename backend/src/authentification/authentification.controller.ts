@@ -131,6 +131,30 @@ export class AuthentificationController {
     return user;
   }
 
+  @Get('admin/me')
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @ApiResponse({
+    description: 'Returns the decoded payload of the JWT',
+    type: 'object',
+  })
+  async decodeTokenAdmin(@Req() req: Request) {
+    const token = req?.cookies?.admin_token as string | undefined;
+    if (!token) {
+      throw new UnauthorizedException('Authentication required');
+    }
+
+    // Decode the token to get the user id, then fetch the full user profile
+    const payload = this.authentificationService.decodeToken(token);
+    // If payload doesn't contain an id, unauthorize
+    if (!payload?.id) {
+      throw new UnauthorizedException('Authentication required');
+    }
+    // Use UserService to fetch the user entity and return it directly
+    const user = await this.usersService.findOne(payload.id);
+    return user;
+  }
+
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logout(@Res({ passthrough: true }) res: Response) {

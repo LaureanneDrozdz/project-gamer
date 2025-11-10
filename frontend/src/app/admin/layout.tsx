@@ -1,34 +1,30 @@
+import { apiFetch } from '@/lib/api';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import type { ReactNode } from 'react';
-import { apiFetch } from '@/lib/api';
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
-  // Try common cookie names that may store a JWT
-  
   const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value ?? cookieStore.get('auth')?.value ?? cookieStore.get('admin_token')?.value;
+  const adminCookie = cookieStore.get('admin_token') ?? cookieStore.get('token');
+  const tokenValue = adminCookie?.value;
 
-  // If there's no login cookie, redirect to signin immediately
-  if (!token) {
-    redirect('/auth/admin-signin');
-  }
+  if (!tokenValue) redirect('/auth/admin-signin');
 
   try {
-    const res = await apiFetch(`/auth/me`, {
+
+    const res = await apiFetch(`/auth/admin/me`, {
       method: 'GET',
-      // forward the cookie so the backend can read it
-      headers: { cookie: `token=${token}` },
+      headers: { cookie: `admin_token=${tokenValue}` },
       cache: 'no-store',
     });
-    if (!res.ok) {
-      redirect('/auth/admin-signin');
-    }
 
+    if (!res.ok) redirect('/auth/admin-signin');
+
+    const payload = await res.json();
+    if (!payload || payload.role !== 'ADMIN') redirect('/auth/admin-signin');
+
+    return <>{children}</>;
   } catch {
-    // on any error, redirect to signin
     redirect('/auth/admin-signin');
   }
-
-  return <>{children}</>;
 }

@@ -11,7 +11,7 @@ export default function AdminPage() {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [participations, setParticipations] = useState<Participation[]>([]);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     setLoading(true);
    
