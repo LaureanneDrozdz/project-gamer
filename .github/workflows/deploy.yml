@@ -108,8 +108,6 @@ jobs:
         with:
           context: ./frontend
           no-cache: true
-          # Pass both server and client API URLs from repository secrets into the Docker build.
-          # Ensure you set a secret named SERVER_API_URL in the repository Actions secrets.
           build-args: |
             SERVER_API_URL=${{ secrets.SERVER_API_URL }}
             NEXT_PUBLIC_API_URL=${{ secrets.SERVER_API_URL }}
@@ -149,7 +147,6 @@ jobs:
       - name: Disable AppArmor (required for Chrome)
         run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
         if: runner.os == 'Linux'
-
       - uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -157,38 +154,12 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Start frontend server
-        working-directory: frontend
-        run: |
-          # If Railway provided a deployed frontend URL, Pa11y will target it in a later step.
-          # Otherwise serve the downloaded static `out` directory locally.
-          if [ -z "${{ secrets.RAILWAY_FRONTEND_URL }}" ]; then
-            npm install
-            npx serve -s out -l 5173 &
-            for i in {1..30}; do
-              if curl -s http://localhost:5173 > /dev/null; then
-                echo "Server is up!"
-                break
-              fi
-              echo "Waiting for server..."
-              sleep 1
-            done
-          else
-            echo "RAILWAY_FRONTEND_URL is set; skipping local serve"
-          fi
-
       - name: Run Pa11y accessibility tests (deployed)
         working-directory: frontend
         run: |
           URL="${{ secrets.RAILWAY_FRONTEND_URL }}"
           echo "Running Pa11y against $URL"
           npx pa11y "$URL" 2>&1 | tee pa11y-report.txt || true
-
-      - name: Run Pa11y accessibility tests (local)
-        working-directory: frontend
-        run: |
-          # Capture Pa11y output to a file for reporting
-          npm run pa11y-ci:run 2>&1 | tee pa11y-report.txt || true
 
       - name: Upload Pa11y report
         uses: actions/upload-artifact@v4
@@ -209,39 +180,14 @@ jobs:
 
       - name: Install Lighthouse CI
         run: npm install -g @lhci/cli
-      - name: Start frontend server
-        working-directory: frontend
-        run: |
-          # If a deployed frontend URL is available, skip local serve and let LHCI target the deployed URL.
-          if [ -z "${{ secrets.RAILWAY_FRONTEND_URL }}" ]; then
-            npm install
-            npx serve -s out -l 5173 &
-            for i in {1..30}; do
-              if curl -s http://localhost:5173 > /dev/null; then
-                echo "Server is up!"
-                break
-              fi
-              echo "Waiting for server..."
-              sleep 1
-            done
-          else
-            echo "RAILWAY_FRONTEND_URL is set; skipping local serve"
-          fi
-
+      
       - name: Run Lighthouse CI (deployed)
         working-directory: frontend
         run: |
           URL="${{ secrets.RAILWAY_FRONTEND_URL }}"
           echo "Running LHCI against $URL"
-          npx @lhci/cli collect --url="$URL" --config=./.lighthouserc.js 2>&1 | tee lhci-collect.txt || true
-          npx @lhci/cli assert --config=./.lighthouserc.js 2>&1 | tee lhci-assert.txt || true
-
-      - name: Run Lighthouse CI (local)
-        working-directory: frontend
-        run: |
-          # collect artifacts and save output
-          lhci collect --config=frontend/.lighthouserc.js 2>&1 | tee lhci-collect.txt || true
-          lhci assert --config=frontend/.lighthouserc.js 2>&1 | tee lhci-assert.txt || true
+          npx @lhci/cli collect --url="$URL" --config=frontend/.lighthouserc.js 2>&1 | tee lhci-collect.txt || true
+          npx @lhci/cli assert --config=frontend/.lighthouserc.js 2>&1 | tee lhci-assert.txt || true
 
       - name: Upload Lighthouse artifacts
         uses: actions/upload-artifact@v4
