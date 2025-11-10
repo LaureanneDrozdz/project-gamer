@@ -11,7 +11,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 
   // If there's no login cookie, redirect to signin immediately
   if (!token) {
-    redirect('/auth/signin');
+    redirect('/auth/admin-signin');
   }
 
   try {
@@ -22,17 +22,17 @@ export default async function AdminLayout({ children }: { children: ReactNode })
       cache: 'no-store',
     });
     if (!res.ok) {
-      redirect('/auth/signin');
+      redirect('/auth/admin-signin');
     }
 
     const payload = await res.json();
     if (!payload || (payload.role && payload.role !== 'ADMIN')) {
       // not an admin
-      redirect('/auth/signin');
+      redirect('/auth/admin-signin');
     }
   } catch {
     // on any error, redirect to signin
-    redirect('/auth/signin');
+    redirect('/auth/admin-signin');
   }
 
   return <>{children}</>;
