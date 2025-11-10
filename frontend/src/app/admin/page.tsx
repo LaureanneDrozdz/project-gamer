@@ -62,7 +62,7 @@ export default function AdminPage() {
       });
       await fetchAdminData();
       alert('Challenge supprimé');
-    } catch(error) {
+    } catch {
       alert('Échec suppression challenge');
     }
   }
@@ -75,7 +75,7 @@ export default function AdminPage() {
       });
       await fetchAdminData();
       alert('Participation supprimée');
-    } catch(error) {
+    } catch {
       alert('Échec suppression participation');
     }
   }
