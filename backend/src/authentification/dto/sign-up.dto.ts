@@ -17,7 +17,6 @@ export class SignUpDto {
     description: 'Username ',
     example: 'john.doe@example.com',
   })
-
   @IsNotEmpty()
   @Trim()
   @NormalizeEmail()
@@ -28,5 +27,4 @@ export class SignUpDto {
   @IsNotEmpty()
   @Trim()
   password: string;
-
 }

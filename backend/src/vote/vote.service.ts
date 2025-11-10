@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateVoteDto } from './dto/create-vote.dto';
 import { UpdateVoteDto } from './dto/update-vote.dto';
@@ -8,9 +13,7 @@ import { VoteEntity } from './entities/vote.entity';
 
 @Injectable()
 export class VoteService {
-  constructor(
-    private prisma: PrismaService,
-  ) {}
+  constructor(private prisma: PrismaService) {}
   private readonly logger = new Logger(VoteService.name);
   async create(createVoteDto: CreateVoteDto) {
     const { user_id, target_id, target_type, ...rest } = createVoteDto;
@@ -59,7 +62,7 @@ export class VoteService {
         },
       },
     });
-    
+
     return new VoteEntity(vote);
   }
 

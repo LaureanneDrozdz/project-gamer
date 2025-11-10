@@ -56,7 +56,11 @@ export class AuthentificationService {
   async signUp(data: SignUpDto): Promise<{ accessToken: string }> {
     try {
       const randomImage = `https://avatar.iran.liara.run/public/[${Math.floor(Math.random() * 10)}]`;
-      const createUserDto: CreateUserDto = { ...data, role: Roles.USER, avatar_url: randomImage };
+      const createUserDto: CreateUserDto = {
+        ...data,
+        role: Roles.USER,
+        avatar_url: randomImage,
+      };
       const user = await this.usersService.create(createUserDto);
 
       const apiUser = await this.usersService.findByEmail(data.email);

@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthentificationController } from './authentification.controller';
 import { AuthentificationService } from './authentification.service';
 import { UserService } from '../user/user.service';
+import { UserEntity } from '../user/entities/user.entity';
 import { UnauthorizedException } from '@nestjs/common';
 import { Request } from 'express';
 import { CreateUserDto, Roles } from '../user/dto/create-user.dto';
@@ -112,10 +113,12 @@ describe('AuthentificationController', () => {
 
     it('should pass through token even if it has surrounding spaces (no trimming in controller)', async () => {
       const decodedPayload = { id: 'user-id' };
-      const userEntity = { id: 'user-id' } as any;
+      const userEntity = { id: 'user-id' } as Partial<UserEntity>;
       mockAuthentificationService.decodeToken.mockReturnValue(decodedPayload);
       mockUserService.findOne.mockResolvedValue(userEntity);
-      const req = { cookies: { token: '  faketoken123  ' } } as unknown as Request;
+      const req = {
+        cookies: { token: '  faketoken123  ' },
+      } as unknown as Request;
 
       await expect(controller.decodeToken(req)).resolves.toEqual(userEntity);
       expect(mockAuthentificationService.decodeToken).toHaveBeenCalledWith(

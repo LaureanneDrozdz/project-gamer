@@ -114,9 +114,7 @@ export class AuthentificationController {
     description: 'Returns the decoded payload of the JWT',
     type: 'object',
   })
- 
   async decodeToken(@Req() req: Request) {
-
     const token = req?.cookies?.token as string | undefined;
     if (!token) {
       throw new UnauthorizedException('Authentication required');

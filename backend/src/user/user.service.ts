@@ -146,11 +146,16 @@ export class UserService {
   // Helper: compute the score for a single user record (from prisma select)
   private calculateScoreForUser(
     user: LeaderboardUser,
-    weights: { validatedParticipation: number; vote: number; challengeCreated: number; },
+    weights: {
+      validatedParticipation: number;
+      vote: number;
+      challengeCreated: number;
+    },
   ) {
     const validatedParticipations = user.participations.length;
     const votesOnParticipation = user.participations.reduce(
-      (sum: number, participation: { votes: { id: string }[] }) => sum + participation.votes.length,
+      (sum: number, participation: { votes: { id: string }[] }) =>
+        sum + participation.votes.length,
       0,
     );
     const challengesCreated = user.challenges.length;
@@ -188,11 +193,17 @@ export class UserService {
 
     const users = await this.fetchUsersForLeaderboard();
 
-    const leaderboardData = users.map((user) => this.calculateScoreForUser(user, weights));
+    const leaderboardData = users.map((user) =>
+      this.calculateScoreForUser(user, weights),
+    );
 
-    const topUsers = leaderboardData.sort((a, b) => b.score - a.score).slice(0, limit);
+    const topUsers = leaderboardData
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit);
 
-    const userDetails = await this.fetchUserDetailsByIds(topUsers.map((u) => u.id));
+    const userDetails = await this.fetchUserDetailsByIds(
+      topUsers.map((u) => u.id),
+    );
 
     const leaderboard = topUsers.map((u) => ({
       ...userDetails.find((d) => d.id === u.id),
@@ -201,5 +212,4 @@ export class UserService {
 
     return leaderboard;
   }
-  
 }
