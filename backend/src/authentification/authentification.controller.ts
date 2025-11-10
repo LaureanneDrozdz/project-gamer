@@ -125,7 +125,7 @@ export class AuthentificationController {
     return user;
   }
 
-  @Get('admin/me')
+  @Get('profile-admin')
   @HttpCode(HttpStatus.OK)
   @ApiBearerAuth()
   @ApiResponse({

@@ -25,7 +25,7 @@ export default function AdminSignInPage() {
         throw new Error(err.message || 'Admin login failed');
       }
 
-      const me = await apiFetch(`/auth/admin/me`, {
+      const me = await apiFetch(`/auth/profile-admin`, {
         method: 'GET',
         credentials: 'include',
       });

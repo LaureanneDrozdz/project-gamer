@@ -12,7 +12,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
 
   try {
 
-    const res = await apiFetch(`/auth/admin/me`, {
+    const res = await apiFetch(`/auth/profile-admin`, {
       method: 'GET',
       headers: { cookie: `admin_token=${tokenValue}` },
       cache: 'no-store',
