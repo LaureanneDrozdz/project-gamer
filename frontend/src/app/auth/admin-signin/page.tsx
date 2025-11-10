@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AuthHeader from '@/app/components/auth/authHeader';
 import LoginForm from '@/app/components/auth/Form/loginForm';
+import { apiFetch } from '@/lib/api';
 
 export default function AdminSignInPage() {
   const [error, setError] = useState('');
@@ -11,7 +12,7 @@ export default function AdminSignInPage() {
   async function handleSubmit(email: string, password: string) {
     setError('');
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/admin-login`, {
+      const res = await apiFetch(`/auth/admin-login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
