@@ -1,6 +1,7 @@
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto, Roles } from '../user/dto/create-user.dto';
+import { CreateUserDto, Roles as DtoRoles } from '../user/dto/create-user.dto';
+import { Roles as PrismaRoles } from '@prisma/client';
 import { SignInDto } from './dto/sign-in.dto';
 import {
   BadRequestException,
@@ -58,7 +59,7 @@ export class AuthentificationService {
       const randomImage = `https://avatar.iran.liara.run/public/[${Math.floor(Math.random() * 10)}]`;
       const createUserDto: CreateUserDto = {
         ...data,
-        role: Roles.USER,
+        role: DtoRoles.USER,
         avatar_url: randomImage,
       };
       const user = await this.usersService.create(createUserDto);
@@ -115,7 +116,7 @@ export class AuthentificationService {
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    if (user.role !== Roles.ADMIN) {
+    if (user.role !== PrismaRoles.ADMIN) {
       throw new UnauthorizedException('Admin credentials required');
     }
     const payload = {
