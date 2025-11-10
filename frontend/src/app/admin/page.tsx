@@ -63,20 +63,20 @@ export default function AdminPage() {
       await fetchAdminData();
       alert('Challenge supprimé');
     } catch(error) {
-      alert('Échec suppression challenge'+error);
+      alert('Échec suppression challenge');
     }
   }
 
   async function deleteParticipation(id: string) {
     if (!confirm('Supprimer cette participation ?')) return;
     try {
-      await apiFetch(`/admin/participation/${id}`, {
+      await apiFetch(`/participation/${id}`, {
         method: 'DELETE',
       });
       await fetchAdminData();
       alert('Participation supprimée');
     } catch(error) {
-      alert('Échec suppression participation'+error);
+      alert('Échec suppression participation');
     }
   }
 

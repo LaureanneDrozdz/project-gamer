@@ -21,7 +21,7 @@ export class JwtAuthGuard implements CanActivate {
 
     const cookies = request.cookies as Record<string, unknown> | undefined;
     const token =
-      typeof cookies?.token === 'string' ? cookies.token : undefined;
+      typeof cookies?.token === 'string' ? cookies.token : typeof cookies?.admin_token === 'string' ? cookies.admin_token : undefined;
     if (!token) {
       throw new UnauthorizedException('Token manquant');
     }
