@@ -1,36 +1,43 @@
-@startuml architecture_diagram
+@startuml archi_from_image
+title Project Gamer - Architecture
 
-rectangle "Frontend" {
-  [React] as react
-  [Tailwind CSS] as tailwind
-
+skinparam rectangle {
+  Shadowing false
 }
 
-rectangle "Backend" {
-  [NestJS] as nestjs
-  [Prisma] as prisma
-  [Swagger] as swagger
-  [JWT] as jwt
-  [Express] as express
+left to right direction
+
+actor "Clients / Browser" as Clients
+
+cloud "Frontend\nNext.js + TailwindCSS\n(image: node:20-alpine)\nport: 5173 (dev)" as Frontend {
+  rectangle "Volumes:" as FrontVol {
+    [./frontend:/app/frontend]
+    [/app/frontend/node_modules]
+  }
 }
 
-database "PostgreSQL" as postgres
-
-rectangle "Outils de Développement" {
-  [Docker] as docker
-  [Git & GitHub] as git
+rectangle "Backend (NestJS)\n(image: node:20-alpine)\nport: 3000" as Backend {
+  component "Modules:\n- Auth (JWT)\n- Challenge\n- Participation\n- Notification\n- Vote\n- User\n- Events" as Modules
+  database "Prisma (ORM)\n(schema + migrations)" as Prisma
+  rectangle "Volumes:" as BackVol {
+    [./backend:/usr/src/backend]
+    [/usr/src/backend/node_modules]
+  }
 }
 
-react --> axios: Requêtes API
-axios --> nestjs: Appels HTTP
-nestjs --> express: Gestion des routes
-nestjs --> prisma: Accès à la base de données
-prisma --> postgres: Requêtes SQL
-nestjs --> swagger: Documentation API
-nestjs --> jwt: Authentification
-docker --> react: Conteneurisation
-docker --> nestjs: Conteneurisation
-git --> react: Gestion de versions
-git --> nestjs: Gestion de versions
+database "PostgreSQL\n(image: postgres:17-alpine)\nport: 5432" as Postgres {
+  rectangle "Volumes:" as DbVol {
+    [./db:/var/lib/postgresql/data]
+  }
+}
+
+
+Clients -down-> Frontend : HTTP(S) requests
+
+Frontend --> Backend : API requests (HTTP 3000)
+
+Prisma --> Postgres : SQL queries (5432)
+
+
 
 @enduml

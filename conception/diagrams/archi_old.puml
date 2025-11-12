@@ -1,0 +1,36 @@
+@startuml architecture_diagram
+
+rectangle "Frontend" {
+  [React] as react
+  [Tailwind CSS] as tailwind
+
+}
+
+rectangle "Backend" {
+  [NestJS] as nestjs
+  [Prisma] as prisma
+  [Swagger] as swagger
+  [JWT] as jwt
+  [Express] as express
+}
+
+database "PostgreSQL" as postgres
+
+rectangle "Outils de Développement" {
+  [Docker] as docker
+  [Git & GitHub] as git
+}
+
+react --> axios: Requêtes API
+axios --> nestjs: Appels HTTP
+nestjs --> express: Gestion des routes
+nestjs --> prisma: Accès à la base de données
+prisma --> postgres: Requêtes SQL
+nestjs --> swagger: Documentation API
+nestjs --> jwt: Authentification
+docker --> react: Conteneurisation
+docker --> nestjs: Conteneurisation
+git --> react: Gestion de versions
+git --> nestjs: Gestion de versions
+
+@enduml

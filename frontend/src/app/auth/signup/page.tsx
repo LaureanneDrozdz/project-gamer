@@ -20,11 +20,9 @@ export default function SignUpPage() {
     try {
       await signup({ userName, email, password });
       router.push('/');
-    } catch (err: unknown) {
+    } catch {
       setError(
-        err instanceof Error
-          ? err.message
-          : 'Erreur lors de la création du compte'
+        'Erreur lors de la création du compte'
       );
     }
   }

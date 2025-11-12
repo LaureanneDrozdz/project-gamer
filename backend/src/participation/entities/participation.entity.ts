@@ -63,7 +63,6 @@ export class ParticipationEntity {
   constructor(participation: Participation) {
     Object.assign(this, participation);
     // Ensure created_at is serialized as ISO string for the API
-    // Prisma may return a Date object; convert to ISO string for consistency
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     this.created_at =

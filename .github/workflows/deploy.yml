@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - develop
   pull_request:
     branches:
       - main
@@ -123,8 +122,8 @@ jobs:
     needs: [build-and-push-backend, build-and-push-frontend]
     env:
       RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-      SERVICE_BACKEND: 53938932-3d5b-4924-ad59-69a071951e1f
-      SERVICE_FRONTEND: 65464a4f-6bbb-4584-8cb4-85e2210ced24
+      SERVICE_BACKEND: ${{ secrets.SERVICE_BACKEND }}
+      SERVICE_FRONTEND: ${{ secrets.SERVICE_FRONTEND }}
     steps:
 
       - name: Install Railway CLI
