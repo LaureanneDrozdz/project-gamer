@@ -1,9 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Challenge } from 'src/challenge/entities/challenge.entity';
-import { Participation } from 'src/participation/entities/participation.entity';
-import { Vote } from 'src/vote/entities/vote.entity';
+import { ChallengeEntity } from '../../challenge/entities/challenge.entity';
+import { ParticipationEntity } from '../../participation/entities/participation.entity';
+import { Roles, User } from '@prisma/client';
+import { VoteEntity } from '../../vote/entities/vote.entity';
 
-export class User {
+export class UserEntity {
+  constructor(user: Partial<User>) {
+    Object.assign(this, user);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    delete this.password_hash;
+
+    // Normalize created_at to ISO string for API consumers
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.created_at =
+      user?.created_at instanceof Date
+        ? user.created_at.toISOString()
+        : (user?.created_at as unknown as string);
+  }
+
   @ApiProperty({
     description: "Identifiant unique de l'utilisateur",
     example: '123e4567-e89b-12d3-a456-426614174000',
@@ -38,23 +55,34 @@ export class User {
     description: 'Date de création du compte',
     example: '2025-05-15T10:30:00Z',
   })
-  created_at: Date;
+  created_at: string;
 
   @ApiProperty({
     description: "Challenges créés par l'utilisateur",
-    type: [Challenge],
+    // Lazy resolver + isArray to prevent circular reference issues in Swagger
+    type: () => ChallengeEntity,
+    isArray: true,
   })
-  challenges?: Challenge[];
+  challenges?: ChallengeEntity[];
 
   @ApiProperty({
     description: "Participations de l'utilisateur",
-    type: [Participation],
+    type: () => ParticipationEntity,
+    isArray: true,
   })
-  participations?: Participation[];
+  participations?: ParticipationEntity[];
 
   @ApiProperty({
     description: "Votes de l'utilisateur",
-    type: [Vote],
+    type: () => VoteEntity,
+    isArray: true,
   })
-  votes?: Vote[];
+  votes?: VoteEntity[];
+
+  @ApiProperty({
+    description: "Rôle(s) de l'utilisateur (par exemple, 'admin', 'user')",
+    enum: Roles,
+    example: 'user',
+  })
+  role: Roles;
 }

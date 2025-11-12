@@ -1,51 +1,55 @@
 @startuml erd
 
 entity User{
-    *id: string 
-    --- 
-    *username: string
-    *email: string 
-    *password: string
-    image : string
-    *created_at: datetime
+        *id: string
+        ---
+        *userName: string
+        *email: string
+        *password_hash: string
+        avatar_url : string
+        *created_at: datetime
 }
 
 entity Challenge{
-    *id : string
-    --- 
-    *title : sttring 
-    *description : string
-    *rules : string
-    *game : string
-    difficulty : string
-    *created_by : foreign_key 
-    validated : boolean
-    *created_at: datetime
+        *id : string
+        ---
+        *title : string
+        *description : string
+        *rules : string
+        *game : string
+        *difficulty : Difficulty
+        *user_id : string
+        validated : boolean
+        *created_at: datetime
+        image_url : string?
 }
 
 entity Participation{
-    *id: string 
-    --- 
-    *users_id: FK 
-    *video_url: string 
-    *description: string
-    validated : boolean
-    *created_at: datetime
+        *id: string
+        ---
+        *user_id: string
+        *challenge_id: string
+        *video_url: string
+        description: string
+        validated : boolean
+        *created_at: datetime
 }
 
 entity Vote{
-  *id: string
-  ---
-  *user_id: FK
-  target_id: salt
-  created_at: datetime
+    *id: string
+    ---
+    *user_id: string
+    challenge_id: string?
+    participation_id: string?
+    *target_type: TargetType
+    *created_at: datetime
 }
 
-User ||--o{ Challenge: "crée"
-User ||--o{ Participation: "soumet"
-User ||--o{ Vote: "dépose"}
-Challenge ||--o{ Participation: "possède"
-Challenge ||--o{ Vote: "possède"
-Participation ||--o{ Vote: "possède"
+User ||--o{ Challenge: "creates"
+User ||--o{ Participation: "submits"
+User ||--o{ Vote: "votes"}
+Challenge ||--o{ Participation: "has"
+Challenge ||--o{ Vote: "has"
+Participation ||--o{ Vote: "has"
 
 @enduml

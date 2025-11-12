@@ -1,8 +1,20 @@
-import { PrismaClient, Difficulty, TargetType } from '../generated/prisma';
+import { PrismaClient, Difficulty, Roles, TargetType } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 async function main() {
+
+  const adminUser = await prisma.user.upsert({
+    where: { userName: 'admin' },
+    update: {},
+    create: {
+      userName: 'admin',
+      email: 'admin@example.com',
+      password_hash: 'Passpass1',
+      avatar_url: 'https://randomuser.me/api/portraits/women/23.jpg',
+      role: Roles.ADMIN,
+    },
+  });
 
   const user1 = await prisma.user.upsert({
      where: { userName: 'alice' },
@@ -11,7 +23,8 @@ async function main() {
       userName: "alice",
       email: "alice@example.com",
       password_hash: "hashalice123",
-      avatar_url: "https://example.com/avatar/alice.png",
+      avatar_url: "https://randomuser.me/api/portraits/women/32.jpg",
+      role: Roles.USER
     },
   });
 
@@ -22,49 +35,66 @@ async function main() {
       userName: "bob",
       email: "bob@example.com",
       password_hash: "hashbob456",
-      avatar_url: "https://example.com/avatar/bob.png",
+      avatar_url: "https://randomuser.me/api/portraits/men/75.jpg",
+      role: Roles.USER
     },
   });
 
-  
-  const challenge1 = await prisma.challenge.create({
-    data: {
-      title: "Speedrun challenge",
-      description: "Finish the game as fast as possible",
-      rules: "No cheats, no glitches",
-      game: "SuperFastGame",
-      difficulty: Difficulty.MEDIUM,
-      validated: true,
-      created_by: user1.id,
-    },
-  });
-
-
-  const participation1 = await prisma.participation.create({
-    data: {
-      users_id: user2.id,
-      challenge_id: challenge1.id,
-      video_url: "https://example.com/videos/bob_speedrun.mp4",
-      description: "My best run ever!",
-      validated: false,
-    },
-  });
-
-
-  await prisma.vote.create({
-  data: {
-    users_id: user1.id,
-    participation_id: participation1.id,
-    target_type: 'PARTICIPATION',
+const challengeId = "challenge_speedrun_1";
+const randomImage = Math.floor(Math.random() * 1000);
+const challenge1 = await prisma.challenge.upsert({
+  where: { id: challengeId },
+  update: {},
+  create: {
+    title: "Speedrun challenge",
+    description: "Finish the game as fast as possible",
+    rules: "No cheats, no glitches",
+    game: "SuperFastGame",
+    difficulty: Difficulty.MEDIUM,
+    validated: true,
+    image_url: `https://via.assets.so/game.webp?id=${randomImage}`,
+    creator: { connect: { id: user1.id } },
   },
 });
 
-  await prisma.vote.create({
-    data: {
-      users_id: user2.id,
-      challenge_id: challenge1.id,
+
+const participationId = "participation_1";
+const participation1 = await prisma.participation.upsert({
+  where: {
+    id: participationId
+  },
+  update: {},
+  create: {
+    user: { connect: { id: user2.id } },
+    challenge: { connect: { id: challenge1.id } },
+    video_url: "https://www.youtube.com/watch?v=KEpjLAzTod8&ab_channel=olivierhorps",
+    description: "My best run ever!",
+    validated: false,
+  },
+});
+
+
+  const voteForParticipationId = `${participation1.id}_participation`;
+  await prisma.vote.upsert({
+    where: { id: voteForParticipationId },
+    update: {},
+    create: {
+      id: voteForParticipationId,
+      user: { connect: { id: user1.id } },
+      participation: { connect: { id: participation1.id } },
+      target_type: TargetType.PARTICIPATION,
+    },
+  });
+
+  const voteForChallengeId = `${challenge1.id}_challenge`;
+  await prisma.vote.upsert({
+    where: { id: voteForChallengeId },
+    update: {},
+    create: {
+      id: voteForChallengeId,
+      challenge: { connect: { id: challenge1.id } },
+      user: { connect: { id: user2.id } },
       target_type: TargetType.CHALLENGE,
-      
     },
   });
 

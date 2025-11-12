@@ -64,3 +64,6 @@
 - L'équipe pédagogique n'est en aucun cas positionnée en tant que représentante du client fictif du projet proposé.
 
 :arrow_right: [Attendus sur le sprint 0](../.github/ISSUE_TEMPLATE/sp0-suivi-conception.md), dédié à la conception.
+
+
+test deploiement

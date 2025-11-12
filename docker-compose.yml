@@ -1,34 +1,45 @@
 services:
   frontend:
+    container_name: frontend
     build:
       context: ./frontend
+      dockerfile: Dockerfile.dev
     volumes:
-      - ./frontend:/app/frontend
-      - /app/frontend/node_modules
+      - ./frontend:/usr/src/frontend
+      - /usr/src/frontend/node_modules
     ports:
-      - 5173:5173
+      - "5173:5173"
     depends_on:
       - backend
     tty: true
+    env_file:
+      - docker.env
 
   backend:
+    container_name: backend
     build:
       context: ./backend
+      dockerfile: Dockerfile.dev
     volumes:
       - ./backend:/usr/src/backend
-      - /ur/src/backend/node_modules
+      - /usr/src/backend/node_modules
     ports:
       - 3000:3000
     tty: true
     depends_on:
       database:
         condition: service_healthy
-    command:
-      [
-        "bash",
-        "-c",
-        "./wait-for-it.sh database:5432 -- npx prisma migrate dev --name init &&  npx prisma generate && npm run seed && npm run start:dev",
-      ]
+    command: >
+      sh -c "
+        # 1) Generate the Prisma client
+        npx prisma generate &&
+        npx prisma migrate deploy &&
+        npx prisma db seed &&
+        npm run start:dev
+      "
+    env_file:
+      - docker.env
+
 
   database:
     image: postgres:17-alpine

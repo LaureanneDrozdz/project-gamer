@@ -1,0 +1,80 @@
+@startuml sequence_participation
+
+actor User
+participant "Frontend" as FE
+participant "Backend" as BE
+participant "AuthService" as Auth
+participant "ParticipationService" as PS
+database "Database" as DB
+
+User -> FE: Accéder à la page d'accueil
+FE -> BE: Charger la page d'accueil / liste des défis
+activate BE
+BE -> DB: Récupérer défis en vedette
+activate DB
+DB --> BE: Défis
+deactivate DB
+BE --> FE: Afficher défis
+deactivate BE
+
+User -> FE: Choisir un défi -> Aller à la page du défi
+FE -> BE: Charger détails du défi
+activate BE
+BE -> DB: Récupérer détails du défi
+activate DB
+DB --> BE: Détails du défi
+deactivate DB
+BE --> FE: Afficher page du défi
+deactivate BE
+
+
+
+alt Utilisateur connecté
+  FE -> User: Affiche formulaire de soumission (lien vidéo + description)
+  User -> FE: Soumettre participation (lien vidéo + description)
+  FE -> BE: POST /participations (données de la participation)
+  activate BE
+  BE -> Auth: Vérifier token (présence/validité)
+  activate Auth
+  alt Token valide
+    Auth --> BE: Token valide
+    deactivate Auth
+  else Token manquant/invalide
+    Auth --> BE: Token manquant / invalide
+    deactivate Auth
+    BE --> FE: Erreur 401 : Authentification requise
+    deactivate BE
+    FE --> User: Affiche erreur 401 : Authentification requise
+  end
+end
+
+BE -> PS: Valider les données de la participation (format, champs oblig.)
+activate PS
+alt Soumission invalide
+  PS --> BE: Erreurs de validation
+  deactivate PS
+  BE --> FE: Retour d'erreur (liste des champs à corriger)
+  deactivate BE
+  FE --> User: Afficher erreurs, demander correction
+  loop Jusqu'à soumission valide
+    User -> FE: Corrige et renvoie la participation
+    FE -> BE: POST /participations (données corrigées)
+    activate BE
+    BE -> PS: Valider les données
+    activate PS
+  end
+else Soumission valide
+  PS -> DB: Sauvegarder participation (statut: en attente)
+  activate DB
+  DB --> PS: Participation sauvegardée
+  deactivate DB
+  PS --> BE: Participation enregistrée
+  deactivate PS
+  BE --> FE: Confirmation de réception
+  deactivate BE
+  FE --> User: Affiche confirmation
+end
+
+@enduml
+
+

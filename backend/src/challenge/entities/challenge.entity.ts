@@ -1,14 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/user/entities/user.entity';
-import { Vote } from 'src/vote/entities/vote.entity';
+import { UserEntity } from '../../user/entities/user.entity';
+import { VoteEntity } from '../../vote/entities/vote.entity';
+import { Challenge, Difficulty } from '@prisma/client';
 
-export enum Difficulty {
-  EASY = 'EASY',
-  MEDIUM = 'MEDIUM',
-  HARD = 'HARD',
-}
-
-export class Challenge {
+export class ChallengeEntity {
   @ApiProperty({
     description: 'Identifiant unique du challenge',
     example: '123e4567-e89b-12d3-a456-426614174000',
@@ -51,7 +46,13 @@ export class Challenge {
     description: "Identifiant de l'utilisateur créateur",
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
-  created_by: string;
+  user_id: string;
+
+  @ApiProperty({
+    description: 'Image de couverture du challenge',
+    example: 'https://via.assets.so/game.webp?id=99',
+  })
+  image_url: string | null;
 
   @ApiProperty({
     description: 'Statut de validation du challenge',
@@ -63,17 +64,30 @@ export class Challenge {
     description: 'Date de création du challenge',
     example: '2025-05-15T10:30:00Z',
   })
-  created_at: Date;
+  created_at: string;
 
   @ApiProperty({
     description: "L'utilisateur qui a créé le challenge",
-    type: User,
+    // Use a lazy resolver to avoid circular reference during Swagger model generation
+    type: () => UserEntity,
   })
-  creator?: User;
+  creator?: UserEntity;
 
   @ApiProperty({
     description: 'Votes reçus pour ce challenge',
-    type: [Vote],
+    // Use lazy resolver + isArray to avoid circular references
+    type: () => VoteEntity,
+    isArray: true,
   })
-  votes?: Vote[];
+  votes?: VoteEntity[];
+  constructor(challenge: Challenge) {
+    Object.assign(this, challenge);
+    // Ensure created_at is serialized as ISO string
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.created_at =
+      challenge.created_at instanceof Date
+        ? challenge.created_at.toISOString()
+        : (challenge.created_at as unknown as string);
+  }
 }

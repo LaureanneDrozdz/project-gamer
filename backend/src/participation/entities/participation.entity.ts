@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/user/entities/user.entity';
-import { Vote } from 'src/vote/entities/vote.entity';
+import { UserEntity } from '../../user/entities/user.entity';
+import { VoteEntity } from '../../vote/entities/vote.entity';
+import { Participation } from '@prisma/client';
 
-export class Participation {
+export class ParticipationEntity {
   @ApiProperty({
     description: 'Identifiant unique de la participation',
     example: '123e4567-e89b-12d3-a456-426614174000',
@@ -13,7 +14,7 @@ export class Participation {
     description: "Identifiant de l'utilisateur participant",
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
-  users_id: string;
+  user_id: string;
 
   @ApiProperty({
     description: 'Identifiant du challenge concerné',
@@ -44,17 +45,29 @@ export class Participation {
     description: 'Date de création de la participation',
     example: '2025-05-15T10:30:00Z',
   })
-  created_at: Date;
+  created_at: string;
 
   @ApiProperty({
     description: "L'utilisateur qui a créé la participation",
-    type: User,
+    type: () => UserEntity,
   })
-  user?: User;
+  user?: UserEntity;
 
   @ApiProperty({
     description: 'Votes reçus pour cette participation',
-    type: [Vote],
+    type: () => VoteEntity,
+    isArray: true,
   })
-  votes?: Vote[];
+  votes?: VoteEntity[];
+
+  constructor(participation: Participation) {
+    Object.assign(this, participation);
+    // Ensure created_at is serialized as ISO string for the API
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.created_at =
+      participation.created_at instanceof Date
+        ? participation.created_at.toISOString()
+        : (participation.created_at as unknown as string);
+  }
 }

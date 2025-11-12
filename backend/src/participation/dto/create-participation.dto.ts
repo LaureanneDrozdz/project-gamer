@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Escape } from 'class-sanitizer';
 import {
   IsNotEmpty,
   IsString,
@@ -16,7 +17,6 @@ export class CreateParticipationDto {
   @IsUUID()
   @IsNotEmpty()
   challenge_id: string;
-
   @ApiProperty({
     description: 'URL de la vidéo prouvant la réalisation du challenge',
     example: 'https://example.com/videos/my-challenge-completion.mp4',
@@ -32,6 +32,7 @@ export class CreateParticipationDto {
   })
   @IsString()
   @IsNotEmpty()
+  @Escape()
   description: string;
 
   @ApiProperty({
@@ -43,4 +44,12 @@ export class CreateParticipationDto {
   @IsBoolean()
   @IsOptional()
   validated?: boolean = false;
+
+  @ApiProperty({
+    description: 'User qui poste la participation',
+    example: 'a4a52400-22b7-4318-b04d-3dc5a75c63f4',
+  })
+  @IsUUID()
+  @IsNotEmpty()
+  user_id: string;
 }

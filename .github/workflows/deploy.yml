@@ -1,0 +1,202 @@
+name: CI/CD Pipeline
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    name: Lint (frontend & backend)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [frontend, backend]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ${{ github.workspace }}/${{ matrix.project }}
+
+      - name: Run linting
+        run: npm run lint
+        working-directory: ${{ github.workspace }}/${{ matrix.project }}
+
+  test-backend:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: backend
+
+      - name: Run backend tests
+        run: npm test
+        working-directory: backend
+
+  build-and-push-backend:
+    name: Build and push backend to Docker Hub
+    runs-on: ubuntu-latest
+    needs: test-backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          no-cache: true
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/project-backend:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/project-backend:latest
+
+  build-and-push-frontend:
+    name: Build and push frontend to Docker Hub
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: docker.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push frontend image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          no-cache: true
+          build-args: |
+            SERVER_API_URL=${{ secrets.SERVER_API_URL }}
+            NEXT_PUBLIC_API_URL=${{ secrets.SERVER_API_URL }}
+            NEXT_PUBLIC_RAWG_API_KEY=${{ secrets.NEXT_PUBLIC_RAWG_API_KEY }}
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/project-frontend:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/project-frontend:latest
+
+  deploy-to-railway:
+    name: Deploy to Railway
+    runs-on: ubuntu-latest
+    needs: [build-and-push-backend, build-and-push-frontend]
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      SERVICE_BACKEND: ${{ secrets.SERVICE_BACKEND }}
+      SERVICE_FRONTEND: ${{ secrets.SERVICE_FRONTEND }}
+    steps:
+
+      - name: Install Railway CLI
+        run: |
+          npm install -g @railway/cli || true
+      - name: Deploy backend to Railway
+        run: |
+          echo "Deploying backend to Railway..."
+          railway redeploy --service="$SERVICE_BACKEND" --yes
+      - name: Deploy frontend to Railway
+        run: |
+          echo "Deploying frontend to Railway..."
+          railway redeploy --service="$SERVICE_FRONTEND" --yes
+     
+
+  accessibility:
+    runs-on: ubuntu-latest
+    needs: deploy-to-railway
+    steps:
+      - name: Disable AppArmor (required for Chrome)
+        run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+        if: runner.os == 'Linux'
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run Pa11y accessibility tests (deployed)
+        working-directory: frontend
+        run: |
+          URL="${{ secrets.RAILWAY_FRONTEND_URL }}"
+          echo "Running Pa11y against $URL"
+          paths=( "/" "/challenges" "/leaderboard" "/auth/signin" )
+          for p in "${paths[@]}"; do
+            echo "==== Testing $URL$p ====" | tee -a pa11y-report.txt
+            npx pa11y "$URL$p" 2>&1 | tee -a pa11y-report.txt || true
+          done
+
+      - name: Upload Pa11y report
+        uses: actions/upload-artifact@v4
+        with:
+          name: pa11y-report
+          path: frontend/pa11y-report.txt
+
+  lighthouse:
+    runs-on: ubuntu-latest
+    needs: deploy-to-railway
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli
+      
+      - name: Run Lighthouse CI (deployed)
+        working-directory: frontend
+        run: |
+          URL="${{ secrets.RAILWAY_FRONTEND_URL }}"
+          echo "Running LHCI against $URL"
+          npx @lhci/cli collect --url="$URL" --config=./.lighthouserc.js 2>&1 | tee lhci-collect.txt || true
+          npx @lhci/cli assert --config=./.lighthouserc.js 2>&1 | tee lhci-assert.txt || true
+
+      - name: Upload Lighthouse artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: |
+            frontend/.lighthouseci
+            frontend/lhci-collect.txt
+            frontend/lhci-assert.txt

@@ -14,4 +14,4 @@ ALTER TABLE "Challenge" ADD CONSTRAINT "Challenge_created_by_fkey" FOREIGN KEY (
 ALTER TABLE "Participation" ADD CONSTRAINT "Participation_users_id_fkey" FOREIGN KEY ("users_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Vote" ADD CONSTRAINT "Vote_users_id_fkey" FOREIGN KEY ("users_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Vote" ADD CONSTRAINT "Vote_users_id_fkey" FOREIGN KEY ("users_id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;²
